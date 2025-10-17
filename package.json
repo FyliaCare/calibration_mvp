@@ -1,15 +1,11 @@
 {
-  "name": "calibration-mvp-professional",
+  "name": "calpro-calibration-system",
   "version": "2.0.0",
-  "description": "Professional offline-first instrument calibration certificate management system",
-  "main": "server.js",
+  "description": "CalPro - Professional Calibration Management System (Frontend)",
   "scripts": {
-    "start": "node server-auth.js",
-    "start:basic": "node server.js",
-    "dev": "nodemon server-auth.js",
-    "test": "echo \"No tests specified\" && exit 0",
-    "build": "echo \"Build completed\"",
-    "backup": "node scripts/backup.js"
+    "build": "echo 'Frontend build completed'",
+    "dev": "echo 'Development mode - serve public folder'",
+    "test": "echo 'No tests specified' && exit 0"
   },
   "keywords": [
     "calibration",
@@ -17,33 +13,17 @@
     "certificates",
     "offline-first",
     "PWA",
-    "quality-control"
+    "quality-control",
+    "frontend"
   ],
-  "author": "Calibration MVP Team",
+  "author": "Jay Monty",
   "license": "MIT",
-  "dependencies": {
-    "bcrypt": "^6.0.0",
-    "body-parser": "^1.20.2",
-    "compression": "^1.8.1",
-    "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
-    "express": "^4.21.2",
-    "express-session": "^1.18.2",
-    "express-validator": "^7.2.1",
-    "fast-csv": "^5.0.5",
-    "json2csv": "^6.0.0-alpha.2",
-    "jsonwebtoken": "^9.0.2",
-    "multer": "^1.4.5-lts.1",
-    "nodemailer": "^6.10.1",
-    "pdfkit": "^0.17.2",
-    "qrcode": "^1.5.4",
-    "speakeasy": "^2.0.0",
-    "sqlite3": "^5.1.6"
-  },
-  "devDependencies": {
-    "nodemon": "^3.0.1"
-  },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18.0.0"
+  },
+  "homepage": "https://calpro-calibration.netlify.app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jaymonty/calpro-calibration-system.git"
   }
 }

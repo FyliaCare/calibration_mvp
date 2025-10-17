@@ -1,7 +1,31 @@
 
-# 🎯 Calibration MVP - Professional Instrument Calibration System
+# 🎯 CalPro - Professional Calibration Management System
 
-A comprehensive, offline-first Progressive Web Application (PWA) for managing instrument calibration certificates. Built for calibration laboratories, quality control departments, and field technicians who need reliable certificate management even without internet connectivity.
+A modern, offline-first Progressive Web Application (PWA) for managing instrument calibration certificates. Built for calibration laboratories, quality control departments, and field technicians who need reliable certificate management even without internet connectivity.
+
+## 🌐 Live Demo
+
+**Frontend (Netlify):** [https://calpro-calibration.netlify.app](https://calpro-calibration.netlify.app)  
+**Backend API:** Deploy separately to Heroku, Railway, or your preferred hosting platform
+
+## 📁 Project Structure
+
+```
+├── public/             # Frontend static files (Deploy to Netlify)
+│   ├── index.html     # Main dashboard
+│   ├── clients.html   # Client management
+│   ├── equipment.html # Equipment database
+│   ├── profile.html   # User profile
+│   ├── app.js         # Main application logic
+│   ├── styles.css     # Professional light theme
+│   └── ...
+├── backend/           # Backend API (Deploy separately)
+│   ├── server-auth.js # Main server with authentication
+│   ├── server.js      # Basic server
+│   └── package.json   # Backend dependencies
+├── netlify.toml       # Netlify deployment config
+└── package.json       # Frontend build config
+```
 
 ## ✨ Features
 
@@ -29,18 +53,30 @@ A comprehensive, offline-first Progressive Web Application (PWA) for managing in
 - **Version Control**: Record versioning and change management
 - **Backup & Recovery**: Built-in data backup and recovery mechanisms
 
-## 🚀 Quick Start
+## 🚀 Deployment
 
-### Prerequisites
-- Node.js 14.0 or higher
-- Modern web browser with PWA support
-- SQLite3 (included with Node.js installation)
+### Frontend Deployment (Netlify)
 
-### Installation
-
-1. **Clone or extract the project**
+1. **Fork/Clone this repository**
    ```bash
-   cd calibration_mvp
+   git clone https://github.com/yourusername/calpro-calibration-system.git
+   ```
+
+2. **Deploy to Netlify**
+   - Connect your GitHub repository to Netlify
+   - Set build command: `npm run build`
+   - Set publish directory: `public`
+   - Deploy automatically on push
+
+3. **Environment Configuration**
+   - The app works offline-first with IndexedDB
+   - No environment variables needed for frontend
+
+### Backend Deployment (Optional)
+
+1. **Navigate to backend folder**
+   ```bash
+   cd backend
    ```
 
 2. **Install dependencies**
@@ -48,13 +84,38 @@ A comprehensive, offline-first Progressive Web Application (PWA) for managing in
    npm install
    ```
 
-3. **Start the server**
+3. **Deploy to Heroku/Railway**
    ```bash
-   npm start
+   # Example for Heroku
+   heroku create your-calpro-backend
+   git push heroku main
    ```
 
-4. **Access the application**
-   Open your browser to `http://localhost:3000`
+4. **Update API endpoints in frontend**
+   - Edit `netlify.toml` to point to your backend URL
+
+## 🔧 Local Development
+
+### Prerequisites
+- Node.js 18.0 or higher
+- Modern web browser with PWA support
+
+### Frontend Only
+1. Serve the `public` folder with any static server:
+   ```bash
+   npx serve public
+   ```
+
+### Full Stack Development
+1. **Start backend**:
+   ```bash
+   cd backend && npm install && npm run dev
+   ```
+
+2. **Serve frontend**:
+   ```bash
+   npx serve public
+   ```
 
 ### 📱 Install as PWA
 1. Open the application in Chrome, Edge, or Safari
