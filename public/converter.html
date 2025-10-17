@@ -1,0 +1,2114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unit Converter - Calibration Management</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: #0f0f23;
+      min-height: 100vh;
+      display: flex;
+      margin: 0;
+    }
+
+    .header {
+      background: rgba(26, 26, 46, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 20px 40px;
+      margin-bottom: 0;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 184, 0, 0.2);
+    }
+
+    .header h1 {
+      font-size: 22px;
+      color: #ffffff;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header h1 i {
+      color: #FFB800;
+      font-size: 26px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 184, 0, 0.2);
+      border-color: #FFB800;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px;
+    }
+
+    .page-title {
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .page-title h2 {
+      font-size: 32px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .page-title p {
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.6);
+      margin: 0;
+    }
+
+    .converter-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+      gap: 24px;
+    }
+
+    .converter-card {
+      background: rgba(26, 26, 46, 0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 0;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      border: 1px solid rgba(255, 184, 0, 0.15);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+    }
+
+    .converter-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(255, 184, 0, 0.2);
+      border-color: rgba(255, 184, 0, 0.4);
+    }
+
+    .converter-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 20px 24px;
+      background: linear-gradient(135deg, rgba(255, 184, 0, 0.15) 0%, rgba(255, 184, 0, 0.05) 100%);
+      border-bottom: 1px solid rgba(255, 184, 0, 0.2);
+    }
+
+    .converter-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      color: #0f0f23;
+      background: linear-gradient(135deg, #FFB800 0%, #FFA000 100%);
+      box-shadow: 0 4px 12px rgba(255, 184, 0, 0.3);
+    }
+
+    .converter-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #FFB800;
+      margin: 0;
+      letter-spacing: 0.3px;
+    }
+
+    .converter-body {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      padding: 28px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .form-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+    }
+
+    .input-group {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .form-control {
+      padding: 14px 18px;
+      border: 1px solid rgba(255, 184, 0, 0.2);
+      border-radius: 8px;
+      font-size: 16px;
+      font-family: inherit;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.05);
+      color: #ffffff;
+      font-weight: 500;
+    }
+
+    .form-control::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: #FFB800;
+      background: rgba(255, 184, 0, 0.08);
+      box-shadow: 0 0 0 4px rgba(255, 184, 0, 0.1);
+    }
+
+    select.form-control {
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 184, 0, 0.2);
+      font-weight: 600;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23FFB800' d='M10.293 3.293L6 7.586 1.707 3.293A1 1 0 00.293 4.707l5 5a1 1 0 001.414 0l5-5a1 1 0 10-1.414-1.414z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 40px;
+    }
+
+    select.form-control option {
+      background: #1a1a2e;
+      color: #ffffff;
+    }
+
+    .result-display {
+      background: linear-gradient(135deg, rgba(255, 184, 0, 0.1) 0%, rgba(255, 160, 0, 0.05) 100%);
+      border: 2px solid rgba(255, 184, 0, 0.3);
+      color: white;
+      padding: 24px;
+      border-radius: 12px;
+      text-align: left;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .result-display::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(180deg, #FFB800 0%, #FFA000 100%);
+    }
+
+    .result-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: #FFB800;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .result-value {
+      font-size: 32px;
+      font-weight: 700;
+      color: #FFB800;
+      word-break: break-word;
+      line-height: 1.2;
+      text-shadow: 0 2px 8px rgba(255, 184, 0, 0.3);
+    }
+
+    .swap-btn {
+      background: rgba(255, 184, 0, 0.1);
+      color: #FFB800;
+      border: 1px solid rgba(255, 184, 0, 0.3);
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      font-size: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .swap-btn:hover {
+      background: #FFB800;
+      color: #0f0f23;
+      border-color: #FFB800;
+      transform: rotate(180deg) scale(1.1);
+      box-shadow: 0 6px 20px rgba(255, 184, 0, 0.4);
+    }
+
+    .quick-conversions {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 18px 20px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 184, 0, 0.15);
+    }
+
+    .quick-conversions-title {
+      font-size: 10px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+    }
+
+    .quick-conversion-item {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.7);
+      padding: 8px 0;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      transition: color 0.3s ease;
+    }
+
+    .quick-conversion-item:hover {
+      color: #FFB800;
+    }
+
+    .quick-conversion-item:last-child {
+      border-bottom: none;
+    }
+
+    .quick-conversion-item strong {
+      color: #FFB800;
+      font-weight: 600;
+    }
+
+    /* Universal Converter Styles */
+    .universal-converter {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .converter-main-card {
+      background: rgba(26, 26, 46, 0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 12px 48px rgba(0,0,0,0.5);
+      border: 1px solid rgba(255, 184, 0, 0.2);
+      overflow: hidden;
+    }
+
+    .category-selector {
+      padding: 32px;
+      background: linear-gradient(135deg, rgba(255, 184, 0, 0.1) 0%, rgba(255, 184, 0, 0.05) 100%);
+      border-bottom: 1px solid rgba(255, 184, 0, 0.2);
+    }
+
+    .category-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #FFB800;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 20px;
+    }
+
+    .category-label i {
+      font-size: 16px;
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 12px;
+    }
+
+    .category-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 184, 0, 0.2);
+      border-radius: 12px;
+      padding: 16px 12px;
+      color: rgba(255, 255, 255, 0.7);
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .category-btn i {
+      font-size: 24px;
+    }
+
+    .category-btn:hover {
+      background: rgba(255, 184, 0, 0.1);
+      border-color: rgba(255, 184, 0, 0.5);
+      color: #FFB800;
+      transform: translateY(-2px);
+    }
+
+    .category-btn.active {
+      background: linear-gradient(135deg, #FFB800 0%, #FFA000 100%);
+      border-color: #FFB800;
+      color: #0f0f23;
+      box-shadow: 0 6px 20px rgba(255, 184, 0, 0.4);
+    }
+
+    .conversion-area {
+      padding: 40px;
+    }
+
+    .conversion-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 24px;
+      align-items: start;
+      margin-bottom: 32px;
+    }
+
+    .conversion-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .form-control-large {
+      padding: 18px 24px;
+      border: 2px solid rgba(255, 184, 0, 0.3);
+      border-radius: 12px;
+      font-size: 28px;
+      font-family: inherit;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.05);
+      color: #ffffff;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .form-control-large::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+      font-size: 18px;
+    }
+
+    .form-control-large:focus {
+      outline: none;
+      border-color: #FFB800;
+      background: rgba(255, 184, 0, 0.08);
+      box-shadow: 0 0 0 6px rgba(255, 184, 0, 0.15);
+    }
+
+    .form-select-large {
+      padding: 16px 24px;
+      border: 2px solid rgba(255, 184, 0, 0.2);
+      border-radius: 12px;
+      font-size: 16px;
+      font-family: inherit;
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      font-weight: 600;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%23FFB800' d='M13.293 5.293L8 10.586 2.707 5.293A1 1 0 101.293 6.707l6 6a1 1 0 001.414 0l6-6a1 1 0 10-1.414-1.414z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      padding-right: 52px;
+      transition: all 0.3s ease;
+    }
+
+    .form-select-large:hover {
+      border-color: rgba(255, 184, 0, 0.4);
+      background-color: rgba(255, 184, 0, 0.05);
+    }
+
+    .form-select-large:focus {
+      outline: none;
+      border-color: #FFB800;
+      box-shadow: 0 0 0 4px rgba(255, 184, 0, 0.15);
+    }
+
+    .form-select-large option {
+      background: #1a1a2e;
+      color: #ffffff;
+      padding: 12px;
+    }
+
+    .swap-container {
+      display: flex;
+      align-items: center;
+      padding-top: 80px;
+    }
+
+    .swap-btn-large {
+      background: linear-gradient(135deg, rgba(255, 184, 0, 0.15) 0%, rgba(255, 160, 0, 0.1) 100%);
+      border: 2px solid rgba(255, 184, 0, 0.4);
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      color: #FFB800;
+      font-size: 24px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+    }
+
+    .swap-btn-large:hover {
+      background: linear-gradient(135deg, #FFB800 0%, #FFA000 100%);
+      color: #0f0f23;
+      transform: rotate(180deg) scale(1.1);
+      box-shadow: 0 8px 24px rgba(255, 184, 0, 0.5);
+    }
+
+    .result-display-large {
+      background: linear-gradient(135deg, rgba(255, 184, 0, 0.15) 0%, rgba(255, 160, 0, 0.08) 100%);
+      border: 3px solid rgba(255, 184, 0, 0.4);
+      padding: 24px;
+      border-radius: 16px;
+      position: relative;
+      overflow: hidden;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .result-display-large::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 6px;
+      height: 100%;
+      background: linear-gradient(180deg, #FFB800 0%, #FFA000 100%);
+    }
+
+    .result-value-large {
+      font-size: 42px;
+      font-weight: 700;
+      color: #FFB800;
+      word-break: break-word;
+      line-height: 1.2;
+      text-shadow: 0 4px 12px rgba(255, 184, 0, 0.4);
+      text-align: center;
+    }
+
+    .quick-reference {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 184, 0, 0.15);
+      border-radius: 16px;
+      padding: 24px 28px;
+      margin-top: 24px;
+    }
+
+    .quick-reference-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 16px;
+    }
+
+    .quick-reference-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 12px;
+    }
+
+    .quick-ref-item {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.7);
+      padding: 10px 0;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .quick-ref-item:last-child {
+      border-bottom: none;
+    }
+
+    .quick-ref-item strong {
+      color: #FFB800;
+      font-weight: 600;
+    }
+
+    @media (max-width: 1200px) {
+      .converter-grid {
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      }
+      
+      .conversion-row {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      
+      .swap-container {
+        padding-top: 0;
+        justify-content: center;
+      }
+      
+      .swap-btn-large {
+        transform: rotate(90deg);
+      }
+      
+      .swap-btn-large:hover {
+        transform: rotate(270deg) scale(1.1);
+      }
+
+      .category-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .conversion-area {
+        padding: 32px 24px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .converter-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .header {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+        padding: 16px 20px;
+      }
+
+      .header h1 {
+        font-size: 19px;
+      }
+
+      .container {
+        padding: 24px 16px;
+      }
+
+      .page-title {
+        margin-bottom: 24px;
+      }
+
+      .page-title h2 {
+        font-size: 24px;
+      }
+
+      .page-title p {
+        font-size: 14px;
+      }
+
+      .converter-card {
+        margin-bottom: 20px;
+      }
+
+      .converter-body {
+        padding: 20px;
+      }
+
+      .result-value {
+        font-size: 26px;
+      }
+
+      .input-group {
+        grid-template-columns: 1fr;
+      }
+
+      .swap-btn {
+        width: 100%;
+        height: 48px;
+      }
+
+      /* Universal converter mobile */
+      .category-selector {
+        padding: 24px 20px;
+      }
+
+      .category-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .category-btn {
+        padding: 14px 10px;
+        font-size: 12px;
+      }
+
+      .category-btn i {
+        font-size: 20px;
+      }
+
+      .conversion-area {
+        padding: 24px 20px;
+      }
+
+      .form-control-large {
+        font-size: 22px;
+        padding: 16px 20px;
+      }
+
+      .form-select-large {
+        font-size: 14px;
+        padding: 14px 20px 14px 16px;
+      }
+
+      .result-value-large {
+        font-size: 32px;
+      }
+
+      .quick-reference {
+        padding: 20px;
+      }
+
+      .quick-reference-content {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .form-control-large {
+        font-size: 20px;
+        padding: 14px 16px;
+      }
+
+      .result-value-large {
+        font-size: 26px;
+      }
+    }
+
+    .formula-hint {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.4);
+      font-style: italic;
+      margin-top: 6px;
+    }
+
+    /* Custom scrollbar for dark theme */
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 184, 0, 0.3);
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 184, 0, 0.5);
+    }
+
+    /* Smooth animations */
+    * {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+  
+    /* Sidebar Styles */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      height: 100vh;
+      width: 260px;
+      background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+      color: white;
+      overflow-y: auto;
+      z-index: 1000;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+
+    .sidebar-header {
+      padding: 24px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sidebar-title h3 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #FFB800;
+      margin: 0;
+      line-height: 1;
+    }
+
+    .sidebar-title p {
+      font-size: 11px;
+      color: rgba(255,255,255,0.7);
+      margin: 4px 0 0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .sidebar-menu {
+      padding: 16px 0;
+    }
+
+    .menu-section {
+      margin-bottom: 24px;
+    }
+
+    .menu-section h4 {
+      padding: 0 20px;
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin: 0 0 8px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .menu-item:hover {
+      background: rgba(255,255,255,0.05);
+      color: #FFB800;
+    }
+
+    .menu-item.active {
+      background: rgba(255,184,0,0.15);
+      color: #FFB800;
+      border-left: 3px solid #FFB800;
+    }
+
+    .menu-item i {
+      width: 20px;
+      font-size: 16px;
+      margin-right: 12px;
+    }
+
+    .sidebar-footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 16px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      background: rgba(0,0,0,0.2);
+    }
+
+    .sidebar-status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .version-info {
+      color: rgba(255,255,255,0.5);
+      font-size: 11px;
+    }
+
+    /* Page wrapper for sidebar layout */
+    .page-wrapper {
+      margin-left: 260px;
+      min-height: 100vh;
+      width: calc(100% - 260px);
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      
+      .sidebar.active {
+        transform: translateX(0);
+      }
+      
+      .page-wrapper {
+        margin-left: 0;
+        width: 100%;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Sidebar -->
+  <nav class="sidebar" id="sidebar" aria-label="Main navigation">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <div class="sidebar-logo-text">
+          <i class="fas fa-balance-scale" style="font-size: 36px; color: #FFB800;"></i>
+        </div>
+        <div class="sidebar-title">
+          <h3>CalPro</h3>
+          <p>Calibration Management</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="sidebar-menu" role="menu">
+      <div class="menu-section">
+        <h4>Main</h4>
+        <a href="index.html#dashboard" class="menu-item">
+          <i class="fas fa-tachometer-alt"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="index.html#worksheets" class="menu-item">
+          <i class="fas fa-file-lines"></i>
+          <span>Worksheets</span>
+        </a>
+        <a href="index.html#certificates" class="menu-item">
+          <i class="fas fa-certificate"></i>
+          <span>Certificates</span>
+        </a>
+        <a href="equipment.html" class="menu-item">
+          <i class="fas fa-tools"></i>
+          <span>Equipment</span>
+        </a>
+      </div>
+      
+      <div class="menu-section">
+        <h4>Management</h4>
+        <a href="clients.html" class="menu-item">
+          <i class="fas fa-users"></i>
+          <span>Clients</span>
+        </a>
+        <a href="integrations.html" class="menu-item">
+          <i class="fas fa-plug"></i>
+          <span>Integrations</span>
+        </a>
+        <a href="index.html#reports" class="menu-item">
+          <i class="fas fa-chart-bar"></i>
+          <span>Reports</span>
+        </a>
+        <a href="index.html#settings" class="menu-item">
+          <i class="fas fa-cog"></i>
+          <span>Settings</span>
+        </a>
+      </div>
+
+      <div class="menu-section">
+        <h4>Tools</h4>
+        <a href="converter.html" class="menu-item active">
+          <i class="fas fa-calculator"></i>
+          <span>Unit Converter</span>
+        </a>
+      </div>
+
+      <div class="menu-section">
+        <h4>Account</h4>
+        <a href="profile.html" class="menu-item">
+          <i class="fas fa-user-circle"></i>
+          <span>My Profile</span>
+        </a>
+      </div>
+    </div>
+    
+    <div class="sidebar-footer">
+      <div class="sidebar-status">
+        <div class="status-item" id="connectionStatus">
+          <i class="fas fa-wifi" id="connectionIcon"></i>
+          <span id="connectionText">Online</span>
+        </div>
+        <div class="version-info">v2.0.0</div>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- Page Content Wrapper -->
+  <div class="page-wrapper">
+  <div class="header">
+    <h1><i class="fas fa-calculator"></i> Unit Converter</h1>
+    <a href="index.html" class="btn btn-secondary">
+      <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+  </div>
+
+  <div class="container">
+    <div class="page-title">
+      <h2>Universal Unit Converter</h2>
+      <p>Accurate conversion tool for all calibration and laboratory measurements</p>
+    </div>
+    
+    <!-- Single Universal Converter -->
+    <div class="universal-converter">
+      <div class="converter-main-card">
+        <!-- Category Selector -->
+        <div class="category-selector">
+          <label class="category-label">
+            <i class="fas fa-layer-group"></i>
+            Select Category
+          </label>
+          <div class="category-grid" id="categoryGrid">
+            <button class="category-btn active" data-category="mass" onclick="selectCategory('mass')">
+              <i class="fas fa-weight-hanging"></i>
+              <span>Mass</span>
+            </button>
+            <button class="category-btn" data-category="length" onclick="selectCategory('length')">
+              <i class="fas fa-ruler"></i>
+              <span>Length</span>
+            </button>
+            <button class="category-btn" data-category="temperature" onclick="selectCategory('temperature')">
+              <i class="fas fa-thermometer-half"></i>
+              <span>Temperature</span>
+            </button>
+            <button class="category-btn" data-category="pressure" onclick="selectCategory('pressure')">
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Pressure</span>
+            </button>
+            <button class="category-btn" data-category="volume" onclick="selectCategory('volume')">
+              <i class="fas fa-flask"></i>
+              <span>Volume</span>
+            </button>
+            <button class="category-btn" data-category="force" onclick="selectCategory('force')">
+              <i class="fas fa-hand-rock"></i>
+              <span>Force</span>
+            </button>
+            <button class="category-btn" data-category="torque" onclick="selectCategory('torque')">
+              <i class="fas fa-wrench"></i>
+              <span>Torque</span>
+            </button>
+            <button class="category-btn" data-category="electrical" onclick="selectCategory('electrical')">
+              <i class="fas fa-bolt"></i>
+              <span>Electrical</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Conversion Area -->
+        <div class="conversion-area">
+          <div class="conversion-row">
+            <div class="conversion-col">
+              <label class="form-label">From</label>
+              <input type="number" class="form-control-large" id="inputValue" placeholder="Enter value" value="1">
+              <select class="form-select-large" id="fromUnit">
+                <!-- Units will be populated dynamically -->
+              </select>
+            </div>
+
+            <div class="swap-container">
+              <button class="swap-btn-large" onclick="swapUnits()">
+                <i class="fas fa-exchange-alt"></i>
+              </button>
+            </div>
+
+            <div class="conversion-col">
+              <label class="form-label">To</label>
+              <div class="result-display-large">
+                <div class="result-label">Result</div>
+                <div class="result-value-large" id="resultValue">1000</div>
+              </div>
+              <select class="form-select-large" id="toUnit">
+                <!-- Units will be populated dynamically -->
+              </select>
+            </div>
+          </div>
+
+          <!-- Quick Reference -->
+          <div class="quick-reference" id="quickReference">
+            <div class="quick-reference-title">
+              <i class="fas fa-info-circle"></i>
+              Quick Reference
+            </div>
+            <div class="quick-reference-content" id="quickReferenceContent">
+              <!-- Will be populated dynamically -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="converter-grid" style="display: none;">
+      
+      <!-- MASS/WEIGHT CONVERTER -->
+      <div class="converter-card">
+        <div class="converter-header">
+          <div class="converter-icon">
+            <i class="fas fa-weight"></i>
+          </div>
+          <h3 class="converter-title">Mass / Weight</h3>
+        </div>
+        <div class="converter-body">
+          <div class="form-group">
+            <label class="form-label">From</label>
+            <div class="input-group">
+              <input type="number" class="form-control" id="mass-input" placeholder="Enter value" value="1">
+              <select class="form-control" id="mass-from" style="max-width: 150px;">
+                <option value="kg">Kilogram (kg)</option>
+                <option value="g">Gram (g)</option>
+                <option value="mg">Milligram (mg)</option>
+                <option value="ton">Metric Ton</option>
+                <option value="lb">Pound (lb)</option>
+                <option value="oz">Ounce (oz)</option>
+                <option value="grain">Grain</option>
+              </select>
+            </div>
+          </div>
+          <button class="swap-btn" onclick="swapUnits('mass')">
+            <i class="fas fa-exchange-alt"></i>
+          </button>
+          <div class="form-group">
+            <label class="form-label">To</label>
+            <select class="form-control" id="mass-to">
+              <option value="kg">Kilogram (kg)</option>
+              <option value="g" selected>Gram (g)</option>
+              <option value="mg">Milligram (mg)</option>
+              <option value="ton">Metric Ton</option>
+              <option value="lb">Pound (lb)</option>
+              <option value="oz">Ounce (oz)</option>
+              <option value="grain">Grain</option>
+            </select>
+          </div>
+          <div class="result-display">
+            <div class="result-label">Result</div>
+            <div class="result-value" id="mass-result">1000 g</div>
+          </div>
+          <div class="quick-conversions">
+            <div class="quick-conversions-title">Common Conversions</div>
+            <div class="quick-conversion-item">
+              <span>1 kg =</span>
+              <span>1000 g | 2.205 lb</span>
+            </div>
+            <div class="quick-conversion-item">
+              <span>1 lb =</span>
+              <span>453.592 g | 0.454 kg</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LENGTH CONVERTER -->
+      <div class="converter-card">
+        <div class="converter-header">
+          <div class="converter-icon">
+            <i class="fas fa-ruler"></i>
+          </div>
+          <h3 class="converter-title">Length / Distance</h3>
+        </div>
+        <div class="converter-body">
+          <div class="form-group">
+            <label class="form-label">From</label>
+            <div class="input-group">
+              <input type="number" class="form-control" id="length-input" placeholder="Enter value" value="1">
+              <select class="form-control" id="length-from" style="max-width: 150px;">
+                <option value="m">Meter (m)</option>
+                <option value="km">Kilometer (km)</option>
+                <option value="cm">Centimeter (cm)</option>
+                <option value="mm">Millimeter (mm)</option>
+                <option value="um">Micrometer (μm)</option>
+                <option value="nm">Nanometer (nm)</option>
+                <option value="in">Inch (in)</option>
+                <option value="ft">Foot (ft)</option>
+                <option value="yd">Yard (yd)</option>
+                <option value="mi">Mile (mi)</option>
+              </select>
+            </div>
+          </div>
+          <button class="swap-btn" onclick="swapUnits('length')">
+            <i class="fas fa-exchange-alt"></i>
+          </button>
+          <div class="form-group">
+            <label class="form-label">To</label>
+            <select class="form-control" id="length-to">
+              <option value="m">Meter (m)</option>
+              <option value="km">Kilometer (km)</option>
+              <option value="cm" selected>Centimeter (cm)</option>
+              <option value="mm">Millimeter (mm)</option>
+              <option value="um">Micrometer (μm)</option>
+              <option value="nm">Nanometer (nm)</option>
+              <option value="in">Inch (in)</option>
+              <option value="ft">Foot (ft)</option>
+              <option value="yd">Yard (yd)</option>
+              <option value="mi">Mile (mi)</option>
+            </select>
+          </div>
+          <div class="result-display">
+            <div class="result-label">Result</div>
+            <div class="result-value" id="length-result">100 cm</div>
+          </div>
+          <div class="quick-conversions">
+            <div class="quick-conversions-title">Common Conversions</div>
+            <div class="quick-conversion-item">
+              <span>1 m =</span>
+              <span>100 cm | 39.37 in</span>
+            </div>
+            <div class="quick-conversion-item">
+              <span>1 in =</span>
+              <span>2.54 cm | 25.4 mm</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TEMPERATURE CONVERTER -->
+      <div class="converter-card">
+        <div class="converter-header">
+          <div class="converter-icon">
+            <i class="fas fa-thermometer-half"></i>
+          </div>
+          <h3 class="converter-title">Temperature</h3>
+        </div>
+        <div class="converter-body">
+          <div class="form-group">
+            <label class="form-label">From</label>
+            <div class="input-group">
+              <input type="number" class="form-control" id="temp-input" placeholder="Enter value" value="25" step="0.01">
+              <select class="form-control" id="temp-from" style="max-width: 150px;">
+                <option value="C" selected>Celsius (°C)</option>
+                <option value="F">Fahrenheit (°F)</option>
+                <option value="K">Kelvin (K)</option>
+                <option value="R">Rankine (°R)</option>
+              </select>
+            </div>
+          </div>
+          <button class="swap-btn" onclick="swapUnits('temp')">
+            <i class="fas fa-exchange-alt"></i>
+          </button>
+          <div class="form-group">
+            <label class="form-label">To</label>
+            <select class="form-control" id="temp-to">
+              <option value="C">Celsius (°C)</option>
+              <option value="F" selected>Fahrenheit (°F)</option>
+              <option value="K">Kelvin (K)</option>
+              <option value="R">Rankine (°R)</option>
+            </select>
+          </div>
+          <div class="result-display">
+            <div class="result-label">Result</div>
+            <div class="result-value" id="temp-result">77 °F</div>
+          </div>
+          <div class="quick-conversions">
+            <div class="quick-conversions-title">Common Reference Points</div>
+            <div class="quick-conversion-item">
+              <span>Water Freezes:</span>
+              <span>0°C | 32°F | 273.15K</span>
+            </div>
+            <div class="quick-conversion-item">
+              <span>Water Boils:</span>
+              <span>100°C | 212°F | 373.15K</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRESSURE CONVERTER -->
+      <div class="converter-card">
+        <div class="converter-header">
+          <div class="converter-icon">
+            <i class="fas fa-gauge-high"></i>
+          </div>
+          <h3 class="converter-title">Pressure</h3>
+        </div>
+        <div class="converter-body">
+          <div class="form-group">
+            <label class="form-label">From</label>
+            <div class="input-group">
+              <input type="number" class="form-control" id="pressure-input" placeholder="Enter value" value="1" step="0.0001">
+              <select class="form-control" id="pressure-from" style="max-width: 150px;">
+                <option value="bar" selected>Bar</option>
+                <option value="pa">Pascal (Pa)</option>
+                <option value="kpa">Kilopascal (kPa)</option>
+                <option value="mpa">Megapascal (MPa)</option>
+                <option value="psi">PSI</option>
+                <option value="atm">Atmosphere (atm)</option>
+                <option value="torr">Torr</option>
+                <option value="mmhg">mmHg</option>
+                <option value="inhg">inHg</option>
+              </select>
+            </div>
+          </div>
+          <button class="swap-btn" onclick="swapUnits('pressure')">
+            <i class="fas fa-exchange-alt"></i>
+          </button>
+          <div class="form-group">
+            <label class="form-label">To</label>
+            <select class="form-control" id="pressure-to">
+              <option value="bar">Bar</option>
+              <option value="pa">Pascal (Pa)</option>
+              <option value="kpa">Kilopascal (kPa)</option>
+              <option value="mpa">Megapascal (MPa)</option>
+              <option value="psi" selected>PSI</option>
+              <option value="atm">Atmosphere (atm)</option>
+              <option value="torr">Torr</option>
+              <option value="mmhg">mmHg</option>
+              <option value="inhg">inHg</option>
+            </select>
+          </div>
+          <div class="result-display">
+            <div class="result-label">Result</div>
+            <div class="result-value" id="pressure-result">14.504 PSI</div>
+          </div>
+          <div class="quick-conversions">
+            <div class="quick-conversions-title">Common Conversions</div>
+            <div class="quick-conversion-item">
+              <span>1 bar =</span>
+              <span>100 kPa | 14.504 PSI</span>
+            </div>
+            <div class="quick-conversion-item">
+              <span>1 atm =</span>
+              <span>101.325 kPa | 1.01325 bar</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VOLUME CONVERTER -->
+      <div class="converter-card">
+        <div class="converter-header">
+          <div class="converter-icon">
+            <i class="fas fa-flask"></i>
+          </div>
+          <h3 class="converter-title">Volume</h3>
+        </div>
+        <div class="converter-body">
+          <div class="form-group">
+            <label class="form-label">From</label>
+            <div class="input-group">
+              <input type="number" class="form-control" id="volume-input" placeholder="Enter value" value="1" step="0.0001">
+              <select class="form-control" id="volume-from" style="max-width: 150px;">
+                <option value="l" selected>Liter (L)</option>
+                <option value="ml">Milliliter (mL)</option>
+                <option value="m3">Cubic Meter (m³)</option>
+                <option value="cm3">Cubic Centimeter (cm³)</option>
+                <option value="gal">Gallon (US)</option>
+                <option value="qt">Quart (US)</option>
+                <option value="pt">Pint (US)</option>
+                <option value="cup">Cup (US)</option>
+                <option value="floz">Fluid Ounce (fl oz)</option>
+              </select>
+            </div>
+          </div>
+          <button class="swap-btn" onclick="swapUnits('volume')">
+            <i class="fas fa-exchange-alt"></i>
+          </button>
+          <div class="form-group">
+            <label class="form-label">To</label>
+            <select class="form-control" id="volume-to">
+              <option value="l">Liter (L)</option>
+              <option value="ml" selected>Milliliter (mL)</option>
+              <option value="m3">Cubic Meter (m³)</option>
+              <option value="cm3">Cubic Centimeter (cm³)</option>
+              <option value="gal">Gallon (US)</option>
+              <option value="qt">Quart (US)</option>
+              <option value="pt">Pint (US)</option>
+              <option value="cup">Cup (US)</option>
+              <option value="floz">Fluid Ounce (fl oz)</option>
+            </select>
+          </div>
+          <div class="result-display">
+            <div class="result-label">Result</div>
+            <div class="result-value" id="volume-result">1000 mL</div>
+          </div>
+          <div class="quick-conversions">
+            <div class="quick-conversions-title">Common Conversions</div>
+            <div class="quick-conversion-item">
+              <span>1 L =</span>
+              <span>1000 mL | 0.264 gal</span>
+            </div>
+            <div class="quick-conversion-item">
+              <span>1 gal =</span>
+              <span>3.785 L | 3785 mL</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORCE CONVERTER -->
+      <div class="converter-card">
+        <div class="converter-header">
+          <div class="converter-icon">
+            <i class="fas fa-hand-fist"></i>
+          </div>
+          <h3 class="converter-title">Force</h3>
+        </div>
+        <div class="converter-body">
+          <div class="form-group">
+            <label class="form-label">From</label>
+            <div class="input-group">
+              <input type="number" class="form-control" id="force-input" placeholder="Enter value" value="1" step="0.0001">
+              <select class="form-control" id="force-from" style="max-width: 150px;">
+                <option value="n" selected>Newton (N)</option>
+                <option value="kn">Kilonewton (kN)</option>
+                <option value="lbf">Pound-force (lbf)</option>
+                <option value="kgf">Kilogram-force (kgf)</option>
+                <option value="dyne">Dyne</option>
+              </select>
+            </div>
+          </div>
+          <button class="swap-btn" onclick="swapUnits('force')">
+            <i class="fas fa-exchange-alt"></i>
+          </button>
+          <div class="form-group">
+            <label class="form-label">To</label>
+            <select class="form-control" id="force-to">
+              <option value="n">Newton (N)</option>
+              <option value="kn">Kilonewton (kN)</option>
+              <option value="lbf" selected>Pound-force (lbf)</option>
+              <option value="kgf">Kilogram-force (kgf)</option>
+              <option value="dyne">Dyne</option>
+            </select>
+          </div>
+          <div class="result-display">
+            <div class="result-label">Result</div>
+            <div class="result-value" id="force-result">0.2248 lbf</div>
+          </div>
+          <div class="quick-conversions">
+            <div class="quick-conversions-title">Common Conversions</div>
+            <div class="quick-conversion-item">
+              <span>1 N =</span>
+              <span>0.2248 lbf | 0.102 kgf</span>
+            </div>
+            <div class="quick-conversion-item">
+              <span>1 kN =</span>
+              <span>1000 N | 224.8 lbf</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TORQUE CONVERTER -->
+      <div class="converter-card">
+        <div class="converter-header">
+          <div class="converter-icon">
+            <i class="fas fa-wrench"></i>
+          </div>
+          <h3 class="converter-title">Torque</h3>
+        </div>
+        <div class="converter-body">
+          <div class="form-group">
+            <label class="form-label">From</label>
+            <div class="input-group">
+              <input type="number" class="form-control" id="torque-input" placeholder="Enter value" value="1" step="0.0001">
+              <select class="form-control" id="torque-from" style="max-width: 150px;">
+                <option value="nm" selected>Newton-meter (N⋅m)</option>
+                <option value="knm">Kilonewton-meter (kN⋅m)</option>
+                <option value="lbfft">Pound-force foot (lbf⋅ft)</option>
+                <option value="lbfin">Pound-force inch (lbf⋅in)</option>
+                <option value="kgfm">Kilogram-force meter (kgf⋅m)</option>
+              </select>
+            </div>
+          </div>
+          <button class="swap-btn" onclick="swapUnits('torque')">
+            <i class="fas fa-exchange-alt"></i>
+          </button>
+          <div class="form-group">
+            <label class="form-label">To</label>
+            <select class="form-control" id="torque-to">
+              <option value="nm">Newton-meter (N⋅m)</option>
+              <option value="knm">Kilonewton-meter (kN⋅m)</option>
+              <option value="lbfft" selected>Pound-force foot (lbf⋅ft)</option>
+              <option value="lbfin">Pound-force inch (lbf⋅in)</option>
+              <option value="kgfm">Kilogram-force meter (kgf⋅m)</option>
+            </select>
+          </div>
+          <div class="result-display">
+            <div class="result-label">Result</div>
+            <div class="result-value" id="torque-result">0.7376 lbf⋅ft</div>
+          </div>
+          <div class="quick-conversions">
+            <div class="quick-conversions-title">Common Conversions</div>
+            <div class="quick-conversion-item">
+              <span>1 N⋅m =</span>
+              <span>0.7376 lbf⋅ft | 8.851 lbf⋅in</span>
+            </div>
+            <div class="quick-conversion-item">
+              <span>1 lbf⋅ft =</span>
+              <span>1.356 N⋅m | 12 lbf⋅in</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ELECTRICAL - VOLTAGE/CURRENT/RESISTANCE -->
+      <div class="converter-card">
+        <div class="converter-header">
+          <div class="converter-icon">
+            <i class="fas fa-bolt"></i>
+          </div>
+          <h3 class="converter-title">Electrical Units</h3>
+        </div>
+        <div class="converter-body">
+          <div class="form-group">
+            <label class="form-label">Measurement Type</label>
+            <select class="form-control" id="electrical-type" onchange="updateElectricalUnits()">
+              <option value="voltage">Voltage</option>
+              <option value="current">Current</option>
+              <option value="resistance">Resistance</option>
+              <option value="power">Power</option>
+              <option value="capacitance">Capacitance</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">From</label>
+            <div class="input-group">
+              <input type="number" class="form-control" id="electrical-input" placeholder="Enter value" value="1" step="0.0001">
+              <select class="form-control" id="electrical-from" style="max-width: 150px;">
+                <option value="v" selected>Volt (V)</option>
+                <option value="kv">Kilovolt (kV)</option>
+                <option value="mv">Millivolt (mV)</option>
+                <option value="uv">Microvolt (μV)</option>
+              </select>
+            </div>
+          </div>
+          <button class="swap-btn" onclick="swapUnits('electrical')">
+            <i class="fas fa-exchange-alt"></i>
+          </button>
+          <div class="form-group">
+            <label class="form-label">To</label>
+            <select class="form-control" id="electrical-to">
+              <option value="v">Volt (V)</option>
+              <option value="kv">Kilovolt (kV)</option>
+              <option value="mv" selected>Millivolt (mV)</option>
+              <option value="uv">Microvolt (μV)</option>
+            </select>
+          </div>
+          <div class="result-display">
+            <div class="result-label">Result</div>
+            <div class="result-value" id="electrical-result">1000 mV</div>
+          </div>
+          <div class="quick-conversions">
+            <div class="quick-conversions-title">Common Conversions</div>
+            <div class="quick-conversion-item">
+              <span>1 V =</span>
+              <span>1000 mV | 1×10⁶ μV</span>
+            </div>
+            <div class="quick-conversion-item">
+              <span>1 kV =</span>
+              <span>1000 V | 1×10⁶ mV</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Universal Converter Logic
+    let currentCategory = 'mass';
+
+    // All conversion data
+    const conversionData = {
+      mass: {
+        name: 'Mass / Weight',
+        baseUnit: 'kg',
+        units: {
+          kg: { name: 'Kilogram', factor: 1 },
+          g: { name: 'Gram', factor: 1000 },
+          mg: { name: 'Milligram', factor: 1000000 },
+          ton: { name: 'Metric Ton', factor: 0.001 },
+          lb: { name: 'Pound', factor: 2.20462262185 },
+          oz: { name: 'Ounce', factor: 35.2739619496 },
+          grain: { name: 'Grain', factor: 15432.3583529 }
+        },
+        quickRef: [
+          '1 kg = 1000 g = 2.205 lb',
+          '1 lb = 453.592 g = 0.454 kg',
+          '1 ton = 1000 kg = 2204.62 lb'
+        ]
+      },
+      length: {
+        name: 'Length / Distance',
+        baseUnit: 'm',
+        units: {
+          m: { name: 'Meter', factor: 1 },
+          km: { name: 'Kilometer', factor: 0.001 },
+          cm: { name: 'Centimeter', factor: 100 },
+          mm: { name: 'Millimeter', factor: 1000 },
+          um: { name: 'Micrometer', factor: 1000000 },
+          nm: { name: 'Nanometer', factor: 1000000000 },
+          in: { name: 'Inch', factor: 39.3700787402 },
+          ft: { name: 'Foot', factor: 3.28083989501 },
+          yd: { name: 'Yard', factor: 1.09361329834 },
+          mi: { name: 'Mile', factor: 0.000621371192 }
+        },
+        quickRef: [
+          '1 m = 100 cm = 39.37 in = 3.281 ft',
+          '1 km = 1000 m = 0.621 mi',
+          '1 in = 2.54 cm = 25.4 mm'
+        ]
+      },
+      temperature: {
+        name: 'Temperature',
+        special: true,
+        units: {
+          C: { name: 'Celsius' },
+          F: { name: 'Fahrenheit' },
+          K: { name: 'Kelvin' },
+          R: { name: 'Rankine' }
+        },
+        quickRef: [
+          '0°C = 32°F = 273.15K',
+          '100°C = 212°F = 373.15K',
+          '25°C = 77°F = 298.15K'
+        ]
+      },
+      pressure: {
+        name: 'Pressure',
+        baseUnit: 'bar',
+        units: {
+          bar: { name: 'Bar', factor: 1 },
+          pa: { name: 'Pascal', factor: 100000 },
+          kpa: { name: 'Kilopascal', factor: 100 },
+          mpa: { name: 'Megapascal', factor: 0.1 },
+          psi: { name: 'PSI', factor: 14.5037738007 },
+          atm: { name: 'Atmosphere', factor: 0.986923266716 },
+          torr: { name: 'Torr', factor: 750.061682704 },
+          mmhg: { name: 'mmHg', factor: 750.061682704 },
+          inhg: { name: 'inHg', factor: 29.5299801647 }
+        },
+        quickRef: [
+          '1 bar = 100 kPa = 14.504 PSI',
+          '1 atm = 1.01325 bar = 101.325 kPa',
+          '1 PSI = 0.0689 bar = 6.895 kPa'
+        ]
+      },
+      volume: {
+        name: 'Volume',
+        baseUnit: 'l',
+        units: {
+          l: { name: 'Liter', factor: 1 },
+          ml: { name: 'Milliliter', factor: 1000 },
+          m3: { name: 'Cubic Meter', factor: 0.001 },
+          cm3: { name: 'Cubic Centimeter', factor: 1000 },
+          gal: { name: 'Gallon (US)', factor: 0.264172052358 },
+          qt: { name: 'Quart', factor: 1.05668820943 },
+          pt: { name: 'Pint', factor: 2.11337641887 },
+          cup: { name: 'Cup', factor: 4.22675283773 },
+          floz: { name: 'Fluid Ounce', factor: 33.8140226619 }
+        },
+        quickRef: [
+          '1 L = 1000 mL = 0.264 gal',
+          '1 gal = 3.785 L = 128 fl oz',
+          '1 m³ = 1000 L = 264.17 gal'
+        ]
+      },
+      force: {
+        name: 'Force',
+        baseUnit: 'n',
+        units: {
+          n: { name: 'Newton', factor: 1 },
+          kn: { name: 'Kilonewton', factor: 0.001 },
+          lbf: { name: 'Pound-force', factor: 0.224808943099 },
+          kgf: { name: 'Kilogram-force', factor: 0.101971621298 },
+          dyne: { name: 'Dyne', factor: 100000 }
+        },
+        quickRef: [
+          '1 N = 0.225 lbf = 0.102 kgf',
+          '1 kN = 1000 N = 224.81 lbf',
+          '1 lbf = 4.448 N'
+        ]
+      },
+      torque: {
+        name: 'Torque',
+        baseUnit: 'nm',
+        units: {
+          nm: { name: 'Newton-meter', factor: 1 },
+          knm: { name: 'Kilonewton-meter', factor: 0.001 },
+          lbfft: { name: 'Pound-force Foot', factor: 0.737562149277 },
+          lbfin: { name: 'Pound-force Inch', factor: 8.85074579133 },
+          kgfm: { name: 'Kilogram-force Meter', factor: 0.101971621298 }
+        },
+        quickRef: [
+          '1 N⋅m = 0.738 lbf⋅ft = 8.851 lbf⋅in',
+          '1 lbf⋅ft = 1.356 N⋅m = 12 lbf⋅in',
+          '1 kN⋅m = 1000 N⋅m = 737.56 lbf⋅ft'
+        ]
+      },
+      electrical: {
+        name: 'Electrical (Voltage)',
+        baseUnit: 'v',
+        units: {
+          v: { name: 'Volt', factor: 1 },
+          kv: { name: 'Kilovolt', factor: 0.001 },
+          mv: { name: 'Millivolt', factor: 1000 },
+          uv: { name: 'Microvolt', factor: 1000000 }
+        },
+        quickRef: [
+          '1 V = 1000 mV = 1,000,000 μV',
+          '1 kV = 1000 V',
+          '1 mV = 0.001 V = 1000 μV'
+        ]
+      }
+    };
+
+    // Conversion factors to base units
+    const conversions = {
+      mass: {
+        kg: 1,
+        g: 1000,
+        mg: 1000000,
+        ton: 0.001,
+        lb: 2.20462262185,
+        oz: 35.2739619496,
+        grain: 15432.3583529
+      },
+      length: {
+        m: 1,
+        km: 0.001,
+        cm: 100,
+        mm: 1000,
+        um: 1000000,
+        nm: 1000000000,
+        in: 39.3700787402,
+        ft: 3.28083989501,
+        yd: 1.09361329834,
+        mi: 0.000621371192
+      },
+      pressure: {
+        bar: 1,
+        pa: 100000,
+        kpa: 100,
+        mpa: 0.1,
+        psi: 14.5037738007,
+        atm: 0.986923266716,
+        torr: 750.061682704,
+        mmhg: 750.061682704,
+        inhg: 29.5299801647
+      },
+      volume: {
+        l: 1,
+        ml: 1000,
+        m3: 0.001,
+        cm3: 1000,
+        gal: 0.264172052358,
+        qt: 1.05668820943,
+        pt: 2.11337641887,
+        cup: 4.22675283773,
+        floz: 33.8140226619
+      },
+      force: {
+        n: 1,
+        kn: 0.001,
+        lbf: 0.224808943099,
+        kgf: 0.101971621298,
+        dyne: 100000
+      },
+      torque: {
+        nm: 1,
+        knm: 0.001,
+        lbfft: 0.737562149277,
+        lbfin: 8.85074579133,
+        kgfm: 0.101971621298
+      }
+    };
+
+    // Temperature conversion (special case)
+    function convertTemperature(value, from, to) {
+      // Convert to Celsius first
+      let celsius;
+      switch(from) {
+        case 'C': celsius = value; break;
+        case 'F': celsius = (value - 32) * 5/9; break;
+        case 'K': celsius = value - 273.15; break;
+        case 'R': celsius = (value - 491.67) * 5/9; break;
+      }
+
+      // Convert from Celsius to target
+      let result;
+      switch(to) {
+        case 'C': result = celsius; break;
+        case 'F': result = celsius * 9/5 + 32; break;
+        case 'K': result = celsius + 273.15; break;
+        case 'R': result = celsius * 9/5 + 491.67; break;
+      }
+
+      return result;
+    }
+
+    // Electrical units converter
+    const electricalUnits = {
+      voltage: {
+        v: 1, kv: 0.001, mv: 1000, uv: 1000000
+      },
+      current: {
+        a: 1, ka: 0.001, ma: 1000, ua: 1000000, na: 1000000000
+      },
+      resistance: {
+        ohm: 1, kohm: 0.001, mohm: 0.000001, milliohm: 1000
+      },
+      power: {
+        w: 1, kw: 0.001, mw: 1000, hp: 0.00134102209
+      },
+      capacitance: {
+        f: 1, mf: 1000, uf: 1000000, nf: 1000000000, pf: 1000000000000
+      }
+    };
+
+    // Generic conversion function
+    function convert(type) {
+      const input = parseFloat(document.getElementById(`${type}-input`).value);
+      const fromUnit = document.getElementById(`${type}-from`).value;
+      const toUnit = document.getElementById(`${type}-to`).value;
+
+      if (isNaN(input)) {
+        document.getElementById(`${type}-result`).textContent = 'Enter a valid number';
+        return;
+      }
+
+      let result;
+
+      if (type === 'temp') {
+        result = convertTemperature(input, fromUnit, toUnit);
+      } else if (type === 'electrical') {
+        const elecType = document.getElementById('electrical-type').value;
+        const baseValue = input / electricalUnits[elecType][fromUnit];
+        result = baseValue * electricalUnits[elecType][toUnit];
+      } else {
+        const baseValue = input / conversions[type][fromUnit];
+        result = baseValue * conversions[type][toUnit];
+      }
+
+      // Format result
+      let formattedResult;
+      if (Math.abs(result) >= 1000000 || (Math.abs(result) < 0.001 && result !== 0)) {
+        formattedResult = result.toExponential(6);
+      } else {
+        formattedResult = parseFloat(result.toFixed(8)).toString();
+      }
+
+      // Get unit symbol
+      let unitSymbol = toUnit;
+      if (type === 'temp') {
+        unitSymbol = { C: '°C', F: '°F', K: 'K', R: '°R' }[toUnit];
+      } else if (type === 'electrical') {
+        const elecType = document.getElementById('electrical-type').value;
+        const symbols = {
+          voltage: { v: 'V', kv: 'kV', mv: 'mV', uv: 'μV' },
+          current: { a: 'A', ka: 'kA', ma: 'mA', ua: 'μA', na: 'nA' },
+          resistance: { ohm: 'Ω', kohm: 'kΩ', mohm: 'MΩ', milliohm: 'mΩ' },
+          power: { w: 'W', kw: 'kW', mw: 'mW', hp: 'HP' },
+          capacitance: { f: 'F', mf: 'mF', uf: 'μF', nf: 'nF', pf: 'pF' }
+        };
+        unitSymbol = symbols[elecType][toUnit];
+      }
+
+      document.getElementById(`${type}-result`).textContent = `${formattedResult} ${unitSymbol}`;
+    }
+
+    // Swap units
+    function swapUnits(type) {
+      const fromSelect = document.getElementById(`${type}-from`);
+      const toSelect = document.getElementById(`${type}-to`);
+      const temp = fromSelect.value;
+      fromSelect.value = toSelect.value;
+      toSelect.value = temp;
+      convert(type);
+    }
+
+    // Update electrical units when type changes
+    function updateElectricalUnits() {
+      const type = document.getElementById('electrical-type').value;
+      const fromSelect = document.getElementById('electrical-from');
+      const toSelect = document.getElementById('electrical-to');
+
+      const options = {
+        voltage: [
+          { value: 'v', text: 'Volt (V)' },
+          { value: 'kv', text: 'Kilovolt (kV)' },
+          { value: 'mv', text: 'Millivolt (mV)' },
+          { value: 'uv', text: 'Microvolt (μV)' }
+        ],
+        current: [
+          { value: 'a', text: 'Ampere (A)' },
+          { value: 'ka', text: 'Kiloampere (kA)' },
+          { value: 'ma', text: 'Milliampere (mA)' },
+          { value: 'ua', text: 'Microampere (μA)' },
+          { value: 'na', text: 'Nanoampere (nA)' }
+        ],
+        resistance: [
+          { value: 'ohm', text: 'Ohm (Ω)' },
+          { value: 'kohm', text: 'Kiloohm (kΩ)' },
+          { value: 'mohm', text: 'Megaohm (MΩ)' },
+          { value: 'milliohm', text: 'Milliohm (mΩ)' }
+        ],
+        power: [
+          { value: 'w', text: 'Watt (W)' },
+          { value: 'kw', text: 'Kilowatt (kW)' },
+          { value: 'mw', text: 'Milliwatt (mW)' },
+          { value: 'hp', text: 'Horsepower (HP)' }
+        ],
+        capacitance: [
+          { value: 'f', text: 'Farad (F)' },
+          { value: 'mf', text: 'Millifarad (mF)' },
+          { value: 'uf', text: 'Microfarad (μF)' },
+          { value: 'nf', text: 'Nanofarad (nF)' },
+          { value: 'pf', text: 'Picofarad (pF)' }
+        ]
+      };
+
+      fromSelect.innerHTML = '';
+      toSelect.innerHTML = '';
+
+      options[type].forEach((opt, index) => {
+        fromSelect.add(new Option(opt.text, opt.value, index === 0, index === 0));
+        toSelect.add(new Option(opt.text, opt.value, index === 1, index === 1));
+      });
+
+      convert('electrical');
+    }
+
+    // Add event listeners
+    document.addEventListener('DOMContentLoaded', () => {
+      // Mass
+      document.getElementById('mass-input').addEventListener('input', () => convert('mass'));
+      document.getElementById('mass-from').addEventListener('change', () => convert('mass'));
+      document.getElementById('mass-to').addEventListener('change', () => convert('mass'));
+
+      // Length
+      document.getElementById('length-input').addEventListener('input', () => convert('length'));
+      document.getElementById('length-from').addEventListener('change', () => convert('length'));
+      document.getElementById('length-to').addEventListener('change', () => convert('length'));
+
+      // Temperature
+      document.getElementById('temp-input').addEventListener('input', () => convert('temp'));
+      document.getElementById('temp-from').addEventListener('change', () => convert('temp'));
+      document.getElementById('temp-to').addEventListener('change', () => convert('temp'));
+
+      // Pressure
+      document.getElementById('pressure-input').addEventListener('input', () => convert('pressure'));
+      document.getElementById('pressure-from').addEventListener('change', () => convert('pressure'));
+      document.getElementById('pressure-to').addEventListener('change', () => convert('pressure'));
+
+      // Volume
+      document.getElementById('volume-input').addEventListener('input', () => convert('volume'));
+      document.getElementById('volume-from').addEventListener('change', () => convert('volume'));
+      document.getElementById('volume-to').addEventListener('change', () => convert('volume'));
+
+      // Force
+      document.getElementById('force-input').addEventListener('input', () => convert('force'));
+      document.getElementById('force-from').addEventListener('change', () => convert('force'));
+      document.getElementById('force-to').addEventListener('change', () => convert('force'));
+
+      // Torque
+      document.getElementById('torque-input').addEventListener('input', () => convert('torque'));
+      document.getElementById('torque-from').addEventListener('change', () => convert('torque'));
+      document.getElementById('torque-to').addEventListener('change', () => convert('torque'));
+
+      // Electrical
+      document.getElementById('electrical-input').addEventListener('input', () => convert('electrical'));
+      document.getElementById('electrical-from').addEventListener('change', () => convert('electrical'));
+      document.getElementById('electrical-to').addEventListener('change', () => convert('electrical'));
+
+      // Initial conversions
+      convert('mass');
+      convert('length');
+      convert('temp');
+      convert('pressure');
+      convert('volume');
+      convert('force');
+      convert('torque');
+      convert('electrical');
+    });
+
+    // ===== UNIVERSAL CONVERTER FUNCTIONS =====
+    
+    function selectCategory(category) {
+      currentCategory = category;
+      
+      // Update button states
+      document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.closest('.category-btn').classList.add('active');
+      
+      // Populate units
+      populateUnits();
+      
+      // Update quick reference
+      updateQuickReference();
+      
+      // Convert
+      performConversion();
+    }
+
+    function populateUnits() {
+      const data = conversionData[currentCategory];
+      const fromSelect = document.getElementById('fromUnit');
+      const toSelect = document.getElementById('toUnit');
+      
+      // Clear existing options
+      fromSelect.innerHTML = '';
+      toSelect.innerHTML = '';
+      
+      // Add units
+      Object.keys(data.units).forEach((unitKey, index) => {
+        const unit = data.units[unitKey];
+        const fromOption = document.createElement('option');
+        fromOption.value = unitKey;
+        fromOption.textContent = `${unit.name} (${unitKey.toUpperCase()})`;
+        fromSelect.appendChild(fromOption);
+        
+        const toOption = document.createElement('option');
+        toOption.value = unitKey;
+        toOption.textContent = `${unit.name} (${unitKey.toUpperCase()})`;
+        if (index === 1) toOption.selected = true; // Select second unit by default
+        toSelect.appendChild(toOption);
+      });
+    }
+
+    function updateQuickReference() {
+      const data = conversionData[currentCategory];
+      const content = document.getElementById('quickReferenceContent');
+      
+      content.innerHTML = data.quickRef.map(ref => 
+        `<div class="quick-ref-item"><span>${ref}</span></div>`
+      ).join('');
+    }
+
+    function performConversion() {
+      const inputValue = parseFloat(document.getElementById('inputValue').value) || 0;
+      const fromUnit = document.getElementById('fromUnit').value;
+      const toUnit = document.getElementById('toUnit').value;
+      const data = conversionData[currentCategory];
+      
+      let result;
+      
+      if (currentCategory === 'temperature') {
+        // Special temperature conversion
+        let celsius;
+        switch(fromUnit) {
+          case 'C': celsius = inputValue; break;
+          case 'F': celsius = (inputValue - 32) * 5/9; break;
+          case 'K': celsius = inputValue - 273.15; break;
+          case 'R': celsius = (inputValue - 491.67) * 5/9; break;
+        }
+        
+        switch(toUnit) {
+          case 'C': result = celsius; break;
+          case 'F': result = celsius * 9/5 + 32; break;
+          case 'K': result = celsius + 273.15; break;
+          case 'R': result = celsius * 9/5 + 491.67; break;
+        }
+      } else {
+        // Standard conversion through base unit
+        const fromFactor = data.units[fromUnit].factor;
+        const toFactor = data.units[toUnit].factor;
+        const baseValue = inputValue / fromFactor;
+        result = baseValue * toFactor;
+      }
+      
+      // Format and display result
+      const resultElement = document.getElementById('resultValue');
+      if (Math.abs(result) < 0.001 || Math.abs(result) >= 1000000) {
+        resultElement.textContent = result.toExponential(6).replace('e+', ' × 10^') + ' ' + toUnit.toUpperCase();
+      } else {
+        resultElement.textContent = result.toFixed(6).replace(/\.?0+$/, '') + ' ' + toUnit.toUpperCase();
+      }
+    }
+
+    function swapUnits() {
+      const fromSelect = document.getElementById('fromUnit');
+      const toSelect = document.getElementById('toUnit');
+      const inputValue = document.getElementById('inputValue');
+      const resultValue = document.getElementById('resultValue');
+      
+      // Swap select values
+      const temp = fromSelect.value;
+      fromSelect.value = toSelect.value;
+      toSelect.value = temp;
+      
+      // Swap input and result
+      const resultText = resultValue.textContent.split(' ')[0];
+      if (!isNaN(parseFloat(resultText))) {
+        inputValue.value = resultText;
+      }
+      
+      // Recalculate
+      performConversion();
+    }
+
+    // Event listeners for universal converter
+    document.addEventListener('DOMContentLoaded', () => {
+      const inputValue = document.getElementById('inputValue');
+      const fromUnit = document.getElementById('fromUnit');
+      const toUnit = document.getElementById('toUnit');
+      
+      if (inputValue && fromUnit && toUnit) {
+        // Initialize
+        populateUnits();
+        updateQuickReference();
+        performConversion();
+        
+        // Add event listeners
+        inputValue.addEventListener('input', performConversion);
+        fromUnit.addEventListener('change', performConversion);
+        toUnit.addEventListener('change', performConversion);
+      }
+    });
+  </script>
+  </div> <!-- End page-wrapper -->
+</body>
+</html>
+
+
+

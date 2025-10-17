@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Integrations - Calibration Management</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f2f5;
+      color: #333;
+      line-height: 1.6;
+      display: flex;
+      margin: 0;
+    }
+
+    .header {
+      background: white;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 16px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .header h1 {
+      font-size: 22px;
+      color: #1a1a1a;
+      font-weight: 600;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-secondary {
+      background: #f5f5f5;
+      color: #333;
+    }
+
+    .btn-secondary:hover {
+      background: #e0e0e0;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    .page-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 10px;
+    }
+
+    .page-subtitle {
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 40px;
+    }
+
+    .integrations-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 24px;
+    }
+
+    .integration-card {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: all 0.3s;
+    }
+
+    .integration-card:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+      transform: translateY(-4px);
+    }
+
+    .integration-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    .integration-icon.blue { background: #E3F2FD; color: #1976D2; }
+    .integration-icon.green { background: #E8F5E9; color: #388E3C; }
+    .integration-icon.orange { background: #FFF3E0; color: #F57C00; }
+    .integration-icon.purple { background: #F3E5F5; color: #7B1FA2; }
+
+    .integration-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 10px;
+    }
+
+    .integration-description {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .integration-features {
+      list-style: none;
+      margin-bottom: 20px;
+    }
+
+    .integration-features li {
+      font-size: 13px;
+      color: #555;
+      padding: 6px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .integration-features li::before {
+      content: "✓";
+      color: #4CAF50;
+      font-weight: bold;
+    }
+
+    .integration-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: #FFB800;
+      color: #333;
+      flex: 1;
+    }
+
+    .btn-primary:hover {
+      background: #FFA000;
+    }
+
+    .btn-outline {
+      background: white;
+      color: #FFB800;
+      border: 2px solid #FFB800;
+      flex: 1;
+    }
+
+    .btn-outline:hover {
+      background: #FFF8E1;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 15px;
+    }
+
+    .badge.free {
+      background: #E8F5E9;
+      color: #2E7D32;
+    }
+
+    .badge.premium {
+      background: #FFF3E0;
+      color: #E65100;
+    }
+
+    .toast {
+      position: fixed;
+      top: 80px;
+      right: 24px;
+      background: white;
+      padding: 16px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      display: none;
+      align-items: center;
+      gap: 12px;
+      z-index: 2000;
+      min-width: 300px;
+    }
+
+    .toast.show {
+      display: flex;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(400px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .toast.success { border-left: 4px solid #4CAF50; }
+    .toast.error { border-left: 4px solid #f44336; }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #555;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: #FFB800;
+    }
+
+    select.form-control {
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .integrations-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  
+    /* Sidebar Styles */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      height: 100vh;
+      width: 260px;
+      background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+      color: white;
+      overflow-y: auto;
+      z-index: 1000;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+
+    .sidebar-header {
+      padding: 24px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sidebar-title h3 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #FFB800;
+      margin: 0;
+      line-height: 1;
+    }
+
+    .sidebar-title p {
+      font-size: 11px;
+      color: rgba(255,255,255,0.7);
+      margin: 4px 0 0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .sidebar-menu {
+      padding: 16px 0;
+    }
+
+    .menu-section {
+      margin-bottom: 24px;
+    }
+
+    .menu-section h4 {
+      padding: 0 20px;
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin: 0 0 8px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .menu-item:hover {
+      background: rgba(255,255,255,0.05);
+      color: #FFB800;
+    }
+
+    .menu-item.active {
+      background: rgba(255,184,0,0.15);
+      color: #FFB800;
+      border-left: 3px solid #FFB800;
+    }
+
+    .menu-item i {
+      width: 20px;
+      font-size: 16px;
+      margin-right: 12px;
+    }
+
+    .sidebar-footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 16px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      background: rgba(0,0,0,0.2);
+    }
+
+    .sidebar-status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .version-info {
+      color: rgba(255,255,255,0.5);
+      font-size: 11px;
+    }
+
+    /* Page wrapper for sidebar layout */
+    .page-wrapper {
+      margin-left: 260px;
+      min-height: 100vh;
+      width: calc(100% - 260px);
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      
+      .sidebar.active {
+        transform: translateX(0);
+      }
+      
+      .page-wrapper {
+        margin-left: 0;
+        width: 100%;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Sidebar -->
+  <nav class="sidebar" id="sidebar" aria-label="Main navigation">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <div class="sidebar-logo-text">
+          <i class="fas fa-balance-scale" style="font-size: 36px; color: #FFB800;"></i>
+        </div>
+        <div class="sidebar-title">
+          <h3>CalPro</h3>
+          <p>Calibration Management</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="sidebar-menu" role="menu">
+      <div class="menu-section">
+        <h4>Main</h4>
+        <a href="index.html#dashboard" class="menu-item">
+          <i class="fas fa-tachometer-alt"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="index.html#worksheets" class="menu-item">
+          <i class="fas fa-file-lines"></i>
+          <span>Worksheets</span>
+        </a>
+        <a href="index.html#certificates" class="menu-item">
+          <i class="fas fa-certificate"></i>
+          <span>Certificates</span>
+        </a>
+        <a href="equipment.html" class="menu-item">
+          <i class="fas fa-tools"></i>
+          <span>Equipment</span>
+        </a>
+      </div>
+      
+      <div class="menu-section">
+        <h4>Management</h4>
+        <a href="clients.html" class="menu-item">
+          <i class="fas fa-users"></i>
+          <span>Clients</span>
+        </a>
+        <a href="integrations.html" class="menu-item active">
+          <i class="fas fa-plug"></i>
+          <span>Integrations</span>
+        </a>
+        <a href="index.html#reports" class="menu-item">
+          <i class="fas fa-chart-bar"></i>
+          <span>Reports</span>
+        </a>
+        <a href="index.html#settings" class="menu-item">
+          <i class="fas fa-cog"></i>
+          <span>Settings</span>
+        </a>
+      </div>
+
+      <div class="menu-section">
+        <h4>Tools</h4>
+        <a href="converter.html" class="menu-item">
+          <i class="fas fa-calculator"></i>
+          <span>Unit Converter</span>
+        </a>
+      </div>
+
+      <div class="menu-section">
+        <h4>Account</h4>
+        <a href="profile.html" class="menu-item">
+          <i class="fas fa-user-circle"></i>
+          <span>My Profile</span>
+        </a>
+      </div>
+    </div>
+    
+    <div class="sidebar-footer">
+      <div class="sidebar-status">
+        <div class="status-item" id="connectionStatus">
+          <i class="fas fa-wifi" id="connectionIcon"></i>
+          <span id="connectionText">Online</span>
+        </div>
+        <div class="version-info">v2.0.0</div>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- Page Content Wrapper -->
+  <div class="page-wrapper">
+  <div class="header">
+    <h1><i class="fas fa-plug"></i> Integrations</h1>
+    <a href="index.html" class="btn btn-secondary">
+      <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+  </div>
+
+  <div class="container">
+    <h1 class="page-title">Free Integrations</h1>
+    <p class="page-subtitle">Powerful tools to enhance your calibration management workflow</p>
+
+    <div class="integrations-grid">
+      <!-- PDF Certificate Generation -->
+      <div class="integration-card">
+        <span class="badge free">Free</span>
+        <div class="integration-icon blue">
+          <i class="fas fa-file-pdf"></i>
+        </div>
+        <h3 class="integration-title">PDF Certificate Generator</h3>
+        <p class="integration-description">
+          Generate professional ISO/IEC 17025 compliant calibration certificates with your company branding.
+        </p>
+        <ul class="integration-features">
+          <li>Professional PDF certificates</li>
+          <li>ISO 17025 compliant templates</li>
+          <li>Equipment details & traceability</li>
+          <li>Digital signature support</li>
+          <li>Instant download</li>
+        </ul>
+        <div class="integration-actions">
+          <button class="btn btn-primary" onclick="openCertificateGenerator()">
+            <i class="fas fa-file-pdf"></i> Generate Certificate
+          </button>
+        </div>
+      </div>
+
+      <!-- Email Notifications -->
+      <div class="integration-card">
+        <span class="badge free">Free</span>
+        <div class="integration-icon green">
+          <i class="fas fa-envelope"></i>
+        </div>
+        <h3 class="integration-title">Email Notifications</h3>
+        <p class="integration-description">
+          Automated email reminders for calibration due dates, overdue equipment, and certificate delivery.
+        </p>
+        <ul class="integration-features">
+          <li>Calibration due reminders</li>
+          <li>Overdue equipment alerts</li>
+          <li>Certificate ready notifications</li>
+          <li>Custom email templates</li>
+          <li>Bulk notifications</li>
+        </ul>
+        <div class="integration-actions">
+          <button class="btn btn-primary" onclick="openEmailNotifications()">
+            <i class="fas fa-paper-plane"></i> Send Notification
+          </button>
+        </div>
+      </div>
+
+      <!-- Data Export -->
+      <div class="integration-card">
+        <span class="badge free">Free</span>
+        <div class="integration-icon orange">
+          <i class="fas fa-download"></i>
+        </div>
+        <h3 class="integration-title">Data Export (CSV/Excel)</h3>
+        <p class="integration-description">
+          Export your data to CSV format for use with Google Sheets, Excel, or Google Data Studio.
+        </p>
+        <ul class="integration-features">
+          <li>Export equipment database</li>
+          <li>Export client information</li>
+          <li>Calibration schedule reports</li>
+          <li>Overdue equipment lists</li>
+          <li>Google Sheets compatible</li>
+        </ul>
+        <div class="integration-actions">
+          <button class="btn btn-primary" onclick="exportData('equipment')">
+            <i class="fas fa-download"></i> Export Equipment
+          </button>
+          <button class="btn btn-outline" onclick="showExportOptions()">
+            More Options
+          </button>
+        </div>
+      </div>
+
+      <!-- Auto Reminders -->
+      <div class="integration-card">
+        <span class="badge free">Free</span>
+        <div class="integration-icon purple">
+          <i class="fas fa-robot"></i>
+        </div>
+        <h3 class="integration-title">Automated Reminders</h3>
+        <p class="integration-description">
+          Intelligent system that automatically identifies and sends reminders for upcoming calibrations.
+        </p>
+        <ul class="integration-features">
+          <li>Auto-detect equipment due soon</li>
+          <li>7-day advance reminders</li>
+          <li>Overdue equipment tracking</li>
+          <li>Batch email processing</li>
+          <li>Activity logging</li>
+        </ul>
+        <div class="integration-actions">
+          <button class="btn btn-primary" onclick="runAutoReminders()">
+            <i class="fas fa-play"></i> Run Now
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast">
+    <i class="fas fa-check-circle"></i>
+    <span id="toastMessage">Success</span>
+  </div>
+
+  <script>
+    // Check authentication
+    function checkAuth() {
+      const token = localStorage.getItem('auth_token');
+      if (!token) {
+        window.location.href = 'index.html';
+      }
+    }
+
+    // API Request helper
+    async function apiRequest(url, options = {}) {
+      const token = localStorage.getItem('auth_token');
+      const defaultHeaders = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      };
+
+      const response = await fetch(url, {
+        ...options,
+        headers: {
+          ...defaultHeaders,
+          ...options.headers
+        }
+      });
+
+      if (response.status === 401) {
+        localStorage.removeItem('auth_token');
+        window.location.href = 'index.html';
+        return;
+      }
+
+      return response;
+    }
+
+    // Generate Certificate
+    function openCertificateGenerator() {
+      const equipmentId = prompt('Enter Equipment ID (numeric ID from database):');
+      if (equipmentId) {
+        generateCertificate(equipmentId);
+      }
+    }
+
+    async function generateCertificate(equipmentId) {
+      try {
+        showToast('Generating certificate...', 'info');
+        
+        const response = await apiRequest('/api/integrations/generate-certificate', {
+          method: 'POST',
+          body: JSON.stringify({ equipment_id: equipmentId })
+        });
+
+        if (response.ok) {
+          const blob = await response.blob();
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `certificate-${equipmentId}-${Date.now()}.pdf`;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          a.remove();
+          
+          showToast('Certificate generated successfully!', 'success');
+        } else {
+          const error = await response.json();
+          showToast(error.error || 'Failed to generate certificate', 'error');
+        }
+      } catch (error) {
+        console.error('Certificate generation error:', error);
+        showToast('Failed to generate certificate', 'error');
+      }
+    }
+
+    // Email Notifications
+    function openEmailNotifications() {
+      const email = prompt('Enter recipient email:');
+      if (!email) return;
+
+      const equipmentId = prompt('Enter Equipment ID (for calibration due reminder):');
+      if (!equipmentId) return;
+
+      sendNotification(email, equipmentId);
+    }
+
+    async function sendNotification(email, equipmentId) {
+      try {
+        showToast('Sending notification...', 'info');
+        
+        const response = await apiRequest('/api/integrations/send-notification', {
+          method: 'POST',
+          body: JSON.stringify({
+            type: 'calibration_due',
+            recipient_email: email,
+            equipment_id: equipmentId
+          })
+        });
+
+        const result = await response.json();
+        
+        if (response.ok) {
+          showToast(result.message, 'success');
+        } else {
+          showToast(result.error || 'Failed to send notification', 'error');
+        }
+      } catch (error) {
+        console.error('Notification error:', error);
+        showToast('Failed to send notification', 'error');
+      }
+    }
+
+    // Data Export
+    async function exportData(type) {
+      try {
+        showToast(`Exporting ${type} data...`, 'info');
+        
+        const response = await apiRequest(`/api/integrations/export/${type}`);
+
+        if (response.ok) {
+          const blob = await response.blob();
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `${type}-export-${Date.now()}.csv`;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          a.remove();
+          
+          showToast('Data exported successfully!', 'success');
+        } else {
+          const error = await response.json();
+          showToast(error.error || 'Failed to export data', 'error');
+        }
+      } catch (error) {
+        console.error('Export error:', error);
+        showToast('Failed to export data', 'error');
+      }
+    }
+
+    function showExportOptions() {
+      const options = ['equipment', 'clients', 'calibration-schedule', 'overdue'];
+      const choice = prompt(`Select export type:\n1. Equipment\n2. Clients\n3. Calibration Schedule\n4. Overdue Equipment\n\nEnter 1-4:`);
+      
+      if (choice >= 1 && choice <= 4) {
+        exportData(options[choice - 1]);
+      }
+    }
+
+    // Auto Reminders
+    async function runAutoReminders() {
+      try {
+        showToast('Processing auto-reminders...', 'info');
+        
+        const response = await apiRequest('/api/integrations/auto-reminders', {
+          method: 'POST'
+        });
+
+        const result = await response.json();
+        
+        if (response.ok) {
+          showToast(`Processed ${result.equipment.length} equipment items. ${result.reminders_sent} reminders sent.`, 'success');
+          console.log('Equipment processed:', result.equipment);
+        } else {
+          showToast(result.error || 'Failed to process reminders', 'error');
+        }
+      } catch (error) {
+        console.error('Auto-reminder error:', error);
+        showToast('Failed to process reminders', 'error');
+      }
+    }
+
+    // Show toast notification
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      const icon = toast.querySelector('i');
+      
+      toast.className = `toast ${type} show`;
+      document.getElementById('toastMessage').textContent = message;
+      
+      if (type === 'success') {
+        icon.className = 'fas fa-check-circle';
+      } else if (type === 'error') {
+        icon.className = 'fas fa-exclamation-circle';
+      } else {
+        icon.className = 'fas fa-info-circle';
+      }
+
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', checkAuth);
+  </script>
+  </div> <!-- End page-wrapper -->
+</body>
+</html>

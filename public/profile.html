@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile - Calibration Management System</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f2f5;
+      color: #333;
+      line-height: 1.6;
+      display: flex;
+      margin: 0;
+    }
+
+    /* Sidebar Styles */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      height: 100vh;
+      width: 260px;
+      background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+      color: white;
+      overflow-y: auto;
+      z-index: 1000;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+
+    .sidebar-header {
+      padding: 24px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sidebar-title h3 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #FFB800;
+      margin: 0;
+      line-height: 1;
+    }
+
+    .sidebar-title p {
+      font-size: 11px;
+      color: rgba(255,255,255,0.7);
+      margin: 4px 0 0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .sidebar-menu {
+      padding: 16px 0;
+    }
+
+    .menu-section {
+      margin-bottom: 24px;
+    }
+
+    .menu-section h4 {
+      padding: 0 20px;
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin: 0 0 8px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .menu-item:hover {
+      background: rgba(255,255,255,0.05);
+      color: #FFB800;
+    }
+
+    .menu-item.active {
+      background: rgba(255,184,0,0.15);
+      color: #FFB800;
+      border-left: 3px solid #FFB800;
+    }
+
+    .menu-item i {
+      width: 20px;
+      font-size: 16px;
+      margin-right: 12px;
+    }
+
+    .sidebar-footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 16px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      background: rgba(0,0,0,0.2);
+    }
+
+    .sidebar-status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .version-info {
+      color: rgba(255,255,255,0.5);
+      font-size: 11px;
+    }
+
+    /* Main content wrapper */
+    .page-wrapper {
+      margin-left: 260px;
+      min-height: 100vh;
+      width: calc(100% - 260px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      background: white;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 16px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .header h1 {
+      font-size: 22px;
+      color: #1a1a1a;
+      font-weight: 600;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-secondary {
+      background: #f5f5f5;
+      color: #333;
+    }
+
+    .btn-secondary:hover {
+      background: #e0e0e0;
+    }
+
+    .btn-danger {
+      background: #dc3545;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #c82333;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    /* Profile Header */
+    .profile-header {
+      background: white;
+      border-radius: 8px;
+      padding: 32px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .avatar-section {
+      position: relative;
+    }
+
+    .avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #f0f2f5;
+    }
+
+    .avatar-upload {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #FFB800;
+      border: 3px solid white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .avatar-upload:hover {
+      background: #FFA000;
+      transform: scale(1.1);
+    }
+
+    .profile-info {
+      flex: 1;
+    }
+
+    .profile-name {
+      font-size: 28px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 4px;
+    }
+
+    .profile-title {
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+
+    .profile-meta {
+      display: flex;
+      gap: 24px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .meta-item i {
+      color: #FFB800;
+    }
+
+    /* Content Grid */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+    }
+
+    /* Section Card */
+    .section {
+      background: white;
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      margin-bottom: 24px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #f0f2f5;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a1a1a;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title i {
+      color: #FFB800;
+      font-size: 20px;
+    }
+
+    .btn-edit {
+      padding: 6px 16px;
+      background: #f5f5f5;
+      border: none;
+      border-radius: 4px;
+      color: #333;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-edit:hover {
+      background: #FFB800;
+      color: #333;
+    }
+
+    /* Form Fields */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #555;
+      margin-bottom: 6px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #FFB800;
+      box-shadow: 0 0 0 3px rgba(255, 184, 0, 0.1);
+    }
+
+    .form-input:disabled {
+      background: #f5f5f5;
+      color: #666;
+    }
+
+    textarea.form-input {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .btn-primary {
+      background: #FFB800;
+      color: #333;
+      font-weight: 600;
+    }
+
+    .btn-primary:hover {
+      background: #FFA000;
+    }
+
+    /* Stats */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      text-align: center;
+      padding: 16px;
+      background: #f8f9fa;
+      border-radius: 6px;
+    }
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: 700;
+      color: #FFB800;
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    /* Activity List */
+    .activity-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .activity-item {
+      display: flex;
+      gap: 12px;
+      padding: 12px;
+      border-left: 3px solid #FFB800;
+      background: #f8f9fa;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+
+    .activity-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #FFB800;
+      color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 14px;
+    }
+
+    .activity-content {
+      flex: 1;
+    }
+
+    .activity-text {
+      font-size: 14px;
+      color: #333;
+      margin-bottom: 2px;
+    }
+
+    .activity-time {
+      font-size: 12px;
+      color: #999;
+    }
+
+    /* Security Items */
+    .security-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px;
+      background: #f8f9fa;
+      border-radius: 6px;
+      margin-bottom: 12px;
+    }
+
+    .security-info {
+      flex: 1;
+    }
+
+    .security-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 4px;
+    }
+
+    .security-desc {
+      font-size: 13px;
+      color: #666;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .modal-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #f5f5f5;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-close:hover {
+      background: #e0e0e0;
+    }
+
+    .modal-body {
+      padding: 24px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #333;
+      color: white;
+      padding: 14px 20px;
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      display: none;
+      align-items: center;
+      gap: 10px;
+      z-index: 2000;
+      animation: slideIn 0.3s ease;
+    }
+
+    .toast.show {
+      display: flex;
+    }
+
+    .toast.success {
+      background: #28a745;
+    }
+
+    .toast.error {
+      background: #dc3545;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #FFB800;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 968px) {
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .profile-header {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Sidebar -->
+  <nav class="sidebar" id="sidebar" aria-label="Main navigation">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <div class="sidebar-logo-text">
+          <i class="fas fa-balance-scale" style="font-size: 36px; color: #FFB800;"></i>
+        </div>
+        <div class="sidebar-title">
+          <h3>CalPro</h3>
+          <p>Calibration Management</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="sidebar-menu" role="menu">
+      <div class="menu-section">
+        <h4>Main</h4>
+        <a href="index.html#dashboard" class="menu-item">
+          <i class="fas fa-tachometer-alt"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="index.html#worksheets" class="menu-item">
+          <i class="fas fa-file-lines"></i>
+          <span>Worksheets</span>
+        </a>
+        <a href="index.html#certificates" class="menu-item">
+          <i class="fas fa-certificate"></i>
+          <span>Certificates</span>
+        </a>
+        <a href="equipment.html" class="menu-item">
+          <i class="fas fa-tools"></i>
+          <span>Equipment</span>
+        </a>
+      </div>
+      
+      <div class="menu-section">
+        <h4>Management</h4>
+        <a href="clients.html" class="menu-item">
+          <i class="fas fa-users"></i>
+          <span>Clients</span>
+        </a>
+        <a href="integrations.html" class="menu-item">
+          <i class="fas fa-plug"></i>
+          <span>Integrations</span>
+        </a>
+        <a href="index.html#reports" class="menu-item">
+          <i class="fas fa-chart-bar"></i>
+          <span>Reports</span>
+        </a>
+        <a href="index.html#settings" class="menu-item">
+          <i class="fas fa-cog"></i>
+          <span>Settings</span>
+        </a>
+      </div>
+
+      <div class="menu-section">
+        <h4>Tools</h4>
+        <a href="converter.html" class="menu-item">
+          <i class="fas fa-calculator"></i>
+          <span>Unit Converter</span>
+        </a>
+      </div>
+
+      <div class="menu-section">
+        <h4>Account</h4>
+        <a href="profile.html" class="menu-item active">
+          <i class="fas fa-user-circle"></i>
+          <span>My Profile</span>
+        </a>
+      </div>
+    </div>
+    
+    <div class="sidebar-footer">
+      <div class="sidebar-status">
+        <div class="status-item" id="connectionStatus">
+          <i class="fas fa-wifi" id="connectionIcon"></i>
+          <span id="connectionText">Online</span>
+        </div>
+        <div class="version-info">v2.0.0</div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Wrapper -->
+  <div class="page-wrapper">
+    <!-- Header -->
+    <div class="header">
+      <h1><i class="fas fa-user-circle"></i> My Profile</h1>
+      <div class="header-actions">
+        <a href="index.html#dashboard" class="btn btn-secondary">
+          <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+        <button class="btn btn-danger" onclick="handleLogout()">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+    <!-- Profile Header -->
+    <div class="profile-header">
+      <div class="avatar-section">
+        <img src="https://ui-avatars.com/api/?name=User&background=FFB800&color=333&size=120" alt="Profile" class="avatar" id="profileAvatar">
+        <input type="file" id="avatarInput" accept="image/*" style="display: none">
+        <div class="avatar-upload" onclick="document.getElementById('avatarInput').click()">
+          <i class="fas fa-camera"></i>
+        </div>
+      </div>
+      <div class="profile-info">
+        <h2 class="profile-name" id="profileName">Loading...</h2>
+        <p class="profile-title" id="profileTitle">...</p>
+        <div class="profile-meta">
+          <div class="meta-item">
+            <i class="fas fa-envelope"></i>
+            <span id="profileEmail">...</span>
+          </div>
+          <div class="meta-item">
+            <i class="fas fa-phone"></i>
+            <span id="profilePhone">...</span>
+          </div>
+          <div class="meta-item">
+            <i class="fas fa-building"></i>
+            <span id="profileCompany">...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Grid -->
+    <div class="content-grid">
+      <!-- Left Column -->
+      <div class="main-column">
+        <!-- Personal Information -->
+        <div class="section">
+          <div class="section-header">
+            <h3 class="section-title">
+              <i class="fas fa-user"></i>
+              Personal Information
+            </h3>
+            <button class="btn-edit" onclick="toggleEdit('personal')">
+              <i class="fas fa-edit"></i> Edit
+            </button>
+          </div>
+          <div id="personalView">
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input type="text" class="form-input" id="viewFullName" disabled>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Job Title</label>
+                <input type="text" class="form-input" id="viewJobTitle" disabled>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Department</label>
+                <input type="text" class="form-input" id="viewDepartment" disabled>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Phone Number</label>
+                <input type="text" class="form-input" id="viewPhone" disabled>
+              </div>
+              <div class="form-group full-width">
+                <label class="form-label">Email Address</label>
+                <input type="email" class="form-input" id="viewEmail" disabled>
+              </div>
+            </div>
+          </div>
+          <form id="personalForm" style="display: none;">
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Full Name *</label>
+                <input type="text" class="form-input" id="editFullName" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Job Title</label>
+                <input type="text" class="form-input" id="editJobTitle">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Department</label>
+                <input type="text" class="form-input" id="editDepartment">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Phone Number</label>
+                <input type="tel" class="form-input" id="editPhone">
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Save Changes</button>
+              <button type="button" class="btn btn-secondary" onclick="toggleEdit('personal')">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Company Information -->
+        <div class="section">
+          <div class="section-header">
+            <h3 class="section-title">
+              <i class="fas fa-building"></i>
+              Company Information
+            </h3>
+            <button class="btn-edit" onclick="toggleEdit('company')">
+              <i class="fas fa-edit"></i> Edit
+            </button>
+          </div>
+          <div id="companyView">
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Company Name</label>
+                <input type="text" class="form-input" id="viewCompanyName" disabled>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Location</label>
+                <input type="text" class="form-input" id="viewLocation" disabled>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Lab Code</label>
+                <input type="text" class="form-input" id="viewLabCode" disabled>
+              </div>
+              <div class="form-group full-width">
+                <label class="form-label">Address</label>
+                <textarea class="form-input" id="viewAddress" disabled></textarea>
+              </div>
+            </div>
+          </div>
+          <form id="companyForm" style="display: none;">
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Company Name</label>
+                <input type="text" class="form-input" id="editCompanyName">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Location</label>
+                <input type="text" class="form-input" id="editLocation">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Lab Code</label>
+                <input type="text" class="form-input" id="editLabCode">
+              </div>
+              <div class="form-group full-width">
+                <label class="form-label">Address</label>
+                <textarea class="form-input" id="editAddress"></textarea>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Save Changes</button>
+              <button type="button" class="btn btn-secondary" onclick="toggleEdit('company')">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Security -->
+        <div class="section">
+          <div class="section-header">
+            <h3 class="section-title">
+              <i class="fas fa-shield-alt"></i>
+              Security
+            </h3>
+          </div>
+          <div class="security-item">
+            <div class="security-info">
+              <div class="security-title">Password</div>
+              <div class="security-desc">Last changed 30 days ago</div>
+            </div>
+            <button class="btn-edit" onclick="openPasswordModal()">Change</button>
+          </div>
+          <div class="security-item">
+            <div class="security-info">
+              <div class="security-title">Last Login</div>
+              <div class="security-desc" id="lastLogin">Loading...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column -->
+      <div class="side-column">
+        <!-- Statistics -->
+        <div class="section">
+          <div class="section-header">
+            <h3 class="section-title">
+              <i class="fas fa-chart-bar"></i>
+              Statistics
+            </h3>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <span class="stat-value" id="statWorksheets">0</span>
+              <span class="stat-label">Worksheets</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-value" id="statCertificates">0</span>
+              <span class="stat-label">Certificates</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-value" id="statEquipment">0</span>
+              <span class="stat-label">Equipment</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="section">
+          <div class="section-header">
+            <h3 class="section-title">
+              <i class="fas fa-history"></i>
+              Recent Activity
+            </h3>
+          </div>
+          <div class="activity-list" id="activityList">
+            <div class="loading">
+              <div class="spinner"></div>
+              <p>Loading activity...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change Password Modal -->
+  <div class="modal" id="passwordModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Change Password</h3>
+        <button class="modal-close" onclick="closePasswordModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <form id="passwordForm">
+          <div class="form-group">
+            <label class="form-label">Current Password</label>
+            <input type="password" class="form-input" id="currentPassword" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">New Password</label>
+            <input type="password" class="form-input" id="newPassword" required minlength="8">
+            <small style="color: #999; font-size: 12px;">Min 8 characters with uppercase, lowercase, number & special character</small>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirm Password</label>
+            <input type="password" class="form-input" id="confirmPassword" required>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Update Password</button>
+            <button type="button" class="btn btn-secondary" onclick="closePasswordModal()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <i class="fas fa-check-circle"></i>
+    <span id="toastMessage">Success!</span>
+  </div>
+
+  <script>
+    let userData = null;
+
+    // Check authentication
+    function checkAuth() {
+      const token = localStorage.getItem('auth_token');
+      if (!token) {
+        window.location.href = 'login.html';
+        return false;
+      }
+      return true;
+    }
+
+    // Load user profile
+    async function loadProfile() {
+      try {
+        const token = localStorage.getItem('auth_token');
+        const response = await fetch('/api/user/profile', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!response.ok) {
+          if (response.status === 401) {
+            localStorage.removeItem('auth_token');
+            window.location.href = 'login.html';
+            return;
+          }
+          throw new Error('Failed to load profile');
+        }
+
+        userData = await response.json();
+        populateProfile(userData);
+      } catch (error) {
+        console.error('Error loading profile:', error);
+        showToast('Failed to load profile', 'error');
+      }
+    }
+
+    // Populate profile data
+    function populateProfile(data) {
+      // Header
+      document.getElementById('profileName').textContent = data.fullName || 'User';
+      document.getElementById('profileTitle').textContent = data.jobTitle || data.role || 'Employee';
+      document.getElementById('profileEmail').textContent = data.email || '';
+      document.getElementById('profilePhone').textContent = data.phone || 'Not set';
+      document.getElementById('profileCompany').textContent = data.companyName || 'Not set';
+
+      // Avatar
+      if (data.avatarUrl) {
+        document.getElementById('profileAvatar').src = data.avatarUrl;
+      } else {
+        const initials = (data.fullName || 'U').split(' ').map(n => n[0]).join('');
+        document.getElementById('profileAvatar').src = 
+          `https://ui-avatars.com/api/?name=${initials}&background=FFB800&color=333&size=120`;
+      }
+
+      // Personal info
+      document.getElementById('viewFullName').value = data.fullName || '';
+      document.getElementById('viewJobTitle').value = data.jobTitle || '';
+      document.getElementById('viewDepartment').value = data.department || '';
+      document.getElementById('viewPhone').value = data.phone || '';
+      document.getElementById('viewEmail').value = data.email || '';
+
+      document.getElementById('editFullName').value = data.fullName || '';
+      document.getElementById('editJobTitle').value = data.jobTitle || '';
+      document.getElementById('editDepartment').value = data.department || '';
+      document.getElementById('editPhone').value = data.phone || '';
+
+      // Company info
+      document.getElementById('viewCompanyName').value = data.companyName || '';
+      document.getElementById('viewLocation').value = data.location || '';
+      document.getElementById('viewLabCode').value = data.labCode || '';
+      document.getElementById('viewAddress').value = data.address || '';
+
+      document.getElementById('editCompanyName').value = data.companyName || '';
+      document.getElementById('editLocation').value = data.location || '';
+      document.getElementById('editLabCode').value = data.labCode || '';
+      document.getElementById('editAddress').value = data.address || '';
+
+      // Last login
+      if (data.lastLogin) {
+        document.getElementById('lastLogin').textContent = new Date(data.lastLogin).toLocaleString();
+      }
+    }
+
+    // Toggle edit mode
+    function toggleEdit(section) {
+      const viewDiv = document.getElementById(`${section}View`);
+      const formDiv = document.getElementById(`${section}Form`);
+      
+      if (formDiv.style.display === 'none') {
+        viewDiv.style.display = 'none';
+        formDiv.style.display = 'block';
+      } else {
+        viewDiv.style.display = 'block';
+        formDiv.style.display = 'none';
+      }
+    }
+
+    // Handle personal form
+    document.getElementById('personalForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const formData = {
+        fullName: document.getElementById('editFullName').value,
+        jobTitle: document.getElementById('editJobTitle').value,
+        department: document.getElementById('editDepartment').value,
+        phone: document.getElementById('editPhone').value
+      };
+
+      try {
+        const token = localStorage.getItem('auth_token');
+        const response = await fetch('/api/user/profile', {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+
+        if (!response.ok) throw new Error('Update failed');
+
+        userData = await response.json();
+        populateProfile(userData);
+        toggleEdit('personal');
+        showToast('Information updated successfully', 'success');
+      } catch (error) {
+        console.error('Update error:', error);
+        showToast('Failed to update information', 'error');
+      }
+    });
+
+    // Handle company form
+    document.getElementById('companyForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const formData = {
+        companyName: document.getElementById('editCompanyName').value,
+        location: document.getElementById('editLocation').value,
+        labCode: document.getElementById('editLabCode').value,
+        address: document.getElementById('editAddress').value
+      };
+
+      try {
+        const token = localStorage.getItem('auth_token');
+        const response = await fetch('/api/user/profile', {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+
+        if (!response.ok) throw new Error('Update failed');
+
+        userData = await response.json();
+        populateProfile(userData);
+        toggleEdit('company');
+        showToast('Information updated successfully', 'success');
+      } catch (error) {
+        console.error('Update error:', error);
+        showToast('Failed to update information', 'error');
+      }
+    });
+
+    // Handle avatar upload
+    document.getElementById('avatarInput').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      if (!file.type.startsWith('image/')) {
+        showToast('Please select an image file', 'error');
+        return;
+      }
+
+      if (file.size > 2 * 1024 * 1024) {
+        showToast('Image must be less than 2MB', 'error');
+        return;
+      }
+
+      // Preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        document.getElementById('profileAvatar').src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+
+      // Upload
+      try {
+        const formData = new FormData();
+        formData.append('avatar', file);
+
+        const token = localStorage.getItem('auth_token');
+        const response = await fetch('/api/user/avatar', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` },
+          body: formData
+        });
+
+        if (!response.ok) throw new Error('Upload failed');
+
+        const data = await response.json();
+        document.getElementById('profileAvatar').src = data.avatarUrl;
+        showToast('Avatar updated successfully', 'success');
+      } catch (error) {
+        console.error('Upload error:', error);
+        showToast('Failed to upload avatar', 'error');
+      }
+    });
+
+    // Load activity
+    async function loadActivity() {
+      try {
+        const token = localStorage.getItem('auth_token');
+        const response = await fetch('/api/user/activity?limit=10', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!response.ok) throw new Error('Failed to load activity');
+
+        const { activities } = await response.json();
+        
+        const listHtml = activities.map(activity => {
+          const icon = getActivityIcon(activity.action);
+          const time = new Date(activity.created_at).toLocaleString();
+          const title = formatActivityTitle(activity.action);
+          
+          return `
+            <div class="activity-item">
+              <div class="activity-icon">
+                <i class="fas ${icon}"></i>
+              </div>
+              <div class="activity-content">
+                <div class="activity-text">${title}</div>
+                <div class="activity-time">${time}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        document.getElementById('activityList').innerHTML = listHtml || '<p style="text-align:center;color:#999;padding:20px;">No recent activity</p>';
+      } catch (error) {
+        console.error('Activity error:', error);
+        document.getElementById('activityList').innerHTML = '<p style="text-align:center;color:#999;padding:20px;">Failed to load activity</p>';
+      }
+    }
+
+    // Get activity icon
+    function getActivityIcon(action) {
+      if (/LOGIN/i.test(action)) return 'fa-sign-in-alt';
+      if (/LOGOUT/i.test(action)) return 'fa-sign-out-alt';
+      if (/PROFILE/i.test(action)) return 'fa-user-edit';
+      if (/AVATAR/i.test(action)) return 'fa-image';
+      if (/PASSWORD/i.test(action)) return 'fa-key';
+      if (/WORKSHEET/i.test(action)) return 'fa-file-alt';
+      if (/CERTIFICATE/i.test(action)) return 'fa-certificate';
+      return 'fa-circle';
+    }
+
+    // Format activity title
+    function formatActivityTitle(action) {
+      return action.replace(/_/g, ' ').toLowerCase()
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+    }
+
+    // Load stats (mock data for now)
+    function loadStats() {
+      // These would come from API
+      document.getElementById('statWorksheets').textContent = '0';
+      document.getElementById('statCertificates').textContent = '0';
+      document.getElementById('statEquipment').textContent = '0';
+    }
+
+    // Password modal
+    function openPasswordModal() {
+      document.getElementById('passwordModal').classList.add('active');
+    }
+
+    function closePasswordModal() {
+      document.getElementById('passwordModal').classList.remove('active');
+      document.getElementById('passwordForm').reset();
+    }
+
+    // Handle password form
+    document.getElementById('passwordForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const currentPassword = document.getElementById('currentPassword').value;
+      const newPassword = document.getElementById('newPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      if (newPassword !== confirmPassword) {
+        showToast('Passwords do not match', 'error');
+        return;
+      }
+
+      try {
+        const token = localStorage.getItem('auth_token');
+        const response = await fetch('/api/user/change-password', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ currentPassword, newPassword })
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || 'Failed to change password');
+        }
+
+        showToast('Password changed successfully', 'success');
+        closePasswordModal();
+      } catch (error) {
+        console.error('Password change error:', error);
+        showToast(error.message, 'error');
+      }
+    });
+
+    // Toast notification
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toastMessage');
+      
+      toast.className = `toast show ${type}`;
+      toastMessage.textContent = message;
+
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // Logout
+    function handleLogout() {
+      if (confirm('Are you sure you want to logout?')) {
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('user');
+        window.location.href = 'login.html';
+      }
+    }
+
+    // Close modal on outside click
+    document.getElementById('passwordModal').addEventListener('click', (e) => {
+      if (e.target.id === 'passwordModal') {
+        closePasswordModal();
+      }
+    });
+
+    // Initialize
+    window.addEventListener('DOMContentLoaded', async () => {
+      if (!checkAuth()) return;
+
+      await Promise.all([
+        loadProfile(),
+        loadActivity(),
+        loadStats()
+      ]);
+    });
+  </script>
+  </div> <!-- End page-wrapper -->
+</body>
+</html>

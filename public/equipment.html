@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Master Equipment List - Calibration Management</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f2f5;
+      color: #333;
+      line-height: 1.6;
+      display: flex;
+      margin: 0;
+    }
+
+    /* Header */
+    .header {
+      background: white;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 16px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .header h1 {
+      font-size: 22px;
+      color: #1a1a1a;
+      font-weight: 600;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: #FFB800;
+      color: #333;
+    }
+
+    .btn-primary:hover {
+      background: #FFA000;
+    }
+
+    .btn-secondary {
+      background: #f5f5f5;
+      color: #333;
+    }
+
+    .btn-secondary:hover {
+      background: #e0e0e0;
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 13px;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    /* Stats Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      border-left: 4px solid #FFB800;
+    }
+
+    .stat-card.valid {
+      border-left-color: #28a745;
+    }
+
+    .stat-card.due-soon {
+      border-left-color: #ffc107;
+    }
+
+    .stat-card.overdue {
+      border-left-color: #dc3545;
+    }
+
+    .stat-card.pending {
+      border-left-color: #6c757d;
+    }
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: 700;
+      color: #1a1a1a;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: #666;
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Filters Section */
+    .filters {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      margin-bottom: 24px;
+    }
+
+    .filters-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr auto;
+      gap: 12px;
+      align-items: end;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .filter-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #555;
+    }
+
+    .filter-input,
+    .filter-select {
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .filter-input:focus,
+    .filter-select:focus {
+      outline: none;
+      border-color: #FFB800;
+      box-shadow: 0 0 0 3px rgba(255, 184, 0, 0.1);
+    }
+
+    /* Equipment Table */
+    .table-container {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    .table-header {
+      padding: 20px;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .table-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead {
+      background: #f8f9fa;
+    }
+
+    th {
+      padding: 14px 16px;
+      text-align: left;
+      font-size: 13px;
+      font-weight: 600;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 2px solid #e0e0e0;
+      white-space: nowrap;
+    }
+
+    th.sortable {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    th.sortable:hover {
+      background: #e9ecef;
+    }
+
+    th.sortable::after {
+      content: ' ↕';
+      color: #ccc;
+      font-size: 12px;
+    }
+
+    td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 14px;
+    }
+
+    tbody tr {
+      transition: background 0.2s;
+    }
+
+    tbody tr:hover {
+      background: #f8f9fa;
+    }
+
+    /* Status Badge */
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .status-valid {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .status-due-soon {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .status-overdue {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .status-pending {
+      background: #e2e3e5;
+      color: #383d41;
+    }
+
+    /* Action Buttons */
+    .actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-icon {
+      width: 32px;
+      height: 32px;
+      border: none;
+      border-radius: 4px;
+      background: #f5f5f5;
+      color: #666;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .btn-icon:hover {
+      background: #FFB800;
+      color: #333;
+    }
+
+    .btn-icon.danger:hover {
+      background: #dc3545;
+      color: white;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 8px;
+      width: 100%;
+      max-width: 900px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      padding: 24px;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .modal-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #f5f5f5;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-close:hover {
+      background: #e0e0e0;
+    }
+
+    .modal-body {
+      padding: 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #555;
+      margin-bottom: 6px;
+    }
+
+    .form-label.required::after {
+      content: ' *';
+      color: #dc3545;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: #FFB800;
+      box-shadow: 0 0 0 3px rgba(255, 184, 0, 0.1);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .modal-footer {
+      padding: 20px 24px;
+      border-top: 1px solid #e0e0e0;
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: #999;
+    }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #FFB800;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #999;
+    }
+
+    .empty-state i {
+      font-size: 64px;
+      color: #ddd;
+      margin-bottom: 16px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #333;
+      color: white;
+      padding: 14px 20px;
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      display: none;
+      align-items: center;
+      gap: 10px;
+      z-index: 2000;
+      animation: slideIn 0.3s ease;
+    }
+
+    .toast.show {
+      display: flex;
+    }
+
+    .toast.success {
+      background: #28a745;
+    }
+
+    .toast.error {
+      background: #dc3545;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .filters-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        gap: 12px;
+        padding: 16px 20px;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      table {
+        font-size: 12px;
+      }
+
+      th, td {
+        padding: 10px 8px;
+      }
+    }
+  
+    /* Sidebar Styles */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      height: 100vh;
+      width: 260px;
+      background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+      color: white;
+      overflow-y: auto;
+      z-index: 1000;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+
+    .sidebar-header {
+      padding: 24px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sidebar-title h3 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #FFB800;
+      margin: 0;
+      line-height: 1;
+    }
+
+    .sidebar-title p {
+      font-size: 11px;
+      color: rgba(255,255,255,0.7);
+      margin: 4px 0 0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .sidebar-menu {
+      padding: 16px 0;
+    }
+
+    .menu-section {
+      margin-bottom: 24px;
+    }
+
+    .menu-section h4 {
+      padding: 0 20px;
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin: 0 0 8px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .menu-item:hover {
+      background: rgba(255,255,255,0.05);
+      color: #FFB800;
+    }
+
+    .menu-item.active {
+      background: rgba(255,184,0,0.15);
+      color: #FFB800;
+      border-left: 3px solid #FFB800;
+    }
+
+    .menu-item i {
+      width: 20px;
+      font-size: 16px;
+      margin-right: 12px;
+    }
+
+    .sidebar-footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 16px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      background: rgba(0,0,0,0.2);
+    }
+
+    .sidebar-status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .version-info {
+      color: rgba(255,255,255,0.5);
+      font-size: 11px;
+    }
+
+    /* Page wrapper for sidebar layout */
+    .page-wrapper {
+      margin-left: 260px;
+      min-height: 100vh;
+      width: calc(100% - 260px);
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      
+      .sidebar.active {
+        transform: translateX(0);
+      }
+      
+      .page-wrapper {
+        margin-left: 0;
+        width: 100%;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Sidebar -->
+  <nav class="sidebar" id="sidebar" aria-label="Main navigation">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <div class="sidebar-logo-text">
+          <i class="fas fa-balance-scale" style="font-size: 36px; color: #FFB800;"></i>
+        </div>
+        <div class="sidebar-title">
+          <h3>CalPro</h3>
+          <p>Calibration Management</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="sidebar-menu" role="menu">
+      <div class="menu-section">
+        <h4>Main</h4>
+        <a href="index.html#dashboard" class="menu-item">
+          <i class="fas fa-tachometer-alt"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="index.html#worksheets" class="menu-item">
+          <i class="fas fa-file-lines"></i>
+          <span>Worksheets</span>
+        </a>
+        <a href="index.html#certificates" class="menu-item">
+          <i class="fas fa-certificate"></i>
+          <span>Certificates</span>
+        </a>
+        <a href="equipment.html" class="menu-item active">
+          <i class="fas fa-tools"></i>
+          <span>Equipment</span>
+        </a>
+      </div>
+      
+      <div class="menu-section">
+        <h4>Management</h4>
+        <a href="clients.html" class="menu-item">
+          <i class="fas fa-users"></i>
+          <span>Clients</span>
+        </a>
+        <a href="integrations.html" class="menu-item">
+          <i class="fas fa-plug"></i>
+          <span>Integrations</span>
+        </a>
+        <a href="index.html#reports" class="menu-item">
+          <i class="fas fa-chart-bar"></i>
+          <span>Reports</span>
+        </a>
+        <a href="index.html#settings" class="menu-item">
+          <i class="fas fa-cog"></i>
+          <span>Settings</span>
+        </a>
+      </div>
+
+      <div class="menu-section">
+        <h4>Tools</h4>
+        <a href="converter.html" class="menu-item">
+          <i class="fas fa-calculator"></i>
+          <span>Unit Converter</span>
+        </a>
+      </div>
+
+      <div class="menu-section">
+        <h4>Account</h4>
+        <a href="profile.html" class="menu-item">
+          <i class="fas fa-user-circle"></i>
+          <span>My Profile</span>
+        </a>
+      </div>
+    </div>
+    
+    <div class="sidebar-footer">
+      <div class="sidebar-status">
+        <div class="status-item" id="connectionStatus">
+          <i class="fas fa-wifi" id="connectionIcon"></i>
+          <span id="connectionText">Online</span>
+        </div>
+        <div class="version-info">v2.0.0</div>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- Page Content Wrapper -->
+  <div class="page-wrapper">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <h1><i class="fas fa-tools"></i> Master Equipment List</h1>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-primary" onclick="openAddModal()">
+        <i class="fas fa-plus"></i> Add Equipment
+      </button>
+      <a href="index.html#dashboard" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Dashboard
+      </a>
+    </div>
+  </div>
+
+  <!-- Container -->
+  <div class="container">
+    <!-- Statistics -->
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card">
+        <div class="stat-value" id="statTotal">0</div>
+        <div class="stat-label">Total Equipment</div>
+      </div>
+      <div class="stat-card valid">
+        <div class="stat-value" id="statValid">0</div>
+        <div class="stat-label">Valid Calibration</div>
+      </div>
+      <div class="stat-card due-soon">
+        <div class="stat-value" id="statDueSoon">0</div>
+        <div class="stat-label">Due Soon</div>
+      </div>
+      <div class="stat-card overdue">
+        <div class="stat-value" id="statOverdue">0</div>
+        <div class="stat-label">Overdue</div>
+      </div>
+      <div class="stat-card pending">
+        <div class="stat-value" id="statPending">0</div>
+        <div class="stat-label">Pending</div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters">
+      <div class="filters-grid">
+        <div class="filter-group">
+          <label class="filter-label">Search</label>
+          <input type="text" class="filter-input" id="searchInput" placeholder="Equipment ID, Name, Manufacturer, Model...">
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Category</label>
+          <select class="filter-select" id="categoryFilter">
+            <option value="">All Categories</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Status</label>
+          <select class="filter-select" id="statusFilter">
+            <option value="">All Statuses</option>
+            <option value="valid">Valid</option>
+            <option value="due_soon">Due Soon</option>
+            <option value="overdue">Overdue</option>
+            <option value="pending">Pending</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Sort By</label>
+          <select class="filter-select" id="sortBy">
+            <option value="equipment_id">Equipment ID</option>
+            <option value="name">Name</option>
+            <option value="category">Category</option>
+            <option value="next_calibration_date">Next Cal Date</option>
+            <option value="calibration_status">Status</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">&nbsp;</label>
+          <button class="btn btn-secondary" onclick="resetFilters()">
+            <i class="fas fa-redo"></i> Reset
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Equipment Table -->
+    <div class="table-container">
+      <div class="table-header">
+        <h2 class="table-title">Equipment List</h2>
+        <span id="equipmentCount">0 items</span>
+      </div>
+      <div id="tableContent">
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Loading equipment...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add/Edit Equipment Modal -->
+  <div class="modal" id="equipmentModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">Add Equipment</h3>
+        <button class="modal-close" onclick="closeModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <form id="equipmentForm">
+          <input type="hidden" id="equipmentId">
+          
+          <h4 style="margin-bottom: 16px; color: #666;">Basic Information</h4>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label required">Equipment ID</label>
+              <input type="text" class="form-input" id="equipment_id" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label required">Equipment Name</label>
+              <input type="text" class="form-input" id="name" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <input type="text" class="form-input" id="category" list="categoryList">
+              <datalist id="categoryList">
+                <option value="Pressure">
+                <option value="Temperature">
+                <option value="Electrical">
+                <option value="Mechanical">
+                <option value="Dimensional">
+              </datalist>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Manufacturer</label>
+              <input type="text" class="form-input" id="manufacturer">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Model</label>
+              <input type="text" class="form-input" id="model">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Serial Number</label>
+              <input type="text" class="form-input" id="serial_number">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Asset Tag</label>
+              <input type="text" class="form-input" id="asset_tag">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Location</label>
+              <input type="text" class="form-input" id="location">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Department</label>
+              <input type="text" class="form-input" id="department">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Responsible Person</label>
+              <input type="text" class="form-input" id="responsible_person">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Purchase Date</label>
+              <input type="date" class="form-input" id="purchase_date">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Purchase Cost</label>
+              <input type="number" class="form-input" id="purchase_cost" step="0.01">
+            </div>
+          </div>
+
+          <h4 style="margin: 24px 0 16px; color: #666;">Calibration Information</h4>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Calibration Interval (days)</label>
+              <input type="number" class="form-input" id="calibration_interval" value="365">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Last Calibration Date</label>
+              <input type="date" class="form-input" id="last_calibration_date">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Next Calibration Date</label>
+              <input type="date" class="form-input" id="next_calibration_date">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Calibration Status</label>
+              <select class="form-select" id="calibration_status">
+                <option value="pending">Pending</option>
+                <option value="valid">Valid</option>
+                <option value="due_soon">Due Soon</option>
+                <option value="overdue">Overdue</option>
+              </select>
+            </div>
+          </div>
+
+          <h4 style="margin: 24px 0 16px; color: #666;">Traceability & Specifications</h4>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Traceability Standard</label>
+              <input type="text" class="form-input" id="traceability_standard" placeholder="e.g., NIST Traceable">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Certificate Number</label>
+              <input type="text" class="form-input" id="traceability_cert_number">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Uncertainty</label>
+              <input type="text" class="form-input" id="uncertainty" placeholder="e.g., ±0.05%">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Condition</label>
+              <select class="form-select" id="condition">
+                <option value="excellent">Excellent</option>
+                <option value="good">Good</option>
+                <option value="fair">Fair</option>
+                <option value="poor">Poor</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Range Min</label>
+              <input type="text" class="form-input" id="range_min" placeholder="e.g., 0 V">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Range Max</label>
+              <input type="text" class="form-input" id="range_max" placeholder="e.g., 1000 V">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Resolution</label>
+              <input type="text" class="form-input" id="resolution" placeholder="e.g., 0.1 mV">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Accuracy</label>
+              <input type="text" class="form-input" id="accuracy" placeholder="e.g., ±0.05%">
+            </div>
+          </div>
+
+          <div class="form-group full-width">
+            <label class="form-label">Notes</label>
+            <textarea class="form-textarea" id="notes" rows="3"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="saveEquipment()">
+          <i class="fas fa-save"></i> Save Equipment
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Equipment Modal -->
+  <div class="modal" id="viewModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Equipment Details</h3>
+        <button class="modal-close" onclick="closeViewModal()">×</button>
+      </div>
+      <div class="modal-body" id="viewModalBody">
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Loading...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <i class="fas fa-check-circle"></i>
+    <span id="toastMessage">Success!</span>
+  </div>
+
+  <script>
+    let allEquipment = [];
+    let currentEditId = null;
+
+    // Check authentication
+    function checkAuth() {
+      const token = localStorage.getItem('auth_token');
+      if (!token) {
+        window.location.href = 'login.html';
+        return false;
+      }
+      return true;
+    }
+
+    // Load statistics
+    async function loadStats() {
+      try {
+        const token = localStorage.getItem('auth_token');
+        const response = await fetch('/api/equipment/stats', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!response.ok) throw new Error('Failed to load stats');
+
+        const { totals } = await response.json();
+        
+        document.getElementById('statTotal').textContent = totals.total || 0;
+        document.getElementById('statValid').textContent = totals.valid || 0;
+        document.getElementById('statDueSoon').textContent = totals.due_soon || 0;
+        document.getElementById('statOverdue').textContent = totals.overdue || 0;
+        document.getElementById('statPending').textContent = totals.pending || 0;
+      } catch (error) {
+        console.error('Stats error:', error);
+      }
+    }
+
+    // Load categories
+    async function loadCategories() {
+      try {
+        const token = localStorage.getItem('auth_token');
+        const response = await fetch('/api/equipment/categories', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!response.ok) throw new Error('Failed to load categories');
+
+        const { categories } = await response.json();
+        const select = document.getElementById('categoryFilter');
+        
+        categories.forEach(cat => {
+          const option = document.createElement('option');
+          option.value = cat;
+          option.textContent = cat;
+          select.appendChild(option);
+        });
+      } catch (error) {
+        console.error('Categories error:', error);
+      }
+    }
+
+    // Load equipment
+    async function loadEquipment() {
+      try {
+        const token = localStorage.getItem('auth_token');
+        const search = document.getElementById('searchInput').value;
+        const category = document.getElementById('categoryFilter').value;
+        const status = document.getElementById('statusFilter').value;
+        const sortBy = document.getElementById('sortBy').value;
+
+        const params = new URLSearchParams();
+        if (search) params.append('search', search);
+        if (category) params.append('category', category);
+        if (status) params.append('status', status);
+        params.append('sortBy', sortBy);
+        params.append('sortOrder', 'ASC');
+
+        const response = await fetch(`/api/equipment?${params}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!response.ok) throw new Error('Failed to load equipment');
+
+        const { equipment } = await response.json();
+        allEquipment = equipment;
+        renderEquipmentTable(equipment);
+      } catch (error) {
+        console.error('Equipment error:', error);
+        document.getElementById('tableContent').innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-exclamation-triangle"></i>
+            <p>Failed to load equipment</p>
+          </div>
+        `;
+      }
+    }
+
+    // Render equipment table
+    function renderEquipmentTable(equipment) {
+      document.getElementById('equipmentCount').textContent = `${equipment.length} items`;
+
+      if (equipment.length === 0) {
+        document.getElementById('tableContent').innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-tools"></i>
+            <p>No equipment found</p>
+          </div>
+        `;
+        return;
+      }
+
+      const html = `
+        <table>
+          <thead>
+            <tr>
+              <th>Equipment ID</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Manufacturer</th>
+              <th>Model</th>
+              <th>Last Cal Date</th>
+              <th>Next Cal Date</th>
+              <th>Status</th>
+              <th>Traceability</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${equipment.map(eq => `
+              <tr>
+                <td><strong>${eq.equipment_id}</strong></td>
+                <td>${eq.name}</td>
+                <td>${eq.category || '-'}</td>
+                <td>${eq.manufacturer || '-'}</td>
+                <td>${eq.model || '-'}</td>
+                <td>${eq.last_calibration_date ? formatDate(eq.last_calibration_date) : '-'}</td>
+                <td>${eq.next_calibration_date ? formatDate(eq.next_calibration_date) : '-'}</td>
+                <td><span class="status-badge status-${eq.calibration_status}">${formatStatus(eq.calibration_status)}</span></td>
+                <td><small>${eq.traceability_cert_number || '-'}</small></td>
+                <td>
+                  <div class="actions">
+                    <button class="btn-icon" onclick="viewEquipment(${eq.id})" title="View Details">
+                      <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="btn-icon" onclick="editEquipment(${eq.id})" title="Edit">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn-icon danger" onclick="deleteEquipment(${eq.id}, '${eq.equipment_id}')" title="Delete">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+
+      document.getElementById('tableContent').innerHTML = html;
+    }
+
+    // Format date
+    function formatDate(dateStr) {
+      if (!dateStr) return '-';
+      const date = new Date(dateStr);
+      return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+
+    // Format status
+    function formatStatus(status) {
+      const statusMap = {
+        'valid': 'Valid',
+        'due_soon': 'Due Soon',
+        'overdue': 'Overdue',
+        'pending': 'Pending'
+      };
+      return statusMap[status] || status;
+    }
+
+    // Open add modal
+    function openAddModal() {
+      currentEditId = null;
+      document.getElementById('modalTitle').textContent = 'Add Equipment';
+      document.getElementById('equipmentForm').reset();
+      document.getElementById('equipmentId').value = '';
+      document.getElementById('calibration_interval').value = '365';
+      document.getElementById('calibration_status').value = 'pending';
+      document.getElementById('condition').value = 'good';
+      document.getElementById('equipmentModal').classList.add('active');
+    }
+
+    // Edit equipment
+    async function editEquipment(id) {
+      try {
+        const token = localStorage.getItem('auth_token');
+        const response = await fetch(`/api/equipment/${id}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!response.ok) throw new Error('Failed to load equipment');
+
+        const equipment = await response.json();
+        currentEditId = id;
+        
+        document.getElementById('modalTitle').textContent = 'Edit Equipment';
+        document.getElementById('equipmentId').value = id;
+        
+        // Populate form
+        Object.keys(equipment).forEach(key => {
+          const input = document.getElementById(key);
+          if (input) {
+            input.value = equipment[key] || '';
+          }
+        });
+        
+        document.getElementById('equipmentModal').classList.add('active');
+      } catch (error) {
+        console.error('Edit error:', error);
+        showToast('Failed to load equipment', 'error');
+      }
+    }
+
+    // Save equipment
+    async function saveEquipment() {
+      const form = document.getElementById('equipmentForm');
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const formData = {
+        equipment_id: document.getElementById('equipment_id').value,
+        name: document.getElementById('name').value,
+        category: document.getElementById('category').value,
+        manufacturer: document.getElementById('manufacturer').value,
+        model: document.getElementById('model').value,
+        serial_number: document.getElementById('serial_number').value,
+        asset_tag: document.getElementById('asset_tag').value,
+        location: document.getElementById('location').value,
+        department: document.getElementById('department').value,
+        responsible_person: document.getElementById('responsible_person').value,
+        purchase_date: document.getElementById('purchase_date').value,
+        purchase_cost: document.getElementById('purchase_cost').value,
+        calibration_interval: document.getElementById('calibration_interval').value,
+        last_calibration_date: document.getElementById('last_calibration_date').value,
+        next_calibration_date: document.getElementById('next_calibration_date').value,
+        calibration_status: document.getElementById('calibration_status').value,
+        traceability_standard: document.getElementById('traceability_standard').value,
+        traceability_cert_number: document.getElementById('traceability_cert_number').value,
+        uncertainty: document.getElementById('uncertainty').value,
+        range_min: document.getElementById('range_min').value,
+        range_max: document.getElementById('range_max').value,
+        resolution: document.getElementById('resolution').value,
+        accuracy: document.getElementById('accuracy').value,
+        condition: document.getElementById('condition').value,
+        notes: document.getElementById('notes').value
+      };
+
+      try {
+        const token = localStorage.getItem('auth_token');
+        const isEdit = currentEditId !== null;
+        const url = isEdit ? `/api/equipment/${currentEditId}` : '/api/equipment';
+        const method = isEdit ? 'PUT' : 'POST';
+
+        const response = await fetch(url, {
+          method,
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || 'Failed to save equipment');
+        }
+
+        showToast(`Equipment ${isEdit ? 'updated' : 'created'} successfully`, 'success');
+        closeModal();
+        await Promise.all([loadEquipment(), loadStats(), loadCategories()]);
+      } catch (error) {
+        console.error('Save error:', error);
+        showToast(error.message, 'error');
+      }
+    }
+
+    // View equipment
+    async function viewEquipment(id) {
+      try {
+        document.getElementById('viewModal').classList.add('active');
+        document.getElementById('viewModalBody').innerHTML = `
+          <div class="loading">
+            <div class="spinner"></div>
+            <p>Loading...</p>
+          </div>
+        `;
+
+        const token = localStorage.getItem('auth_token');
+        const response = await fetch(`/api/equipment/${id}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!response.ok) throw new Error('Failed to load equipment');
+
+        const eq = await response.json();
+        
+        document.getElementById('viewModalBody').innerHTML = `
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+            <div>
+              <strong>Equipment ID:</strong><br>${eq.equipment_id}
+            </div>
+            <div>
+              <strong>Name:</strong><br>${eq.name}
+            </div>
+            <div>
+              <strong>Category:</strong><br>${eq.category || '-'}
+            </div>
+            <div>
+              <strong>Manufacturer:</strong><br>${eq.manufacturer || '-'}
+            </div>
+            <div>
+              <strong>Model:</strong><br>${eq.model || '-'}
+            </div>
+            <div>
+              <strong>Serial Number:</strong><br>${eq.serial_number || '-'}
+            </div>
+            <div>
+              <strong>Asset Tag:</strong><br>${eq.asset_tag || '-'}
+            </div>
+            <div>
+              <strong>Location:</strong><br>${eq.location || '-'}
+            </div>
+            <div>
+              <strong>Department:</strong><br>${eq.department || '-'}
+            </div>
+            <div>
+              <strong>Responsible Person:</strong><br>${eq.responsible_person || '-'}
+            </div>
+            <div>
+              <strong>Calibration Status:</strong><br>
+              <span class="status-badge status-${eq.calibration_status}">${formatStatus(eq.calibration_status)}</span>
+            </div>
+            <div>
+              <strong>Condition:</strong><br>${eq.condition || '-'}
+            </div>
+            <div>
+              <strong>Last Calibration:</strong><br>${eq.last_calibration_date ? formatDate(eq.last_calibration_date) : '-'}
+            </div>
+            <div>
+              <strong>Next Calibration:</strong><br>${eq.next_calibration_date ? formatDate(eq.next_calibration_date) : '-'}
+            </div>
+            <div>
+              <strong>Calibration Interval:</strong><br>${eq.calibration_interval} days
+            </div>
+            <div>
+              <strong>Traceability:</strong><br>${eq.traceability_standard || '-'}
+            </div>
+            <div style="grid-column: 1 / -1;">
+              <strong>Certificate Number:</strong><br>${eq.traceability_cert_number || '-'}
+            </div>
+            <div>
+              <strong>Range:</strong><br>${eq.range_min || '-'} to ${eq.range_max || '-'}
+            </div>
+            <div>
+              <strong>Uncertainty:</strong><br>${eq.uncertainty || '-'}
+            </div>
+            <div>
+              <strong>Resolution:</strong><br>${eq.resolution || '-'}
+            </div>
+            <div>
+              <strong>Accuracy:</strong><br>${eq.accuracy || '-'}
+            </div>
+            <div style="grid-column: 1 / -1;">
+              <strong>Notes:</strong><br>${eq.notes || '-'}
+            </div>
+          </div>
+          <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid #e0e0e0; display: flex; gap: 12px;">
+            <button class="btn btn-primary" onclick="closeViewModal(); editEquipment(${eq.id})">
+              <i class="fas fa-edit"></i> Edit
+            </button>
+            <button class="btn btn-secondary" onclick="closeViewModal()">Close</button>
+          </div>
+        `;
+      } catch (error) {
+        console.error('View error:', error);
+        document.getElementById('viewModalBody').innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-exclamation-triangle"></i>
+            <p>Failed to load equipment details</p>
+          </div>
+        `;
+      }
+    }
+
+    // Delete equipment
+    async function deleteEquipment(id, equipmentId) {
+      if (!confirm(`Are you sure you want to delete ${equipmentId}?`)) {
+        return;
+      }
+
+      try {
+        const token = localStorage.getItem('auth_token');
+        const response = await fetch(`/api/equipment/${id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!response.ok) throw new Error('Failed to delete equipment');
+
+        showToast('Equipment deleted successfully', 'success');
+        await Promise.all([loadEquipment(), loadStats()]);
+      } catch (error) {
+        console.error('Delete error:', error);
+        showToast('Failed to delete equipment', 'error');
+      }
+    }
+
+    // Close modals
+    function closeModal() {
+      document.getElementById('equipmentModal').classList.remove('active');
+    }
+
+    function closeViewModal() {
+      document.getElementById('viewModal').classList.remove('active');
+    }
+
+    // Reset filters
+    function resetFilters() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('categoryFilter').value = '';
+      document.getElementById('statusFilter').value = '';
+      document.getElementById('sortBy').value = 'equipment_id';
+      loadEquipment();
+    }
+
+    // Toast notification
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toastMessage');
+      
+      toast.className = `toast show ${type}`;
+      toastMessage.textContent = message;
+
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // Event listeners
+    document.getElementById('searchInput').addEventListener('input', () => {
+      clearTimeout(window.searchTimeout);
+      window.searchTimeout = setTimeout(loadEquipment, 300);
+    });
+
+    document.getElementById('categoryFilter').addEventListener('change', loadEquipment);
+    document.getElementById('statusFilter').addEventListener('change', loadEquipment);
+    document.getElementById('sortBy').addEventListener('change', loadEquipment);
+
+    // Close modals on outside click
+    document.getElementById('equipmentModal').addEventListener('click', (e) => {
+      if (e.target.id === 'equipmentModal') closeModal();
+    });
+
+    document.getElementById('viewModal').addEventListener('click', (e) => {
+      if (e.target.id === 'viewModal') closeViewModal();
+    });
+
+    // Initialize
+    window.addEventListener('DOMContentLoaded', async () => {
+      if (!checkAuth()) return;
+
+      await Promise.all([
+        loadStats(),
+        loadCategories(),
+        loadEquipment()
+      ]);
+    });
+  </script>
+  </div> <!-- End page-wrapper -->
+</body>
+</html>
