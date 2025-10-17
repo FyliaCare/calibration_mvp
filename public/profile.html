@@ -740,6 +740,11 @@
 
   <!-- Page Wrapper -->
   <div class="page-wrapper">
+    <!-- Demo Mode Banner -->
+    <div id="demo-banner-profile" style="display: none; background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%); color: #856404; padding: 12px 20px; margin: 0; border-bottom: 1px solid #ffeeba; text-align: center; font-weight: 500;">
+      <i class="fas fa-flask"></i> <strong>Demo Mode:</strong> Profile changes are simulated for testing purposes
+    </div>
+
     <!-- Header -->
     <div class="header">
       <h1><i class="fas fa-user-circle"></i> My Profile</h1>
@@ -1013,7 +1018,123 @@
   </div>
 
   <script>
+    // Demo mode detection
+    const isDemoMode = window.location.hostname.includes('netlify') || 
+                       window.location.hostname.includes('github.io') ||
+                       window.location.hostname !== 'localhost';
+
+    // Override fetch for demo mode
+    if (isDemoMode) {
+      const originalFetch = window.fetch;
+      window.fetch = async function(url, options = {}) {
+        if (url.includes('/api/')) {
+          await new Promise(resolve => setTimeout(resolve, 300));
+          const mockResponse = getMockProfileResponse(url, options);
+          return {
+            ok: true,
+            status: 200,
+            json: () => Promise.resolve(mockResponse),
+            text: () => Promise.resolve(JSON.stringify(mockResponse))
+          };
+        }
+        return originalFetch(url, options);
+      };
+    }
+
     let userData = null;
+
+    // Mock profile responses for demo mode
+    function getMockProfileResponse(url, options = {}) {
+      const user = JSON.parse(localStorage.getItem('user')) || {};
+      
+      if (url.includes('/api/user/profile')) {
+        if (options.method === 'PUT') {
+          // Update profile
+          return {
+            success: true,
+            message: 'Profile updated successfully',
+            user: {
+              id: 1,
+              email: user.email || 'demo@example.com',
+              name: options.body ? JSON.parse(options.body).name : user.name || 'Demo User',
+              role: user.role || 'admin',
+              department: user.department || 'Calibration',
+              phone: '+1-555-0123',
+              bio: 'Demo user profile for testing purposes',
+              created_at: '2024-01-01T00:00:00Z',
+              last_login: new Date().toISOString(),
+              profile_picture: null
+            }
+          };
+        } else {
+          // Get profile
+          return {
+            id: 1,
+            email: user.email || 'demo@example.com',
+            name: user.name || 'Demo User',
+            role: user.role || 'admin',
+            department: user.department || 'Calibration',
+            phone: '+1-555-0123',
+            bio: 'Demo user profile for testing purposes',
+            created_at: '2024-01-01T00:00:00Z',
+            last_login: new Date().toISOString(),
+            profile_picture: null
+          };
+        }
+      }
+
+      if (url.includes('/api/user/activity')) {
+        return {
+          activities: [
+            {
+              id: 1,
+              action: 'Login',
+              details: 'User logged in to the system',
+              timestamp: new Date(Date.now() - 1000 * 60 * 30).toISOString(), // 30 min ago
+              ip_address: '192.168.1.100'
+            },
+            {
+              id: 2,
+              action: 'Profile Update',
+              details: 'Updated profile information',
+              timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(), // 2 hours ago
+              ip_address: '192.168.1.100'
+            },
+            {
+              id: 3,
+              action: 'Equipment View', 
+              details: 'Viewed equipment list',
+              timestamp: new Date(Date.now() - 1000 * 60 * 60 * 4).toISOString(), // 4 hours ago
+              ip_address: '192.168.1.100'
+            },
+            {
+              id: 4,
+              action: 'Client Access',
+              details: 'Accessed client management',
+              timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(), // 1 day ago
+              ip_address: '192.168.1.100'
+            }
+          ]
+        };
+      }
+
+      if (url.includes('/api/user/avatar')) {
+        return {
+          success: true,
+          message: 'Avatar updated successfully (demo)',
+          avatar_url: `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || 'Demo User')}&background=FFB800&color=333&size=120`
+        };
+      }
+
+      if (url.includes('/api/user/change-password')) {
+        return {
+          success: true,
+          message: 'Password changed successfully (demo mode)'
+        };
+      }
+
+      return { success: true, message: 'Demo response' };
+    }
 
     // Check authentication
     function checkAuth() {
@@ -1281,12 +1402,19 @@
         .join(' ');
     }
 
-    // Load stats (mock data for now)
+    // Load stats (demo data)
     function loadStats() {
-      // These would come from API
-      document.getElementById('statWorksheets').textContent = '0';
-      document.getElementById('statCertificates').textContent = '0';
-      document.getElementById('statEquipment').textContent = '0';
+      if (isDemoMode) {
+        // Realistic demo stats
+        document.getElementById('statWorksheets').textContent = '23';
+        document.getElementById('statCertificates').textContent = '156';
+        document.getElementById('statEquipment').textContent = '87';
+      } else {
+        // These would come from API in production
+        document.getElementById('statWorksheets').textContent = '0';
+        document.getElementById('statCertificates').textContent = '0';
+        document.getElementById('statEquipment').textContent = '0';
+      }
     }
 
     // Password modal
@@ -1368,6 +1496,14 @@
     // Initialize
     window.addEventListener('DOMContentLoaded', async () => {
       if (!checkAuth()) return;
+
+      // Show demo banner if in demo mode
+      if (isDemoMode) {
+        const demoBanner = document.getElementById('demo-banner-profile');
+        if (demoBanner) {
+          demoBanner.style.display = 'block';
+        }
+      }
 
       await Promise.all([
         loadProfile(),
