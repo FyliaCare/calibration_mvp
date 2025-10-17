@@ -1,0 +1,165 @@
+/**
+ * CSS Variables - CalPro Design System
+ * Centralized design tokens for consistent styling
+ */
+
+:root {
+  /* ============================================
+     CALPRO UNIFIED DESIGN SYSTEM - COLORS
+     Professional Light Theme
+     ============================================ */
+  
+  /* PRIMARY BRAND COLORS */
+  --calpro-gold: #FFB800;
+  --calpro-gold-dark: #FF8C00;
+  --calpro-gold-light: #FFC933;
+  --calpro-gold-pale: #FFF8E6;
+  
+  /* BACKGROUND COLORS - LIGHT THEME */
+  --bg-primary: #f0f2f5;
+  --bg-secondary: #e8eaed;
+  --bg-white: #ffffff;
+  --bg-light-gray: #f7fafc;
+  --bg-card: #ffffff;
+  
+  /* TEXT COLORS - LIGHT THEME */
+  --text-primary: #2c3e50;
+  --text-secondary: #5a6c7d;
+  --text-muted: #95a5a6;
+  --text-dark: #1a1a1a;
+  --text-white: #ffffff;
+  --text-light: #7f8c8d;
+  
+  /* STATUS COLORS */
+  --status-success: #10b981;
+  --status-success-dark: #059669;
+  --status-warning: #f59e0b;
+  --status-warning-dark: #d97706;
+  --status-danger: #ef4444;
+  --status-danger-dark: #dc2626;
+  --status-info: #3b82f6;
+  --status-info-dark: #2563eb;
+  
+  /* UI ELEMENT COLORS - LIGHT THEME */
+  --border-default: #dee2e6;
+  --border-light: #e9ecef;
+  --border-focus: #FFB800;
+  --border-card: #e0e0e0;
+  --shadow-default: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.12);
+  --shadow-gold: rgba(255, 184, 0, 0.2);
+  --hover-bg: #f8f9fa;
+  --hover-bg-gold: rgba(255, 184, 0, 0.08);
+  
+  /* STAT CARD ICON COLORS */
+  --stat-blue: #3b82f6;
+  --stat-green: #10b981;
+  --stat-orange: #f59e0b;
+  --stat-purple: #8b5cf6;
+  --stat-red: #ef4444;
+  
+  /* STAT CARD BACKGROUNDS */
+  --stat-bg-blue: #1e3a8a;
+  --stat-bg-green: #065f46;
+  --stat-bg-orange: #92400e;
+  --stat-bg-purple: #5b21b6;
+  --stat-bg-red: #991b1b;
+  
+  /* BUTTON COLORS - LIGHT THEME */
+  --btn-primary-bg: #FFB800;
+  --btn-primary-hover: #FF8C00;
+  --btn-primary-text: #2c3e50;
+  --btn-secondary-bg: #f8f9fa;
+  --btn-secondary-hover: #e9ecef;
+  --btn-secondary-text: #2c3e50;
+  --btn-secondary-border: #dee2e6;
+  --btn-danger-bg: #ef4444;
+  --btn-danger-hover: #dc2626;
+  --btn-danger-text: #ffffff;
+  --btn-success-bg: #10b981;
+  --btn-success-hover: #059669;
+  --btn-success-text: #ffffff;
+  
+  /* CARD COLORS - LIGHT THEME */
+  --card-bg: #ffffff;
+  --card-border: #e0e0e0;
+  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --card-header-bg: #fafafa;
+  --card-header-text: #2c3e50;
+  --card-hover-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  
+  /* FORM COLORS - LIGHT THEME */
+  --input-bg: #ffffff;
+  --input-border: #ced4da;
+  --input-focus-border: #FFB800;
+  --input-text: #2c3e50;
+  --input-placeholder: #95a5a6;
+  --label-text: #5a6c7d;
+  --input-disabled-bg: #e9ecef;
+  
+  /* TABLE COLORS */
+  --table-header-bg: rgba(26, 26, 46, 0.9);
+  --table-header-text: #FFB800;
+  --table-row-bg: rgba(26, 26, 46, 0.6);
+  --table-row-hover: rgba(255, 184, 0, 0.1);
+  --table-border: rgba(255, 184, 0, 0.2);
+  
+  /* SIDEBAR COLORS - DARK SIDEBAR */
+  --sidebar-bg-start: #2c3e50;
+  --sidebar-bg-end: #34495e;
+  --sidebar-active-bg: #FFB800;
+  --sidebar-hover-bg: rgba(255, 184, 0, 0.1);
+  --sidebar-text: #ecf0f1;
+  --sidebar-active-text: #2c3e50;
+  --sidebar-border-active: 4px solid #FFB800;
+  
+  /* STATUS BADGE COLORS */
+  --badge-active-bg: #10b981;
+  --badge-pending-bg: #f59e0b;
+  --badge-expired-bg: #ef4444;
+  --badge-draft-bg: #6b7280;
+  --badge-text: #ffffff;
+  
+  /* STANDARDIZED SPACING SYSTEM */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+  
+  /* LAYOUT CONSTANTS */
+  --sidebar-width: 280px;
+  --header-height: 80px;
+  --border-radius: 8px;
+  --border-radius-lg: 12px;
+  --animation-duration: 0.3s;
+  
+  /* TYPOGRAPHY */
+  --font-primary: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --font-mono: 'Courier New', monospace;
+  
+  --font-size-h1: 32px;
+  --font-size-h2: 24px;
+  --font-size-h3: 20px;
+  --font-size-large: 16px;
+  --font-size-regular: 14px;
+  --font-size-small: 12px;
+  --font-size-caption: 10px;
+  
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* MOBILE SPECIFIC VARIABLES */
+  --mobile-padding: 16px;
+  --mobile-header-height: 60px;
+  --mobile-bottom-nav-height: 70px;
+  --mobile-safe-area-top: env(safe-area-inset-top, 0px);
+  --mobile-safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --mobile-transition-fast: 0.2s ease;
+  --mobile-transition-normal: 0.3s ease;
+  --mobile-touch-target: 44px;
+}

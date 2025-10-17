@@ -1,0 +1,115 @@
+/**
+ * CSS Reset & Base Styles
+ * Normalize browser defaults and set base styles
+ */
+
+/* Box Sizing Reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* HTML & Body Reset */
+html {
+  scroll-behavior: auto;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-primary);
+  margin: 0;
+  padding: 0;
+  background: var(--bg-primary);
+  min-height: 100vh;
+  height: 100vh;
+  color: var(--text-primary);
+  overflow: hidden;
+  font-size: var(--font-size-regular);
+  line-height: 1.5;
+}
+
+/* Remove default list styles */
+ul, ol {
+  list-style: none;
+}
+
+/* Remove default link styles */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Remove default button styles */
+button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* Remove default input styles */
+input, textarea, select {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* Images */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Remove default table spacing */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* Focus visible for accessibility */
+:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+/* Remove focus outline for mouse users */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Selection color */
+::selection {
+  background-color: var(--calpro-gold-pale);
+  color: var(--text-dark);
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-default) var(--bg-secondary);
+}
