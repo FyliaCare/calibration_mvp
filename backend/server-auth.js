@@ -2195,15 +2195,17 @@ process.on('unhandledRejection', (reason, promise) => {
   }
 });
 
-// Graceful shutdown
-process.on('SIGINT', () => {
-  console.log('\n🛑 Shutting down server...');
-  db.close((err) => {
-    if (err) {
-      console.error('Error closing database:', err);
-    } else {
-      console.log('📊 Database connection closed.');
-    }
-    process.exit(0);
+// Graceful shutdown (only in development)
+if (process.env.NODE_ENV !== 'production') {
+  process.on('SIGINT', () => {
+    console.log('\n🛑 Shutting down server...');
+    db.close((err) => {
+      if (err) {
+        console.error('Error closing database:', err);
+      } else {
+        console.log('📊 Database connection closed.');
+      }
+      process.exit(0);
+    });
   });
-});
+}
