@@ -12,6 +12,22 @@
     display: none !important;
   }
 
+  /* CRITICAL: Keep header icons horizontal */
+  .header-right {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 8px !important;
+    flex-wrap: nowrap !important;
+  }
+
+  .notification-container,
+  .user-profile-widget,
+  .time-widget {
+    display: flex !important;
+    flex-direction: row !important;
+  }
+
   /* SHOW MOBILE-ONLY ELEMENTS */
   .mobile-only {
     display: flex !important;

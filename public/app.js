@@ -2305,7 +2305,7 @@ window.downloadPdfDirect = function() {
       const isCollapsed = sidebar.classList.contains('collapsed');
       console.log('🔄 Toggling sidebar. Currently collapsed:', isCollapsed, '→ Will expand:', isCollapsed);
       setSidebarExpanded(isCollapsed);
-      showNotification(`📱 Sidebar ${isCollapsed ? 'expanded' : 'collapsed'}`, 'info');
+      // No notification needed - just toggle silently
     }
 
     // Desktop menu toggle
@@ -3418,7 +3418,7 @@ window.downloadPdfDirect = function() {
       if (sidebar) {
         const isCollapsed = sidebar.classList.contains('collapsed');
         sidebar.classList.toggle('collapsed', !isCollapsed);
-        showNotification(`📱 Sidebar ${!isCollapsed ? 'expanded' : 'collapsed'}`, 'info');
+        // No notification - silent toggle
       }
     },
     
