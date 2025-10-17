@@ -3,9 +3,12 @@
   "version": "2.0.0",
   "description": "CalPro - Professional Calibration Management System (Frontend)",
   "scripts": {
-    "build": "echo 'Frontend build completed'",
+    "build": "node scripts/build-production.js",
+    "build:demo": "echo 'Demo build ready'",
     "dev": "echo 'Development mode - serve public folder'",
-    "test": "echo 'No tests specified' && exit 0"
+    "test": "echo 'No tests specified' && exit 0",
+    "deploy": "npm run build && netlify deploy --prod",
+    "deploy:production": "node scripts/deploy-production.js"
   },
   "keywords": [
     "calibration",

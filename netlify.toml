@@ -23,13 +23,21 @@
   [headers.values]
     Cache-Control = "no-cache"
 
-# API redirects - disabled for demo mode
-# Uncomment and update URL when backend is deployed to production
+# API redirects for production
+# Update BACKEND_URL with your deployed backend URL
+[[redirects]]
+  from = "/api/*"
+  to = "https://your-backend-url.railway.app/api/:splat"
+  status = 200
+  force = true
+
+# Environment-based redirects (uncomment when ready)
 # [[redirects]]
 #   from = "/api/*"
-#   to = "https://your-backend-api.herokuapp.com/api/:splat"
+#   to = "https://calpro-backend-production.up.railway.app/api/:splat"
 #   status = 200
 #   force = true
+#   condition = "Host"
 
 [[redirects]]
   from = "/*"
