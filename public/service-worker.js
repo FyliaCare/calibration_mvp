@@ -4,19 +4,30 @@
  * Provides offline functionality and caching for the calibration application
  */
 
-const CACHE_NAME = 'calibration-mvp-v2.0.0';
-const DATA_CACHE_NAME = 'calibration-data-v1';
+const CACHE_NAME = 'calibration-mvp-mobile-optimized-v2.1.0';
+const DATA_CACHE_NAME = 'calibration-data-v2';
 
-// Assets to cache for offline use
-const STATIC_ASSETS = [
+// Critical assets for fast mobile loading
+const CRITICAL_ASSETS = [
   '/',
   '/index.html',
   '/styles.css',
-  '/app.js',
+  '/app-optimized.js',
   '/manifest.json',
-  'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js'
+  '/js/mobile-enhancer.js',
+  '/js/mobile-nav.js'
 ];
+
+// Heavy libraries loaded on demand
+const ON_DEMAND_ASSETS = [
+  'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css'
+];
+
+// All assets to cache (critical first, then on-demand)
+const STATIC_ASSETS = [...CRITICAL_ASSETS, ...ON_DEMAND_ASSETS];
 
 // API endpoints to cache
 const API_ENDPOINTS = [
