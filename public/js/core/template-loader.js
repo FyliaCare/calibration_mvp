@@ -6,37 +6,73 @@
 class TemplateLoader {
   constructor() {
     this.cache = new Map();
-    this.basePath = 'views/';
+    this.basePath = 'templates/';
   }
 
   /**
    * Load a template from a file
-   * @param {string} path - Path to template file (relative to views/)
+   * @param {string} path - Path to template file (relative to templates/)
+   * @param {string} containerId - Optional container ID to inject into
    * @param {boolean} useCache - Whether to use cached version
    * @returns {Promise<string>} Template HTML
    */
-  async load(path, useCache = true) {
+  async load(path, containerId = null, useCache = true) {
+    // Ensure .html extension
+    const templatePath = path.endsWith('.html') ? path : `${path}.html`;
+    
     // Check cache first
-    if (useCache && this.cache.has(path)) {
-      return this.cache.get(path);
+    if (useCache && this.cache.has(templatePath)) {
+      const html = this.cache.get(templatePath);
+      if (containerId) {
+        this._injectIntoContainer(containerId, html, templatePath);
+      }
+      return html;
     }
 
     try {
-      const response = await fetch(`${this.basePath}${path}`);
+      const response = await fetch(`${this.basePath}${templatePath}`);
       if (!response.ok) {
-        throw new Error(`Failed to load template: ${path} (${response.status})`);
+        throw new Error(`Failed to load template: ${templatePath} (${response.status})`);
       }
 
       const html = await response.text();
       
       // Cache the template
-      this.cache.set(path, html);
+      this.cache.set(templatePath, html);
+      
+      // Inject into container if specified
+      if (containerId) {
+        this._injectIntoContainer(containerId, html, templatePath);
+      }
       
       return html;
     } catch (error) {
       console.error(`Template loading error:`, error);
-      return `<div class="error">Failed to load template: ${path}</div>`;
+      const errorHtml = `<div class="error">Failed to load template: ${templatePath}</div>`;
+      if (containerId) {
+        this._injectIntoContainer(containerId, errorHtml, templatePath);
+      }
+      return errorHtml;
     }
+  }
+
+  /**
+   * Inject HTML into container
+   * @private
+   */
+  _injectIntoContainer(containerId, html, templatePath) {
+    const container = document.getElementById(containerId);
+    if (!container) {
+      console.error(`Container not found: ${containerId}`);
+      return;
+    }
+    
+    container.innerHTML = html;
+    
+    // Dispatch event for initialization
+    container.dispatchEvent(new CustomEvent('template-loaded', {
+      detail: { path: templatePath }
+    }));
   }
 
   /**
