@@ -96,7 +96,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.static(path.join(__dirname, 'public'), {
+app.use(express.static(path.join(__dirname, '../public'), {
   maxAge: 0, // Let the middleware handle caching
   etag: true, // Enable ETags for better caching
   lastModified: true // Enable Last-Modified headers
