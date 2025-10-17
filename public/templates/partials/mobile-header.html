@@ -1,0 +1,49 @@
+<!-- Mobile Header (visible only on mobile) -->
+<header class="app-header mobile-only">
+  <div class="header-logo">
+    <i class="fas fa-balance-scale"></i>
+    <span>CalPro</span>
+  </div>
+  <div class="header-actions">
+    <button class="header-icon-btn" id="mobileSearchBtn" aria-label="Search">
+      <i class="fas fa-search"></i>
+    </button>
+    <button class="header-icon-btn" id="mobileNotificationsBtn" aria-label="Notifications">
+      <i class="fas fa-bell"></i>
+      <span class="badge"></span>
+    </button>
+    <button class="header-icon-btn" id="mobileProfileBtn" aria-label="Profile">
+      <i class="fas fa-user-circle"></i>
+    </button>
+  </div>
+</header>
+
+<!-- Mobile Bottom Navigation (visible only on mobile) -->
+<nav class="mobile-bottom-nav mobile-only" role="navigation" aria-label="Mobile navigation">
+  <a href="#dashboard" class="nav-tab active touch-feedback" data-page="dashboard">
+    <i class="nav-tab-icon fas fa-home"></i>
+    <span class="nav-tab-label">Home</span>
+  </a>
+  <a href="#worksheets" class="nav-tab touch-feedback" data-page="worksheets">
+    <i class="nav-tab-icon fas fa-file-alt"></i>
+    <span class="nav-tab-label">Worksheets</span>
+    <span class="nav-badge">3</span>
+  </a>
+  <a href="#equipment" class="nav-tab touch-feedback" data-page="equipment">
+    <i class="nav-tab-icon fas fa-tools"></i>
+    <span class="nav-tab-label">Equipment</span>
+  </a>
+  <a href="#certificates" class="nav-tab touch-feedback" data-page="certificates">
+    <i class="nav-tab-icon fas fa-certificate"></i>
+    <span class="nav-tab-label">Certificates</span>
+  </a>
+  <a href="#more" class="nav-tab touch-feedback" data-page="more">
+    <i class="nav-tab-icon fas fa-ellipsis-h"></i>
+    <span class="nav-tab-label">More</span>
+  </a>
+</nav>
+
+<!-- Floating Action Button (mobile) -->
+<button class="fab mobile-only" id="mobileFAB" aria-label="Quick action">
+  <i class="fas fa-plus"></i>
+</button>

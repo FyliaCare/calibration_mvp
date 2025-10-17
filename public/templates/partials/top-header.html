@@ -1,0 +1,108 @@
+<!-- Modern Top Header Bar -->
+<header class="top-header">
+  <div class="header-left">
+    <!-- Mobile Menu Toggle Button -->
+    <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu" style="display: none;">
+      <i class="fas fa-bars"></i>
+    </button>
+    
+    <div class="company-brand">
+      <div class="header-logo-icon" id="headerLogo" title="Toggle Sidebar" style="font-size: 32px; color: #FFB800; cursor: pointer; margin-right: 15px;">
+        <i class="fas fa-balance-scale"></i>
+      </div>
+      <div class="brand-info">
+        <h1 class="company-name">CalPro</h1>
+        <span class="company-tagline">Professional Calibration Management System</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="header-center">
+    <div class="global-search">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" 
+             class="search-input" 
+             id="globalSearch" 
+             placeholder="Search certificates, worksheets, customers...">
+    </div>
+  </div>
+  
+  <div class="header-right">
+    <!-- Live Clock -->
+    <div class="time-widget">
+      <i class="fas fa-clock"></i>
+      <div class="time-info">
+        <span class="time-display" id="currentTime">00:00:00</span>
+        <span class="date-display" id="currentDate">Mon, Oct 14</span>
+      </div>
+    </div>
+    
+    <!-- Notifications -->
+    <div class="notification-container">
+      <button class="header-icon-btn" id="notificationBtn" title="Notifications">
+        <i class="fas fa-bell"></i>
+        <span class="notification-badge" id="notificationCount">0</span>
+      </button>
+      
+      <div class="notification-dropdown" id="notificationDropdown">
+        <div class="dropdown-header">
+          <h4>Notifications</h4>
+          <button class="mark-read-btn" onclick="clearAllNotifications()">Clear all</button>
+        </div>
+        <div class="dropdown-content" id="notificationList">
+          <div class="empty-notifications">
+            <i class="fas fa-bell-slash"></i>
+            <p>No new notifications</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- User Profile -->
+    <div class="user-profile-widget">
+      <button class="user-profile-btn" id="userProfileBtn">
+        <div class="user-avatar">
+          <img src="https://ui-avatars.com/api/?name=E+Mensah&background=FFB800&color=333&bold=true" alt="User Avatar">
+          <span class="user-status-dot online"></span>
+        </div>
+        <div class="user-details">
+          <span class="user-name" id="headerUserName">John Doe</span>
+          <span class="user-role">Lead Calibrator</span>
+        </div>
+        <i class="fas fa-chevron-down dropdown-icon"></i>
+      </button>
+      
+      <div class="user-dropdown" id="userDropdown">
+        <div class="user-dropdown-header">
+          <div class="user-avatar-large">
+            <img src="https://ui-avatars.com/api/?name=E+Mensah&background=FFB800&color=333&bold=true&size=64" alt="User Avatar">
+          </div>
+          <div class="user-dropdown-info">
+            <h4 id="userDropdownName">John Doe</h4>
+            <p id="userDropdownEmail">admin@calpro.com</p>
+            <span class="user-badge">Lead Calibrator</span>
+          </div>
+        </div>
+        <div class="user-dropdown-content">
+          <a href="javascript:void(0)" class="dropdown-menu-item" id="profileLink">
+            <i class="fas fa-user"></i>
+            <span>My Profile</span>
+          </a>
+          <a href="#activity" class="dropdown-menu-item">
+            <i class="fas fa-history"></i>
+            <span>Activity Log</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#help" class="dropdown-menu-item">
+            <i class="fas fa-question-circle"></i>
+            <span>Help & Support</span>
+          </a>
+          <a href="#logout" class="dropdown-menu-item danger">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

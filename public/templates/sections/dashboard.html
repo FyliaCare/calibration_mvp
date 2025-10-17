@@ -1,0 +1,200 @@
+<!-- Dashboard Section -->
+<section class="content-section active" id="dashboard">
+  <!-- Enhanced Dashboard Header -->
+  <div class="dashboard-header-enhanced">
+    <div class="header-main">
+      <div class="header-title-group">
+        <h1><i class="fas fa-gauge-high"></i> Field Calibration Dashboard</h1>
+        <p class="dashboard-subtitle">Real-time overview of calibration activities and equipment status</p>
+      </div>
+      <div class="header-actions-group">
+        <button class="btn btn-primary btn-large" id="newWorksheetBtn" onclick="window.location.hash='worksheets'">
+          <i class="fas fa-plus-circle"></i>
+          <span>New Worksheet</span>
+        </button>
+        <button class="btn btn-secondary" id="quickScanBtn" onclick="openQuickScanModal()">
+          <i class="fas fa-qrcode"></i>
+          <span>Quick Scan</span>
+        </button>
+        <button class="btn btn-outline" id="exportDataBtn" onclick="openExportModal()">
+          <i class="fas fa-download"></i>
+          <span>Export</span>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Quick Stats Bar -->
+    <div class="quick-stats-bar">
+      <div class="quick-stat-item">
+        <i class="fas fa-calendar-day"></i>
+        <div class="quick-stat-content">
+          <span class="quick-stat-value" id="todayCount">0</span>
+          <span class="quick-stat-label">Today's Calibrations</span>
+        </div>
+      </div>
+      <div class="quick-stat-divider"></div>
+      <div class="quick-stat-item">
+        <i class="fas fa-clock"></i>
+        <div class="quick-stat-content">
+          <span class="quick-stat-value" id="weeklyCount">0</span>
+          <span class="quick-stat-label">This Week</span>
+        </div>
+      </div>
+      <div class="quick-stat-divider"></div>
+      <div class="quick-stat-item warning">
+        <i class="fas fa-exclamation-triangle"></i>
+        <div class="quick-stat-content">
+          <span class="quick-stat-value" id="overdueCount">0</span>
+          <span class="quick-stat-label">Overdue</span>
+        </div>
+      </div>
+      <div class="quick-stat-divider"></div>
+      <div class="quick-stat-item">
+        <i class="fas fa-check-circle"></i>
+        <div class="quick-stat-content">
+          <span class="quick-stat-value" id="completedToday">0</span>
+          <span class="quick-stat-label">Completed Today</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Worksheet Creation Section -->
+  <div class="task-bar-section" id="worksheetSection">
+    <div class="section-title-bar">
+      <h2><i class="fas fa-file-circle-plus"></i> Quick Worksheet Creation</h2>
+      <p class="section-subtitle">Select equipment category to start a new calibration worksheet</p>
+    </div>
+
+    <div class="worksheet-templates-grid">
+      <!-- Pressure Equipment -->
+      <div class="worksheet-template-card" onclick="showPressureTemplates()">
+        <div class="template-icon pressure-icon">
+          <i class="fas fa-gauge-high"></i>
+        </div>
+        <div class="template-content">
+          <h3>Pressure Equipment</h3>
+          <p>Gauges, Transmitters, Calibrators, Vacuum</p>
+          <div class="template-count">
+            <i class="fas fa-file-lines"></i>
+            <span>14 templates</span>
+          </div>
+        </div>
+        <div class="template-arrow">
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </div>
+
+      <!-- Temperature Equipment -->
+      <div class="worksheet-template-card" onclick="window.location.hash='worksheets'">
+        <div class="template-icon temperature-icon">
+          <i class="fas fa-thermometer-half"></i>
+        </div>
+        <div class="template-content">
+          <h3>Temperature Equipment</h3>
+          <p>RTDs, Thermocouples, Transmitters, Calibrators</p>
+          <div class="template-count">
+            <i class="fas fa-file-lines"></i>
+            <span>Create custom</span>
+          </div>
+        </div>
+        <div class="template-arrow">
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </div>
+
+      <!-- Electrical Equipment -->
+      <div class="worksheet-template-card" onclick="window.location.hash='worksheets'">
+        <div class="template-icon electrical-icon">
+          <i class="fas fa-bolt"></i>
+        </div>
+        <div class="template-content">
+          <h3>Electrical Equipment</h3>
+          <p>DMMs, Meggers, Oscilloscopes, Power Meters</p>
+          <div class="template-count">
+            <i class="fas fa-file-lines"></i>
+            <span>Create custom</span>
+          </div>
+        </div>
+        <div class="template-arrow">
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </div>
+
+      <!-- Mechanical Equipment -->
+      <div class="worksheet-template-card" onclick="window.location.hash='worksheets'">
+        <div class="template-icon mechanical-icon">
+          <i class="fas fa-cog"></i>
+        </div>
+        <div class="template-content">
+          <h3>Mechanical Equipment</h3>
+          <p>Torque Tools, Force Gauges, Scales, Tachometers</p>
+          <div class="template-count">
+            <i class="fas fa-file-lines"></i>
+            <span>Create custom</span>
+          </div>
+        </div>
+        <div class="template-arrow">
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </div>
+
+      <!-- Dimensional Equipment -->
+      <div class="worksheet-template-card" onclick="window.location.hash='worksheets'">
+        <div class="template-icon dimensional-icon">
+          <i class="fas fa-ruler"></i>
+        </div>
+        <div class="template-content">
+          <h3>Dimensional Equipment</h3>
+          <p>Micrometers, Calipers, Gage Blocks, Indicators</p>
+          <div class="template-count">
+            <i class="fas fa-file-lines"></i>
+            <span>Create custom</span>
+          </div>
+        </div>
+        <div class="template-arrow">
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </div>
+
+      <!-- Custom/Other Equipment -->
+      <div class="worksheet-template-card" onclick="window.location.hash='worksheets'">
+        <div class="template-icon custom-icon">
+          <i class="fas fa-plus-circle"></i>
+        </div>
+        <div class="template-content">
+          <h3>Custom Worksheet</h3>
+          <p>Create blank worksheet for specialized equipment</p>
+          <div class="template-count">
+            <i class="fas fa-file-circle-plus"></i>
+            <span>Start from scratch</span>
+          </div>
+        </div>
+        <div class="template-arrow">
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Worksheets & Certificates -->
+  <div class="dashboard-grid">
+    <div class="dashboard-card full-width">
+      <div class="card-header">
+        <h3><i class="fas fa-clock-rotate-left"></i> Recent Worksheets & Certificates</h3>
+        <button class="btn btn-link" id="viewAllBtn" onclick="window.location.hash='certificates'">
+          View All <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+      <div class="card-content">
+        <div class="recent-worksheets-list">
+          <!-- Dynamic content loaded by JavaScript -->
+          <div style="text-align: center; padding: 40px 20px; color: #999;">
+            <i class="fas fa-spinner fa-spin" style="font-size: 32px; margin-bottom: 12px;"></i>
+            <p>Loading recent worksheets...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

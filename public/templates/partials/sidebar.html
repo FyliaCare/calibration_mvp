@@ -1,0 +1,75 @@
+<!-- Navigation Sidebar -->
+<nav class="sidebar" id="sidebar" aria-label="Main navigation">
+  <div class="sidebar-header">
+    <div class="sidebar-brand">
+      <div class="sidebar-logo-text">
+        <i class="fas fa-balance-scale" style="font-size: 36px; color: #FFB800;"></i>
+      </div>
+      <div class="sidebar-title">
+        <h3>CalPro</h3>
+        <p>Calibration Management</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="sidebar-menu" role="menu">
+    <div class="menu-section">
+      <h4>Main</h4>
+      <a href="#dashboard" class="menu-item active" data-section="dashboard" aria-current="page">
+        <i class="fas fa-tachometer-alt"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="#worksheets" class="menu-item" data-section="worksheets">
+        <i class="fas fa-file-lines"></i>
+        <span>Worksheets</span>
+      </a>
+      <a href="#certificates" class="menu-item" data-section="certificates">
+        <i class="fas fa-certificate"></i>
+        <span>Certificates</span>
+        <span class="menu-notification-badge" id="certificateNotificationBadge" style="display: none;"></span>
+      </a>
+      <a href="equipment.html" class="menu-item">
+        <i class="fas fa-tools"></i>
+        <span>Equipment</span>
+      </a>
+    </div>
+    
+    <div class="menu-section">
+      <h4>Management</h4>
+      <a href="clients.html" class="menu-item">
+        <i class="fas fa-users"></i>
+        <span>Clients</span>
+      </a>
+      <a href="integrations.html" class="menu-item">
+        <i class="fas fa-plug"></i>
+        <span>Integrations</span>
+      </a>
+      <a href="#reports" class="menu-item" data-section="reports">
+        <i class="fas fa-chart-bar"></i>
+        <span>Reports</span>
+      </a>
+      <a href="#settings" class="menu-item" data-section="settings">
+        <i class="fas fa-cog"></i>
+        <span>Settings</span>
+      </a>
+    </div>
+
+    <div class="menu-section">
+      <h4>Tools</h4>
+      <a href="converter.html" class="menu-item">
+        <i class="fas fa-calculator"></i>
+        <span>Unit Converter</span>
+      </a>
+    </div>
+  </div>
+  
+  <div class="sidebar-footer">
+    <div class="sidebar-status">
+      <div class="status-item" id="connectionStatus">
+        <i class="fas fa-wifi" id="connectionIcon"></i>
+        <span id="connectionText">Online</span>
+      </div>
+      <div class="version-info">v2.0.0</div>
+    </div>
+  </div>
+</nav>
