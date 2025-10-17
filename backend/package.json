@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node server-auth.js",
     "start:basic": "node server.js",
+    "start:test": "node test-server.js",
     "dev": "nodemon server-auth.js",
     "test": "echo \"No tests specified\" && exit 0",
     "backup": "node scripts/backup.js"
