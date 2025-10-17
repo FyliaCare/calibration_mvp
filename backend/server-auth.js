@@ -30,7 +30,7 @@ const app = express();
 // Configuration
 const config = {
   port: process.env.PORT || 3000,
-  host: process.env.HOST || 'localhost',
+  host: process.env.HOST || '0.0.0.0',
   jwtSecret: process.env.JWT_SECRET || 'default-secret-change-in-production',
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
   sessionSecret: process.env.SESSION_SECRET || 'default-session-secret',
@@ -56,7 +56,29 @@ app.use(compression({
 }));
 
 app.use(cors({
-  origin: process.env.ALLOWED_ORIGINS?.split(',') || [`http://localhost:${config.port}`],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [
+      `http://localhost:${config.port}`,
+      'http://localhost:3000',
+      'http://127.0.0.1:3000'
+    ];
+    
+    // Allow Railway and Netlify domains in production
+    if (process.env.NODE_ENV === 'production') {
+      if (origin.includes('.railway.app') || origin.includes('.netlify.app')) {
+        return callback(null, true);
+      }
+    }
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 
