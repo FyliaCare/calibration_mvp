@@ -1,0 +1,48 @@
+/**
+ * CalPro Calibration Management System
+ * Main CSS Entry Point
+ * 
+ * This file imports all modular CSS files in the correct order.
+ * Import this single file in your HTML instead of individual CSS files.
+ */
+
+/* ========================================
+   CORE STYLES (Load First)
+   ======================================== */
+@import url('core/variables.css');
+@import url('core/reset.css');
+
+/* ========================================
+   COMPONENT STYLES
+   ======================================== */
+@import url('components/layout.css');
+@import url('components/buttons.css');
+@import url('components/forms.css');
+@import url('components/cards.css');
+@import url('components/tables.css');
+@import url('components/modals.css');
+@import url('components/sidebar.css');
+
+/* ========================================
+   SECTION STYLES (Coming Soon)
+   These will be created as we extract
+   section-specific styles from styles.css
+   ======================================== */
+/* @import url('sections/dashboard.css'); */
+/* @import url('sections/worksheets.css'); */
+/* @import url('sections/certificates.css'); */
+/* @import url('sections/equipment.css'); */
+/* @import url('sections/reports.css'); */
+
+/* ========================================
+   THEME OVERRIDES (Load Last)
+   ======================================== */
+/* @import url('themes/dark.css'); */
+/* @import url('themes/custom.css'); */
+
+/* ========================================
+   LEGACY STYLES (Temporary)
+   Keep original styles.css until fully migrated
+   ======================================== */
+/* When ready, uncomment this line and remove styles.css from HTML */
+/* @import url('../styles.css'); */
