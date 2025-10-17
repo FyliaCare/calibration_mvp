@@ -3559,7 +3559,7 @@
   <!-- Main application logic - MOBILE OPTIMIZED -->
   <script src="app.js?v=20251017" defer></script>
   
-  <!-- MOBILE OPTIMIZED: Minimal Critical Path Script Only -->
+  <!-- CRITICAL: Function Stubs and Core Logic -->
   <script>
     // Service Worker Registration - Progressive Web App support
     if ('serviceWorker' in navigator) {
@@ -3596,6 +3596,65 @@
         setTimeout(() => loadingScreen.remove(), 300);
       }
     }, loadingDelay);
+
+    // CRITICAL FUNCTION STUBS - Prevent onclick errors before app.js loads
+    // These will be overridden by app.js when it loads
+    const functionStubs = [
+      'clearAllNotifications', 'openQuickScanModal', 'openExportModal',
+      'showPressureTemplates', 'selectWorksheetType', 'showWorksheetList',
+      'loadWorksheetCards', 'updateDashboardStats', 'showWorksheetForm',
+      'changeWorksheetType', 'nextWorksheetStep', 'addWorksheetTestRow',
+      'addWorksheetStandardSet', 'calculateWorksheetUncertainty',
+      'prevWorksheetStep', 'saveWorksheetDraft', 'completeWorksheet',
+      'viewWorksheet', 'convertToCertificate', 'continueWorksheet',
+      'deleteWorksheet', 'approveWorksheet', 'removeRow',
+      'openCertificateTemplateModal', 'toggleCertificateView',
+      'showNewRecordForm', 'showTemplateDialog', 'nextStep', 'prevStep',
+      'addBasicTestRow', 'closeUserModal', 'closeUserActivityModal',
+      'showSettings', 'showProfile', 'logout'
+    ];
+
+    functionStubs.forEach(name => {
+      if (!window[name]) {
+        window[name] = function(...args) {
+          console.log(`Function ${name} called, waiting for app.js to load...`);
+          // Queue the call to retry after app.js loads
+          if (window.appLoaded) {
+            if (typeof window[name] === 'function') {
+              return window[name](...args);
+            }
+          } else {
+            setTimeout(() => {
+              if (typeof window[name] === 'function') {
+                window[name](...args);
+              } else {
+                console.warn(`Function ${name} not available after app.js load`);
+              }
+            }, 500);
+          }
+        };
+      }
+    });
+
+    // Flag when app.js is loaded
+    window.addEventListener('DOMContentLoaded', () => {
+      // Check if app.js functions are loaded
+      const checkInterval = setInterval(() => {
+        if (typeof window.initializeApp === 'function') {
+          window.appLoaded = true;
+          clearInterval(checkInterval);
+          console.log('✅ App.js loaded successfully');
+        }
+      }, 100);
+      
+      // Timeout after 5 seconds
+      setTimeout(() => {
+        clearInterval(checkInterval);
+        if (!window.appLoaded) {
+          console.warn('⚠️ App.js took longer than expected to load');
+        }
+      }, 5000);
+    });
   </script>
 </body>
 </html>

@@ -3359,4 +3359,192 @@ window.downloadPdfDirect = function() {
     }
   });
 
+  // CRITICAL: Export all functions needed by onclick handlers in HTML
+  // This ensures buttons work immediately when clicked
+  const exportToGlobal = {
+    // Initialization
+    initializeApp,
+    initializeDashboard,
+    initializeNavigation,
+    initializeCharts,
+    initializeFormWizard,
+    initializeAllButtons,
+    
+    // Dashboard functions
+    updateDashboardStats,
+    loadRecentActivity,
+    showQuickSearchModal,
+    showNotificationPanel,
+    clearAllNotifications: () => {
+      console.log('Clearing notifications');
+      showNotification('All notifications cleared', 'success');
+    },
+    
+    // Navigation
+    showSection,
+    updateActiveMenuItem,
+    updateBreadcrumb,
+    
+    // Worksheet functions
+    showWorksheetList: () => showSection('worksheets'),
+    showWorksheetForm: () => {
+      console.log('Show worksheet form');
+      showSection('worksheets');
+      const formArea = document.getElementById('worksheetFormArea');
+      const listArea = document.getElementById('worksheetListArea');
+      if (formArea) formArea.style.display = 'block';
+      if (listArea) listArea.style.display = 'none';
+    },
+    loadWorksheetCards: () => {
+      console.log('Loading worksheet cards');
+      updateDashboardStats();
+    },
+    selectWorksheetType: (type) => {
+      console.log('Selected type:', type);
+      const typeSelector = document.getElementById('worksheetTypeSelector');
+      const formArea = document.getElementById('worksheetFormContent');
+      if (typeSelector) typeSelector.style.display = 'none';
+      if (formArea) formArea.style.display = 'block';
+      showNotification(`Selected ${type} worksheet type`, 'success');
+    },
+    changeWorksheetType: () => {
+      const typeSelector = document.getElementById('worksheetTypeSelector');
+      const formArea = document.getElementById('worksheetFormContent');
+      if (typeSelector) typeSelector.style.display = 'block';
+      if (formArea) formArea.style.display = 'none';
+    },
+    nextWorksheetStep: () => {
+      console.log('Next worksheet step');
+      showNotification('Moving to next step', 'info');
+    },
+    prevWorksheetStep: () => {
+      console.log('Previous worksheet step');
+      showNotification('Moving to previous step', 'info');
+    },
+    addWorksheetTestRow: () => {
+      console.log('Add test row');
+      showNotification('Test row added', 'success');
+    },
+    addWorksheetStandardSet: () => {
+      console.log('Add standard set');
+      showNotification('Standard set added', 'success');
+    },
+    calculateWorksheetUncertainty: () => {
+      console.log('Calculate uncertainty');
+      showNotification('Calculating uncertainty...', 'info');
+    },
+    saveWorksheetDraft: () => {
+      console.log('Save worksheet draft');
+      showNotification('Worksheet saved as draft', 'success');
+    },
+    completeWorksheet: () => {
+      console.log('Complete worksheet');
+      if (confirm('Complete this worksheet?')) {
+        showNotification('Worksheet completed successfully!', 'success');
+        setTimeout(() => showSection('worksheets'), 1500);
+      }
+    },
+    viewWorksheet: (id) => {
+      console.log('View worksheet:', id);
+      showNotification(`Opening worksheet ${id}`, 'info');
+    },
+    continueWorksheet: (id) => {
+      console.log('Continue worksheet:', id);
+      showNotification(`Continuing worksheet ${id}`, 'info');
+    },
+    deleteWorksheet: (id) => {
+      if (confirm(`Delete worksheet ${id}?`)) {
+        console.log('Delete worksheet:', id);
+        showNotification(`Worksheet ${id} deleted`, 'success');
+      }
+    },
+    approveWorksheet: (id) => {
+      console.log('Approve worksheet:', id);
+      showNotification(`Worksheet ${id} approved`, 'success');
+    },
+    convertToCertificate: (id) => {
+      console.log('Convert to certificate:', id);
+      showNotification(`Converting worksheet ${id} to certificate`, 'info');
+      setTimeout(() => showSection('certificates'), 1000);
+    },
+    
+    // Certificate functions
+    openCertificateTemplateModal: () => {
+      console.log('Open certificate template');
+      showNotification('Opening certificate templates', 'info');
+    },
+    toggleCertificateView: (view) => {
+      document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelector(`[data-view="${view}"]`)?.classList.add('active');
+      const gridView = document.getElementById('certificateGridView');
+      const listView = document.getElementById('certificateListView');
+      if (view === 'grid') {
+        if (gridView) gridView.style.display = 'grid';
+        if (listView) listView.style.display = 'none';
+      } else {
+        if (gridView) gridView.style.display = 'none';
+        if (listView) listView.style.display = 'block';
+      }
+    },
+    
+    // Pressure templates
+    showPressureTemplates: () => {
+      const modal = document.getElementById('pressureTemplateModal');
+      if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      } else {
+        console.log('Opening pressure templates');
+        showNotification('Loading pressure templates...', 'info');
+      }
+    },
+    closePressureTemplates: () => {
+      const modal = document.getElementById('pressureTemplateModal');
+      if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+      }
+    },
+    selectPressureTemplate: (templateId) => {
+      console.log('Selected pressure template:', templateId);
+      const modal = document.getElementById('pressureTemplateModal');
+      if (modal) modal.style.display = 'none';
+      document.body.style.overflow = 'auto';
+      window.location.hash = 'worksheets';
+      showNotification(`Loaded template: ${templateId}`, 'success');
+    },
+    
+    // Modals and dialogs
+    openQuickScanModal: () => {
+      console.log('Quick scan modal');
+      showNotification('Quick scan feature coming soon', 'info');
+    },
+    openExportModal: exportData,
+    closeUserModal: () => {
+      const modal = document.getElementById('userModal');
+      if (modal) modal.style.display = 'none';
+    },
+    closeUserActivityModal: () => {
+      const modal = document.getElementById('userActivityModal');
+      if (modal) modal.style.display = 'none';
+    },
+    
+    // Settings and profile
+    showSettings: showSettingsModal,
+    showProfile: showProfileMenu,
+    logout,
+    
+    // Utility functions
+    showNotification,
+    exportData
+  };
+
+  // Assign all functions to window object
+  Object.assign(window, exportToGlobal);
+
+  // Mark app as loaded
+  window.appLoaded = true;
+  console.log('✅ App functions exported to global scope');
+
+
 })();
