@@ -240,6 +240,135 @@ db.serialize(() => {
   db.run(`CREATE INDEX IF NOT EXISTS idx_otp_user ON otp_codes(user_id)`);
   db.run(`CREATE INDEX IF NOT EXISTS idx_tokens_user ON auth_tokens(user_id)`);
   db.run(`CREATE INDEX IF NOT EXISTS idx_activity_user ON user_activity(user_id)`);
+
+  // Calibration Management Tables
+  // Clients table
+  db.run(`CREATE TABLE IF NOT EXISTS clients (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    industry TEXT,
+    contact TEXT,
+    email TEXT,
+    phone TEXT,
+    address TEXT,
+    website TEXT,
+    notes TEXT,
+    active INTEGER DEFAULT 1,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    created_by INTEGER,
+    FOREIGN KEY (created_by) REFERENCES users (id)
+  )`);
+
+  // Equipment table
+  db.run(`CREATE TABLE IF NOT EXISTS equipment (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    equipment_id TEXT UNIQUE NOT NULL,
+    name TEXT NOT NULL,
+    category TEXT,
+    manufacturer TEXT,
+    model TEXT,
+    serial_number TEXT,
+    description TEXT,
+    location TEXT,
+    client_id INTEGER,
+    calibration_interval INTEGER DEFAULT 365,
+    last_calibration_date DATE,
+    next_calibration_date DATE,
+    calibration_status TEXT CHECK(calibration_status IN ('Due', 'Overdue', 'Current')) DEFAULT 'Due',
+    accuracy TEXT,
+    measurement_range TEXT,
+    units TEXT,
+    active INTEGER DEFAULT 1,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    created_by INTEGER,
+    FOREIGN KEY (client_id) REFERENCES clients (id),
+    FOREIGN KEY (created_by) REFERENCES users (id)
+  )`);
+
+  // Calibration records table
+  db.run(`CREATE TABLE IF NOT EXISTS records (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    local_id TEXT UNIQUE,
+    certificate_number TEXT UNIQUE NOT NULL,
+    instrument_type TEXT NOT NULL,
+    customer TEXT,
+    job_reference TEXT,
+    date_of_issue DATE,
+    date_due DATE,
+    equipment_id INTEGER,
+    
+    -- Equipment information
+    equipment_description TEXT,
+    equipment_manufacturer TEXT,
+    equipment_model TEXT,
+    equipment_serial TEXT,
+    equipment_range_min REAL,
+    equipment_range_max REAL,
+    equipment_units TEXT,
+    equipment_accuracy REAL,
+    
+    -- Test conditions
+    test_temperature REAL,
+    test_humidity REAL,
+    test_pressure REAL,
+    environmental_conditions TEXT,
+    
+    -- Traceability
+    reference_standard TEXT,
+    reference_certificate TEXT,
+    reference_cal_date DATE,
+    reference_due_date DATE,
+    
+    -- Technician info
+    technician_name TEXT,
+    technician_certification TEXT,
+    
+    -- Status and metadata
+    overall_result TEXT CHECK(overall_result IN ('PASS', 'FAIL', 'CONDITIONAL')),
+    test_points_total INTEGER DEFAULT 0,
+    test_points_passed INTEGER DEFAULT 0,
+    test_points_failed INTEGER DEFAULT 0,
+    measurement_uncertainty REAL,
+    
+    -- Full payload for backwards compatibility
+    payload TEXT,
+    
+    -- Sync and audit
+    synced INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    created_by INTEGER,
+    updated_by INTEGER,
+    FOREIGN KEY (equipment_id) REFERENCES equipment (id),
+    FOREIGN KEY (created_by) REFERENCES users (id),
+    FOREIGN KEY (updated_by) REFERENCES users (id)
+  )`);
+
+  // Test results table
+  db.run(`CREATE TABLE IF NOT EXISTS test_results (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    record_id INTEGER,
+    sequence_number INTEGER,
+    reference_value REAL,
+    measured_value REAL,
+    deviation REAL,
+    error_percent REAL,
+    direction TEXT CHECK(direction IN ('rise', 'fall')),
+    result TEXT CHECK(result IN ('Pass', 'Fail')),
+    notes TEXT,
+    FOREIGN KEY (record_id) REFERENCES records (id) ON DELETE CASCADE
+  )`);
+
+  // Create calibration indexes
+  db.run(`CREATE INDEX IF NOT EXISTS idx_clients_name ON clients(name)`);
+  db.run(`CREATE INDEX IF NOT EXISTS idx_equipment_id ON equipment(equipment_id)`);
+  db.run(`CREATE INDEX IF NOT EXISTS idx_equipment_client ON equipment(client_id)`);
+  db.run(`CREATE INDEX IF NOT EXISTS idx_equipment_status ON equipment(calibration_status)`);
+  db.run(`CREATE INDEX IF NOT EXISTS idx_records_cert ON records(certificate_number)`);
+  db.run(`CREATE INDEX IF NOT EXISTS idx_records_equipment ON records(equipment_id)`);
+  db.run(`CREATE INDEX IF NOT EXISTS idx_test_results_record ON test_results(record_id)`);
 });
 
 // Ensure additional columns for profile features
