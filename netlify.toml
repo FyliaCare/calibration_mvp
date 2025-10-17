@@ -23,7 +23,8 @@
   [headers.values]
     Cache-Control = "no-cache"
 
-# API redirects - uncomment and update URL when backend is deployed
+# API redirects - disabled for demo mode
+# Uncomment and update URL when backend is deployed to production
 # [[redirects]]
 #   from = "/api/*"
 #   to = "https://your-backend-api.herokuapp.com/api/:splat"

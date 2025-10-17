@@ -290,6 +290,11 @@
 
       <div id="alert-container"></div>
 
+      <!-- Demo Mode Banner -->
+      <div id="demo-banner" style="display: none; background: #fff3cd; color: #856404; padding: 10px; margin-bottom: 20px; border-radius: 6px; border: 1px solid #ffeeba; text-align: center;">
+        <i class="fas fa-info-circle"></i> <strong>Demo Mode:</strong> Any email/password combination will work for testing
+      </div>
+
       <!-- Login Form -->
       <div id="login-form" class="form-section active">
         <form onsubmit="handleLogin(event)">
@@ -382,6 +387,11 @@
 
   <script>
     const API_URL = window.location.origin;
+    
+    // Demo mode detection for Netlify testing
+    const isDemoMode = window.location.hostname.includes('netlify') || 
+                       window.location.hostname.includes('github.io') ||
+                       window.location.hostname !== 'localhost';
 
     function switchTab(tab) {
       // Update tabs
@@ -446,6 +456,40 @@
       setLoading('login-btn', true);
 
       try {
+        // Demo mode for testing on Netlify
+        if (isDemoMode) {
+          // Simulate API delay
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          
+          // Mock successful login for demo/testing
+          if (email && password) {
+            const mockUser = {
+              id: 1,
+              email: email,
+              name: email.split('@')[0],
+              role: 'admin',
+              department: 'Calibration'
+            };
+            
+            const mockToken = 'demo-token-' + Date.now();
+            
+            localStorage.setItem('auth_token', mockToken);
+            localStorage.setItem('user', JSON.stringify(mockUser));
+            
+            showAlert('Demo Login successful! Redirecting...', 'success');
+            
+            setTimeout(() => {
+              window.location.href = '/index.html';
+            }, 1000);
+            return;
+          } else {
+            showAlert('Please enter email and password', 'error');
+            setLoading('login-btn', false);
+            return;
+          }
+        }
+
+        // Production API call
         const response = await fetch(`${API_URL}/api/auth/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -549,6 +593,11 @@
     // Check if already logged in
     if (localStorage.getItem('auth_token')) {
       window.location.href = '/index.html';
+    }
+
+    // Show demo banner if in demo mode
+    if (isDemoMode) {
+      document.getElementById('demo-banner').style.display = 'block';
     }
   </script>
 </body>

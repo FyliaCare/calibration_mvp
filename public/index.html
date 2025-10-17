@@ -95,8 +95,23 @@
       window.currentUser = user;
       window.authToken = token;
       
+      // Demo mode detection
+      const isDemoMode = window.location.hostname.includes('netlify') || 
+                         window.location.hostname.includes('github.io') ||
+                         window.location.hostname !== 'localhost';
+      
       // Set default headers for all fetch requests
       window.fetchWithAuth = function(url, options = {}) {
+        // Demo mode - return mock responses
+        if (isDemoMode) {
+          return Promise.resolve({
+            ok: true,
+            status: 200,
+            json: () => Promise.resolve(getMockApiResponse(url)),
+            text: () => Promise.resolve('Mock response')
+          });
+        }
+
         options.headers = {
           ...options.headers,
           'Authorization': `Bearer ${token}`,
@@ -114,6 +129,34 @@
             return response;
           });
       };
+
+      // Mock API responses for demo mode
+      function getMockApiResponse(url) {
+        if (url.includes('/api/user/profile')) {
+          return {
+            id: 1,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+            department: user.department,
+            profile_picture: null,
+            last_login: new Date().toISOString()
+          };
+        }
+        if (url.includes('/api/users')) {
+          return {
+            users: [
+              { id: 1, name: 'Demo Admin', email: 'admin@demo.com', role: 'admin', status: 'active' },
+              { id: 2, name: 'Demo User', email: 'user@demo.com', role: 'calibrator', status: 'active' }
+            ],
+            total: 2,
+            page: 1,
+            totalPages: 1
+          };
+        }
+        // Default mock response
+        return { message: 'Demo mode - mock response', success: true };
+      }
     })();
   </script>
   <!-- Navigation Sidebar -->
@@ -196,6 +239,11 @@
 
   <!-- Main Content Area -->
   <main class="main-content" id="mainContent">
+    
+    <!-- Demo Mode Banner -->
+    <div id="demo-mode-banner" style="display: none; background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%); color: #856404; padding: 12px 20px; margin: 0; border-bottom: 1px solid #ffeeba; text-align: center; font-weight: 500;">
+      <i class="fas fa-flask"></i> <strong>Demo Mode Active:</strong> This is a testing environment with simulated data and functionality
+    </div>
     
     <!-- Modern Top Header Bar -->
     <header class="top-header">
@@ -7982,6 +8030,14 @@
 
     // Initialize settings on page load
     document.addEventListener('DOMContentLoaded', function() {
+      // Show demo banner if in demo mode
+      if (typeof isDemoMode !== 'undefined' && isDemoMode) {
+        const demoBanner = document.getElementById('demo-mode-banner');
+        if (demoBanner) {
+          demoBanner.style.display = 'block';
+        }
+      }
+      
       // Load saved settings
       loadSettings();
       
