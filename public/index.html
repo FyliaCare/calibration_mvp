@@ -15,11 +15,12 @@
   <title>CalPro - Calibration Management System</title>
   <!-- Critical CSS First -->
   <link rel="stylesheet" href="styles.css?v=20251017">
+  <link rel="stylesheet" href="css/mobile-advanced.css?v=20251017">
+  <link rel="stylesheet" href="css/mobile-responsive-fixes.css?v=20251017">
   <link rel="manifest" href="manifest.json">
   
-  <!-- Mobile Enhancement Scripts - Load Early -->
-  <script src="js/mobile-enhancer.js" defer></script>
-  <script src="js/mobile-nav.js" defer></script>
+  <!-- Advanced Mobile Enhancement - Load Early -->
+  <script src="js/mobile-enhancer-advanced.js?v=20251017" defer></script>
   
   <!-- Non-critical resources - Load Later -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" media="print" onload="this.media='all'">
@@ -112,7 +113,7 @@
   </style>
 </head>
 <body>
-  <!-- Loading Screen -->
+  <!-- Modern Loading Screen with Progress -->
   <div id="appLoadingScreen">
     <div class="loading-logo">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="white">
@@ -121,8 +122,58 @@
       </svg>
     </div>
     <div class="loading-spinner"></div>
-    <div class="loading-text">Loading Calibration System...</div>
+    <div class="loading-text">Loading CalPro...</div>
   </div>
+
+  <!-- Mobile Header (visible only on mobile) -->
+  <header class="app-header mobile-only">
+    <div class="header-logo">
+      <i class="fas fa-balance-scale"></i>
+      <span>CalPro</span>
+    </div>
+    <div class="header-actions">
+      <button class="header-icon-btn" id="mobileSearchBtn" aria-label="Search">
+        <i class="fas fa-search"></i>
+      </button>
+      <button class="header-icon-btn" id="mobileNotificationsBtn" aria-label="Notifications">
+        <i class="fas fa-bell"></i>
+        <span class="badge"></span>
+      </button>
+      <button class="header-icon-btn" id="mobileProfileBtn" aria-label="Profile">
+        <i class="fas fa-user-circle"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Bottom Navigation (visible only on mobile) -->
+  <nav class="mobile-bottom-nav mobile-only" role="navigation" aria-label="Mobile navigation">
+    <a href="#dashboard" class="nav-tab active touch-feedback" data-page="dashboard">
+      <i class="nav-tab-icon fas fa-home"></i>
+      <span class="nav-tab-label">Home</span>
+    </a>
+    <a href="#worksheets" class="nav-tab touch-feedback" data-page="worksheets">
+      <i class="nav-tab-icon fas fa-file-alt"></i>
+      <span class="nav-tab-label">Worksheets</span>
+      <span class="nav-badge">3</span>
+    </a>
+    <a href="#equipment" class="nav-tab touch-feedback" data-page="equipment">
+      <i class="nav-tab-icon fas fa-tools"></i>
+      <span class="nav-tab-label">Equipment</span>
+    </a>
+    <a href="#certificates" class="nav-tab touch-feedback" data-page="certificates">
+      <i class="nav-tab-icon fas fa-certificate"></i>
+      <span class="nav-tab-label">Certificates</span>
+    </a>
+    <a href="#more" class="nav-tab touch-feedback" data-page="more">
+      <i class="nav-tab-icon fas fa-ellipsis-h"></i>
+      <span class="nav-tab-label">More</span>
+    </a>
+  </nav>
+
+  <!-- Floating Action Button (mobile) -->
+  <button class="fab mobile-only" id="mobileFAB" aria-label="Quick action">
+    <i class="fas fa-plus"></i>
+  </button>
   
   <!-- Authentication Check Script -->
   <script>
