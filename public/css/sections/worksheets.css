@@ -1,0 +1,296 @@
+/**
+ * Worksheets Section
+ * Worksheet forms, wizard steps, and measurement tables
+ */
+
+/* Form Wizard Styles */
+.form-wizard {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.wizard-steps {
+  display: flex;
+  background: #f8f9fa;
+  padding: 0;
+  border-bottom: 1px solid #eee;
+}
+
+.step {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.step.active {
+  background: white;
+  color: #007bff;
+}
+
+.step.completed {
+  background: rgba(40, 167, 69, 0.05);
+}
+
+.step.completed .step-number {
+  background: var(--success-color);
+  color: white;
+}
+
+.step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 30px;
+  background: #ddd;
+}
+
+.step-number {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.step.active .step-number {
+  background: #007bff;
+  color: white;
+}
+
+.step-title {
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.step-content {
+  display: none;
+  padding: 30px;
+}
+
+.step-content.active {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Wizard Navigation */
+.wizard-navigation {
+  padding: 20px 30px;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Measurement Section */
+.measurement-section {
+  margin-top: 30px;
+}
+
+.measurement-section h3 {
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.table-actions {
+  margin-bottom: 15px;
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+#measurementTable input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+#measurementTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+}
+
+#measurementTable th,
+#measurementTable td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: center;
+}
+
+#measurementTable th {
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+#measurementTable tbody tr:hover {
+  background: #f8f9fa;
+}
+
+/* Test Controls */
+.test-controls {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+/* Results Summary */
+.results-summary {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+  border: 1px solid #e1e8ed;
+}
+
+.summary-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.9rem;
+  color: #7f8c8d;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.stat-value {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+.stat-value.success {
+  color: var(--success-color);
+}
+
+.stat-value.danger {
+  color: var(--danger-color);
+}
+
+.stat-value.warning {
+  color: var(--warning-color);
+}
+
+/* Signature Canvas */
+.signature-canvas-container {
+  border: 2px dashed #bdc3c7;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  margin: 20px 0;
+  background: #fafbfc;
+}
+
+.signature-canvas-container h4 {
+  margin: 0 0 15px 0;
+  color: #2c3e50;
+}
+
+#sigCanvas {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: crosshair;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.signature-actions {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: var(--spacing-xl);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid #e1e8ed;
+}
+
+/* Form Group Full Width */
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+/* Equipment Grid */
+.equipment-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+/* Trace Grid */
+.trace-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+/* Responsive Worksheets */
+@media (max-width: 768px) {
+  .wizard-steps {
+    flex-direction: column;
+  }
+  
+  .step:not(:last-child)::after {
+    display: none;
+  }
+  
+  .step {
+    padding: 15px;
+  }
+  
+  .step-content {
+    padding: 20px;
+  }
+  
+  .wizard-navigation {
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+  
+  .test-controls {
+    flex-direction: column;
+  }
+  
+  .signature-canvas-container {
+    padding: 15px;
+  }
+  
+  #sigCanvas {
+    max-width: 100%;
+  }
+}

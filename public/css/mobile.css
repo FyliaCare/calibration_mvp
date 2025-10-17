@@ -1,0 +1,890 @@
+/**
+ * Mobile Responsive Styles
+ * Mobile-specific breakpoints, layouts, and touch optimizations
+ */
+
+/* ==========================================
+   MOBILE HEADER & NAVIGATION
+   ========================================== */
+
+@media (max-width: 768px) {
+  /* Top Header Mobile */
+  .top-header {
+    height: auto;
+    padding: 12px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  
+  .header-left {
+    flex: 1;
+  }
+  
+  .header-center {
+    order: 3;
+    max-width: 100%;
+    width: 100%;
+  }
+  
+  .header-right {
+    flex-shrink: 0;
+  }
+  
+  .company-name {
+    font-size: 14px;
+  }
+  
+  .company-tagline {
+    font-size: 9px;
+  }
+  
+  .header-logo {
+    height: 38px;
+  }
+  
+  /* Sidebar Mobile */
+  .sidebar {
+    transform: translateX(-100%);
+    position: fixed;
+    z-index: 9999;
+  }
+  
+  .sidebar.active {
+    transform: translateX(0);
+  }
+  
+  .main-content {
+    margin-left: 0 !important;
+  }
+  
+  /* Mobile Menu Toggle */
+  .mobile-menu-toggle {
+    display: flex !important;
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #64748b;
+    font-size: 18px;
+  }
+  
+  .mobile-menu-toggle:hover {
+    background: #f8fafc;
+    color: #1e293b;
+  }
+}
+
+/* ==========================================
+   MOBILE FORMS & INPUTS
+   ========================================== */
+
+@media (max-width: 768px) {
+  /* Form Grid Mobile */
+  .form-grid,
+  .equipment-grid,
+  .trace-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .form-group label {
+    font-size: 13px;
+  }
+  
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    font-size: 14px;
+    padding: 10px;
+  }
+  
+  /* Action Rows Mobile */
+  .action-row,
+  .test-controls,
+  .records-controls {
+    flex-direction: column;
+  }
+  
+  .action-row button,
+  .test-controls button {
+    width: 100%;
+  }
+  
+  /* Step Actions Mobile */
+  .step-actions {
+    flex-direction: column-reverse;
+    gap: 10px;
+  }
+  
+  .step-actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-group label {
+    font-size: 12px;
+  }
+  
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    font-size: 13px;
+    padding: 8px;
+  }
+}
+
+/* ==========================================
+   MOBILE WIZARD & STEPS
+   ========================================== */
+
+@media (max-width: 768px) {
+  .wizard-container {
+    padding: 15px;
+  }
+  
+  .wizard-header {
+    padding: 15px;
+  }
+  
+  .wizard-header h2 {
+    font-size: 20px;
+  }
+  
+  .wizard-content {
+    padding: 20px 15px;
+  }
+  
+  .wizard-steps {
+    flex-direction: column;
+  }
+  
+  .step:not(:last-child)::after {
+    display: none;
+  }
+  
+  .step {
+    padding: 15px;
+  }
+  
+  .step-content {
+    padding: 20px;
+  }
+  
+  .wizard-navigation {
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+  
+  .wizard-navigation button {
+    width: 100%;
+  }
+  
+  /* Progress Wizard Mobile */
+  .progress-wizard {
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .progress-line {
+    width: 4px;
+    height: 40px;
+  }
+  
+  .step-circle {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .step-circle i {
+    font-size: 20px;
+  }
+  
+  .step-num {
+    width: 20px;
+    height: 20px;
+    font-size: 11px;
+  }
+  
+  .step-label {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .wizard-container {
+    padding: 12px;
+  }
+  
+  .wizard-header h2 {
+    font-size: 18px;
+  }
+  
+  .wizard-content {
+    padding: 15px 12px;
+  }
+  
+  .step {
+    padding: 10px;
+  }
+  
+  .step-number {
+    width: 28px;
+    height: 28px;
+    font-size: 13px;
+  }
+  
+  .step-label {
+    font-size: 11px;
+  }
+  
+  .step-circle {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+/* ==========================================
+   MOBILE TABLES
+   ========================================== */
+
+@media (max-width: 768px) {
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .results-table,
+  .test-data-table,
+  .modern-table {
+    min-width: 600px;
+  }
+  
+  table th,
+  table td {
+    padding: 8px;
+    font-size: 12px;
+  }
+  
+  table th {
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  
+  .test-data-table {
+    overflow-x: auto;
+  }
+  
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@media (max-width: 480px) {
+  table th,
+  table td {
+    padding: 6px;
+    font-size: 11px;
+  }
+  
+  table th {
+    font-size: 10px;
+  }
+}
+
+/* ==========================================
+   MOBILE MODALS
+   ========================================== */
+
+@media (max-width: 768px) {
+  .modal {
+    padding: 10px;
+  }
+  
+  .modal-content {
+    width: 95%;
+    max-width: 95%;
+    padding: 20px 15px;
+    max-height: 90vh;
+  }
+  
+  .modal-header {
+    padding: 0 0 15px 0;
+  }
+  
+  .modal-header h3,
+  .modal-title {
+    font-size: 18px;
+  }
+  
+  .close-modal,
+  .modal-close {
+    width: 32px;
+    height: 32px;
+    font-size: 20px;
+  }
+  
+  .modal-body {
+    padding: 15px 0;
+  }
+  
+  .modal-footer,
+  .modal-actions {
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px 0 0 0;
+  }
+  
+  .modal-actions button,
+  .modal-footer button {
+    width: 100%;
+  }
+  
+  /* Certificate Preview Modal */
+  .certificate-preview-container {
+    padding: 12px;
+  }
+  
+  /* Template Selection Modal */
+  .template-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .template-card {
+    padding: 15px;
+  }
+  
+  .template-card h4 {
+    font-size: 16px;
+  }
+  
+  .template-preview {
+    height: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-content {
+    padding: 15px 12px;
+  }
+  
+  .modal-header h3,
+  .modal-title {
+    font-size: 16px;
+  }
+  
+  .close-modal,
+  .modal-close {
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+  }
+  
+  .template-card {
+    padding: 12px;
+  }
+  
+  .template-card h4 {
+    font-size: 15px;
+  }
+  
+  .template-features {
+    font-size: 11px;
+  }
+}
+
+/* ==========================================
+   MOBILE BUTTONS & CONTROLS
+   ========================================== */
+
+@media (max-width: 768px) {
+  .btn {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+  
+  .btn i {
+    font-size: 14px;
+  }
+  
+  .btn-sm {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  
+  .btn-lg {
+    padding: 12px 20px;
+    font-size: 15px;
+  }
+  
+  .action-buttons,
+  .button-group {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .action-buttons button,
+  .button-group button {
+    width: 100%;
+  }
+  
+  .header-icon-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .btn {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+  
+  .btn-sm {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+  
+  .btn-lg {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+}
+
+/* ==========================================
+   MOBILE CARDS & CONTAINERS
+   ========================================== */
+
+@media (max-width: 768px) {
+  .card,
+  .info-card,
+  .stat-card,
+  .form-card,
+  .dashboard-card {
+    padding: 15px;
+    margin-bottom: 12px;
+  }
+  
+  .card h3,
+  .info-card h3 {
+    font-size: 16px;
+  }
+  
+  .card-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 15px;
+  }
+  
+  .card-header h2,
+  .card-header h3 {
+    font-size: 18px;
+  }
+  
+  .card-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .card-body {
+    padding: 15px;
+  }
+  
+  /* Certificate Header Mobile */
+  .certificate-header {
+    padding: 20px;
+  }
+  
+  .header-content h1 {
+    font-size: 1.5rem;
+  }
+  
+  .header-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .header-actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .card,
+  .info-card,
+  .stat-card {
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+  
+  .card h3,
+  .info-card h3 {
+    font-size: 15px;
+  }
+  
+  .certificate-header {
+    padding: 15px;
+  }
+  
+  .header-content h1 {
+    font-size: 1.25rem;
+  }
+}
+
+/* ==========================================
+   MOBILE GRIDS & LAYOUTS
+   ========================================== */
+
+@media (max-width: 768px) {
+  .dashboard-grid,
+  .services-grid,
+  .records-grid,
+  .grid-2,
+  .grid-3,
+  .grid-4 {
+    grid-template-columns: 1fr;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .search-box input {
+    width: 100%;
+  }
+  
+  .search-filter {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .search-filter input {
+    max-width: 100%;
+  }
+  
+  .pagination {
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+}
+
+@media (max-width: 1200px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================
+   MOBILE NOTIFICATIONS
+   ========================================== */
+
+@media (max-width: 768px) {
+  .notification,
+  .toast {
+    width: calc(100% - 20px);
+    left: 10px;
+    right: 10px;
+    padding: 15px;
+    min-width: auto;
+  }
+  
+  .notification-title,
+  .toast-title {
+    font-size: 14px;
+  }
+  
+  .notification-message,
+  .toast-message {
+    font-size: 12px;
+  }
+  
+  .notification-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .notification-actions button {
+    width: 100%;
+    font-size: 12px;
+    padding: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .notification,
+  .toast {
+    padding: 12px;
+  }
+  
+  .notification-title,
+  .toast-title {
+    font-size: 13px;
+  }
+  
+  .notification-message,
+  .toast-message {
+    font-size: 11px;
+  }
+}
+
+/* ==========================================
+   MOBILE CONTENT SECTIONS
+   ========================================== */
+
+@media (max-width: 768px) {
+  .content-section {
+    padding: 15px;
+  }
+  
+  .section-header {
+    padding: 15px;
+    margin-bottom: 15px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+  }
+  
+  .section-header h2,
+  .section-title {
+    font-size: 20px;
+  }
+  
+  .section-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+  
+  .section-actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .content-section {
+    padding: 12px;
+  }
+  
+  .section-header {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .section-header h2,
+  .section-title {
+    font-size: 18px;
+  }
+}
+
+/* ==========================================
+   MOBILE UTILITY CLASSES
+   ========================================== */
+
+@media (max-width: 768px) {
+  .hide-mobile {
+    display: none !important;
+  }
+  
+  .show-mobile {
+    display: block !important;
+  }
+  
+  .text-center-mobile {
+    text-align: center !important;
+  }
+  
+  .full-width-mobile {
+    width: 100% !important;
+  }
+  
+  .flex-column-mobile {
+    flex-direction: column !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .hide-desktop {
+    display: none !important;
+  }
+  
+  .show-desktop {
+    display: block !important;
+  }
+  
+  .mobile-menu-toggle {
+    display: none !important;
+  }
+}
+
+/* ==========================================
+   MOBILE PROFILE PAGE
+   ========================================== */
+
+@media (max-width: 768px) {
+  .profile-page-container {
+    padding: 0;
+  }
+  
+  .profile-banner {
+    height: 120px;
+  }
+  
+  .profile-main-info {
+    padding: 0 15px 15px;
+  }
+  
+  .profile-avatar-large {
+    width: 90px;
+    height: 90px;
+  }
+  
+  .profile-avatar-container {
+    margin-top: -45px;
+  }
+  
+  .profile-user-details h1 {
+    font-size: 20px;
+  }
+  
+  .profile-stats-row {
+    gap: 15px;
+  }
+  
+  .profile-actions-area {
+    flex-direction: column;
+  }
+  
+  .profile-actions-area button {
+    width: 100%;
+  }
+  
+  .info-row,
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .profile-info-grid,
+  .profile-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================
+   MOBILE TOUCH OPTIMIZATIONS
+   ========================================== */
+
+@media (max-width: 768px) {
+  /* Larger touch targets */
+  button,
+  .btn,
+  a.btn {
+    min-height: 44px;
+    padding: 12px 16px;
+  }
+  
+  /* Touch-friendly inputs */
+  input,
+  select,
+  textarea {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+    min-height: 44px;
+  }
+  
+  /* Touch-friendly menu items */
+  .menu-item {
+    min-height: 48px;
+    padding: 12px 16px;
+  }
+  
+  /* Prevent horizontal scroll */
+  body {
+    overflow-x: hidden;
+  }
+  
+  /* Smooth scrolling on mobile */
+  .content-section,
+  .modal-body {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ==========================================
+   LANDSCAPE ORIENTATION
+   ========================================== */
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .sidebar {
+    width: 60px;
+  }
+  
+  .sidebar .menu-item span,
+  .sidebar .menu-section h4 {
+    display: none;
+  }
+  
+  .top-header {
+    height: 60px;
+    padding: 8px 12px;
+  }
+  
+  .header-logo {
+    height: 32px;
+  }
+}
+
+/* ==========================================
+   SMALL MOBILE (< 375px)
+   ========================================== */
+
+@media (max-width: 374px) {
+  .top-header {
+    padding: 10px;
+    gap: 8px;
+  }
+  
+  .company-name {
+    font-size: 12px;
+  }
+  
+  .header-logo {
+    height: 32px;
+  }
+  
+  .header-icon-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+  
+  .btn {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+  
+  .stat-card {
+    padding: 12px;
+  }
+  
+  .stat-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+}

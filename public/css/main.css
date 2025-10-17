@@ -24,15 +24,25 @@
 @import url('components/sidebar.css');
 
 /* ========================================
-   SECTION STYLES (Coming Soon)
-   These will be created as we extract
-   section-specific styles from styles.css
+   SECTION STYLES
+   Page-specific styles for major sections
    ======================================== */
-/* @import url('sections/dashboard.css'); */
-/* @import url('sections/worksheets.css'); */
-/* @import url('sections/certificates.css'); */
-/* @import url('sections/equipment.css'); */
-/* @import url('sections/reports.css'); */
+@import url('sections/header.css');
+@import url('sections/dashboard.css');
+@import url('sections/worksheets.css');
+@import url('sections/records.css');
+@import url('sections/certificates.css');
+@import url('sections/profile.css');
+
+/* ========================================
+   UTILITIES & HELPERS
+   ======================================== */
+@import url('utilities.css');
+
+/* ========================================
+   MOBILE RESPONSIVE
+   ======================================== */
+@import url('mobile.css');
 
 /* ========================================
    THEME OVERRIDES (Load Last)
@@ -41,8 +51,8 @@
 /* @import url('themes/custom.css'); */
 
 /* ========================================
-   LEGACY STYLES (Temporary)
-   Keep original styles.css until fully migrated
+   LEGACY STYLES (Temporary - Keep for compatibility)
+   Original styles.css contains remaining custom styles
+   Gradually migrate as needed
    ======================================== */
-/* When ready, uncomment this line and remove styles.css from HTML */
-/* @import url('../styles.css'); */
+/* Keep loading styles.css for now until all styles are verified migrated */
