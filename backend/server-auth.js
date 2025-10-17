@@ -2158,12 +2158,41 @@ app.use((error, req, res, next) => {
 });
 
 // Start server
-app.listen(config.port, config.host, () => {
+const server = app.listen(config.port, config.host, () => {
   console.log(`\n🎯 Calibration MVP Server (Auth-Enabled) running on http://${config.host}:${config.port}`);
   console.log(`📊 Database: ${config.dbPath}`);
   console.log(`🔐 Authentication: ENABLED`);
   console.log(`📧 Email: ${emailTransporter ? 'CONFIGURED' : 'SIMULATED'}`);
-  console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}\n`);
+  console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🔗 Health check: http://${config.host}:${config.port}/api/health\n`);
+});
+
+// Handle server errors
+server.on('error', (err) => {
+  console.error('❌ Server error:', err);
+  if (err.code === 'EADDRINUSE') {
+    console.log(`❌ Port ${config.port} is already in use`);
+    process.exit(1);
+  }
+});
+
+// Keep server running
+process.on('uncaughtException', (err) => {
+  console.error('❌ Uncaught Exception:', err);
+  // Don't exit in production to keep Railway deployment running
+  if (process.env.NODE_ENV === 'production') {
+    console.log('🔄 Continuing in production mode...');
+  } else {
+    process.exit(1);
+  }
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
+  // Don't exit in production
+  if (process.env.NODE_ENV !== 'production') {
+    process.exit(1);
+  }
 });
 
 // Graceful shutdown
