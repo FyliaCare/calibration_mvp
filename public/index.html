@@ -193,66 +193,45 @@
   <script src="js/core/state-manager.js"></script>
   <script src="js/core/template-loader.js"></script>
   
-  <!-- Main Application Script -->
-  <script src="app.js"></script>
+  <!-- Utility Modules -->
+  <script src="js/utils/date-formatters.js"></script>
+  <script src="js/utils/number-formatters.js"></script>
+  <script src="js/utils/validators.js"></script>
+  <script src="js/utils/dom-helpers.js"></script>
+  <script src="js/utils/storage.js"></script>
   
-  <!-- Template Loading Initialization -->
+  <!-- Feature Modules: Certificates -->
+  <script src="js/features/certificates/pdf-generator.js"></script>
+  <script src="js/features/certificates/form-handler.js"></script>
+  
+  <!-- Feature Modules: Worksheets -->
+  <script src="js/features/worksheets/worksheet-manager.js"></script>
+  
+  <!-- Feature Modules: Dashboard -->
+  <script src="js/features/dashboard/dashboard-manager.js"></script>
+  
+  <!-- Main Application Entry Point -->
+  <script src="js/main.js"></script>
+  
+  <!-- Legacy app.js for backward compatibility -->
+  <!-- <script src="app.js"></script> -->
+  
+  <!-- Application Initialization -->
   <script>
-    // Initialize app after DOM is ready
-    document.addEventListener('DOMContentLoaded', async function() {
-      try {
-        console.log('🚀 Initializing CalPro Application...');
-        
-        // Load templates in sequence
-        console.log('📦 Loading templates...');
-        
-        // Load mobile header
-        await templateLoader.load('partials/mobile-header', 'mobile-header-container');
-        
-        // Load sidebar
-        await templateLoader.load('partials/sidebar', 'sidebar-container');
-        
-        // Load top header
-        await templateLoader.load('partials/top-header', 'header-container');
-        
-        // Load modals
-        await templateLoader.load('modals/common-modals', 'modals-container');
-        
-        // Load initial section (dashboard)
-        await templateLoader.load('sections/dashboard', 'content-container');
-        
-        console.log('✅ All templates loaded successfully');
-        
-        // Initialize router after templates are loaded
-        if (typeof router !== 'undefined') {
-          router.init();
+    // Main.js will handle initialization automatically
+    // No manual initialization needed here
+    
+    // Hide loading screen after app initialization
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const loadingScreen = document.getElementById('appLoadingScreen');
+        if (loadingScreen) {
+          loadingScreen.classList.add('hidden');
+          setTimeout(() => {
+            loadingScreen.style.display = 'none';
+          }, 300);
         }
-        
-        // Hide loading screen
-        setTimeout(() => {
-          const loadingScreen = document.getElementById('appLoadingScreen');
-          if (loadingScreen) {
-            loadingScreen.classList.add('hidden');
-            setTimeout(() => {
-              loadingScreen.style.display = 'none';
-            }, 300);
-          }
-        }, 500);
-        
-      } catch (error) {
-        console.error('❌ Failed to load templates:', error);
-        // Show error to user
-        document.getElementById('appLoadingScreen').innerHTML = `
-          <div style="text-align: center; color: white;">
-            <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 20px;"></i>
-            <h2>Failed to Load Application</h2>
-            <p>${error.message}</p>
-            <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; background: white; color: #FF8C00; border: none; border-radius: 5px; cursor: pointer;">
-              Reload Page
-            </button>
-          </div>
-        `;
-      }
+      }, 500);
     });
   </script>
 </body>
