@@ -1138,8 +1138,19 @@
       }
     }
 
+    // Demo mode detection
+    const isDemoMode = window.location.hostname.includes('netlify') || 
+                       window.location.hostname.includes('github.io') ||
+                       window.location.hostname !== 'localhost';
+
     // API Request helper
     async function apiRequest(url, options = {}) {
+      // Demo mode - return mock responses
+      if (isDemoMode) {
+        await new Promise(resolve => setTimeout(resolve, 300)); // Simulate network delay
+        return getMockClientResponse(url, options);
+      }
+
       const token = localStorage.getItem('auth_token');
       const defaultHeaders = {
         'Authorization': `Bearer ${token}`,
@@ -1166,6 +1177,92 @@
       }
 
       return response.json();
+    }
+
+    // Mock API responses for demo mode
+    function getMockClientResponse(url, options = {}) {
+      if (url.includes('/api/clients/stats')) {
+        return {
+          total: 124,
+          active: 118,
+          industries: 8,
+          thisMonth: 12
+        };
+      }
+      
+      if (url.includes('/api/clients/industries')) {
+        return [
+          'Manufacturing', 'Healthcare', 'Automotive', 'Aerospace', 
+          'Energy', 'Pharmaceuticals', 'Food & Beverage', 'Electronics'
+        ];
+      }
+      
+      if (url.includes('/api/clients?') || url === '/api/clients') {
+        return [
+          {
+            id: 1,
+            name: 'Acme Manufacturing Corp',
+            industry: 'Manufacturing',
+            contact: 'John Smith',
+            email: 'john@acme.com',
+            phone: '+1-555-0123',
+            address: '123 Industrial Ave, City, State 12345',
+            status: 'active',
+            created: '2024-01-15',
+            lastCalibration: '2024-09-15'
+          },
+          {
+            id: 2,
+            name: 'TechFlow Solutions',
+            industry: 'Electronics',
+            contact: 'Sarah Johnson',
+            email: 'sarah@techflow.com',
+            phone: '+1-555-0124',
+            address: '456 Tech Park Dr, City, State 12346',
+            status: 'active',
+            created: '2024-02-20',
+            lastCalibration: '2024-10-01'
+          },
+          {
+            id: 3,
+            name: 'MedCare Instruments',
+            industry: 'Healthcare',
+            contact: 'Dr. Michael Brown',
+            email: 'mbrown@medcare.com',
+            phone: '+1-555-0125',
+            address: '789 Medical Center Blvd, City, State 12347',
+            status: 'active',
+            created: '2024-03-10',
+            lastCalibration: '2024-09-28'
+          },
+          {
+            id: 4,
+            name: 'Aerospace Dynamics',
+            industry: 'Aerospace',
+            contact: 'Lisa Wilson',
+            email: 'lwilson@aerodyn.com',
+            phone: '+1-555-0126',
+            address: '321 Aviation Way, City, State 12348',
+            status: 'inactive',
+            created: '2024-01-05',
+            lastCalibration: '2024-08-15'
+          }
+        ];
+      }
+      
+      if (options.method === 'DELETE') {
+        return { success: true, message: 'Client deleted successfully' };
+      }
+      
+      if (options.method === 'PUT' || options.method === 'POST') {
+        return { 
+          success: true, 
+          message: options.method === 'PUT' ? 'Client updated successfully' : 'Client created successfully',
+          id: Math.floor(Math.random() * 1000) + 100
+        };
+      }
+      
+      return { success: true, message: 'Demo response' };
     }
 
     // Load statistics
