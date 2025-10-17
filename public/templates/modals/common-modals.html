@@ -1,0 +1,174 @@
+<!-- Certificate Preview Modal -->
+<div id="certificatePreviewModal" class="modal" style="display:none">
+  <div class="modal-content" style="max-width: 900px; max-height: 90vh;">
+    <div class="modal-header">
+      <h2><i class="fas fa-file-pdf"></i> Certificate Preview</h2>
+      <button class="modal-close" onclick="closeModal('certificatePreviewModal')">&times;</button>
+    </div>
+    <div id="certificatePreviewContent" style="padding: 20px; max-height: 70vh; overflow-y: auto;">
+      <!-- PDF preview loaded here -->
+    </div>
+    <div class="modal-footer-actions" style="border-top: 1px solid #eee; padding: 16px 20px;">
+      <button class="btn btn-secondary" onclick="closeModal('certificatePreviewModal')">
+        <i class="fas fa-times"></i> Close
+      </button>
+      <button class="btn btn-primary" onclick="downloadCertificatePDF()">
+        <i class="fas fa-download"></i> Download PDF
+      </button>
+      <button class="btn btn-success" onclick="emailCertificate()">
+        <i class="fas fa-envelope"></i> Email Certificate
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Certificate Template Selection Modal -->
+<div id="certificateTemplateModal" class="modal" style="display:none">
+  <div class="modal-content" style="max-width: 1000px;">
+    <div class="modal-header">
+      <h2><i class="fas fa-file-invoice"></i> Select Certificate Template</h2>
+      <button class="modal-close" onclick="closeModal('certificateTemplateModal')">&times;</button>
+    </div>
+    <div class="modal-body" id="templateModalBody">
+      <!-- Template selection loaded by JS -->
+    </div>
+    <div class="modal-footer-actions">
+      <button class="btn btn-secondary" onclick="closeModal('certificateTemplateModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Scan Modal -->
+<div id="quickScanModal" class="modal" style="display:none">
+  <div class="modal-content" style="max-width: 500px;">
+    <div class="modal-header">
+      <h2><i class="fas fa-qrcode"></i> Quick Scan Equipment</h2>
+      <button class="modal-close" onclick="closeModal('quickScanModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div id="scannerContainer" style="width: 100%; max-width: 400px; margin: 0 auto;">
+        <p style="text-align: center; color: #999;">
+          <i class="fas fa-camera" style="font-size: 48px; margin-bottom: 15px; display: block;"></i>
+          Scanner will appear here
+        </p>
+      </div>
+      <div id="scanResult" style="margin-top: 20px; display: none;">
+        <h3>Scanned Equipment:</h3>
+        <p id="scannedEquipmentInfo"></p>
+      </div>
+    </div>
+    <div class="modal-footer-actions">
+      <button class="btn btn-secondary" onclick="closeModal('quickScanModal')">Close</button>
+      <button class="btn btn-primary" onclick="startScanner()" id="startScanBtn">
+        <i class="fas fa-camera"></i> Start Scanner
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Export Data Modal -->
+<div id="exportModal" class="modal" style="display:none">
+  <div class="modal-content" style="max-width: 600px;">
+    <div class="modal-header">
+      <h2><i class="fas fa-download"></i> Export Data</h2>
+      <button class="modal-close" onclick="closeModal('exportModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label><i class="fas fa-database"></i> Select Data to Export</label>
+        <select id="exportDataType">
+          <option value="certificates">Certificates</option>
+          <option value="worksheets">Worksheets</option>
+          <option value="equipment">Equipment</option>
+          <option value="all">All Data</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-file-export"></i> Export Format</label>
+        <select id="exportFormat">
+          <option value="pdf">PDF</option>
+          <option value="csv">CSV (Excel Compatible)</option>
+          <option value="json">JSON</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-calendar"></i> Date Range</label>
+        <div class="date-range">
+          <input type="date" id="exportStartDate" placeholder="Start Date">
+          <input type="date" id="exportEndDate" placeholder="End Date">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer-actions">
+      <button class="btn btn-secondary" onclick="closeModal('exportModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="performExport()">
+        <i class="fas fa-download"></i> Export
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Equipment Template Modal -->
+<div id="equipmentTemplateModal" class="modal" style="display:none">
+  <div class="modal-content equipment-template-modal">
+    <div class="modal-header" id="templateModalHeader">
+      <h2><i class="fas fa-file-lines"></i> Select Template</h2>
+      <button class="modal-close" onclick="closeModal('equipmentTemplateModal')">&times;</button>
+    </div>
+    <div class="modal-body" id="templateModalContent">
+      <!-- Template options loaded dynamically -->
+    </div>
+    <div class="modal-footer-actions">
+      <button class="btn btn-secondary" onclick="closeModal('equipmentTemplateModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Pressure Templates Modal -->
+<div id="pressureTemplateModal" class="modal" style="display:none">
+  <div class="modal-content template-modal-content">
+    <div class="modal-header">
+      <h2><i class="fas fa-gauge-high"></i> Pressure Equipment Templates</h2>
+      <button class="modal-close" onclick="closeModal('pressureTemplateModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <!-- Pressure template options loaded by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- User Management Modal -->
+<div id="userModal" class="modal" style="display:none">
+  <div class="modal-content" style="max-width: 600px;">
+    <div class="modal-header">
+      <h2 id="userModalTitle"><i class="fas fa-user-plus"></i> Add User</h2>
+      <button class="modal-close" onclick="closeModal('userModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <!-- User form loaded by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- User Activity Modal -->
+<div id="userActivityModal" class="modal" style="display:none">
+  <div class="modal-content" style="max-width: 800px;">
+    <div class="modal-header">
+      <h2><i class="fas fa-history"></i> User Activity Log</h2>
+      <button class="modal-close" onclick="closeModal('userActivityModal')">&times;</button>
+    </div>
+    <div class="modal-body" id="userActivityContent">
+      <!-- Activity log loaded by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- Loading Modal -->
+<div id="loadingModal" class="modal" style="display:none">
+  <div class="modal-content">
+    <div style="text-align: center; padding: 40px;">
+      <i class="fas fa-spinner fa-spin" style="font-size: 48px; color: #FFB800;"></i>
+      <p style="margin-top: 20px; font-size: 18px;">Loading...</p>
+    </div>
+  </div>
+</div>
