@@ -786,6 +786,11 @@
   <!-- Page Content Wrapper -->
   <div class="page-wrapper">
   <!-- Header -->
+  <!-- Demo Mode Banner -->
+  <div id="demo-banner-clients" style="display: none; background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%); color: #856404; padding: 12px 20px; margin: 0; border-bottom: 1px solid #ffeeba; text-align: center; font-weight: 500;">
+    <i class="fas fa-flask"></i> <strong>Demo Mode:</strong> Viewing sample client data for testing purposes
+  </div>
+
   <div class="header">
     <div class="header-left">
       <h1><i class="fas fa-building"></i> Client Management</h1>
@@ -1109,6 +1114,15 @@
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
       checkAuth();
+      
+      // Show demo banner if in demo mode
+      if (isDemoMode) {
+        const demoBanner = document.getElementById('demo-banner-clients');
+        if (demoBanner) {
+          demoBanner.style.display = 'block';
+        }
+      }
+      
       loadStats();
       loadIndustries();
       loadClients();

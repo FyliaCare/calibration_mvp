@@ -775,6 +775,11 @@
   <!-- Page Content Wrapper -->
   <div class="page-wrapper">
   <!-- Header -->
+  <!-- Demo Mode Banner -->
+  <div id="demo-banner-equipment" style="display: none; background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%); color: #856404; padding: 12px 20px; margin: 0; border-bottom: 1px solid #ffeeba; text-align: center; font-weight: 500;">
+    <i class="fas fa-flask"></i> <strong>Demo Mode:</strong> Viewing sample equipment data for testing purposes
+  </div>
+
   <div class="header">
     <div class="header-left">
       <h1><i class="fas fa-tools"></i> Master Equipment List</h1>
@@ -1046,6 +1051,29 @@
   </div>
 
   <script>
+    // Demo mode detection
+    const isDemoMode = window.location.hostname.includes('netlify') || 
+                       window.location.hostname.includes('github.io') ||
+                       window.location.hostname !== 'localhost';
+
+    // Override fetch for demo mode
+    if (isDemoMode) {
+      const originalFetch = window.fetch;
+      window.fetch = async function(url, options = {}) {
+        if (url.includes('/api/')) {
+          await new Promise(resolve => setTimeout(resolve, 300));
+          const mockResponse = getMockEquipmentResponse(url, options);
+          return {
+            ok: true,
+            status: 200,
+            json: () => Promise.resolve(mockResponse),
+            text: () => Promise.resolve(JSON.stringify(mockResponse))
+          };
+        }
+        return originalFetch(url, options);
+      };
+    }
+
     let allEquipment = [];
     let currentEditId = null;
 
@@ -1059,17 +1087,118 @@
       return true;
     }
 
+    // API helper function
+    async function equipmentApiCall(url, options = {}) {
+      if (isDemoMode) {
+        await new Promise(resolve => setTimeout(resolve, 300)); // Simulate delay
+        return getMockEquipmentResponse(url, options);
+      }
+
+      const token = localStorage.getItem('auth_token');
+      const response = await fetch(url, {
+        ...options,
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          ...options.headers
+        }
+      });
+
+      if (!response.ok) throw new Error('Request failed');
+      return response.json();
+    }
+
+    // Mock equipment responses
+    function getMockEquipmentResponse(url, options = {}) {
+      if (url.includes('/api/equipment/stats')) {
+        return {
+          totals: {
+            total: 156,
+            valid: 142,
+            due_soon: 8,
+            expired: 6
+          }
+        };
+      }
+
+      if (url.includes('/api/equipment/categories')) {
+        return {
+          categories: [
+            'Pressure Gauges', 'Temperature Meters', 'Flow Meters', 
+            'Multimeters', 'Scales & Balances', 'Torque Wrenches', 
+            'Calibrators', 'Oscilloscopes'
+          ]
+        };
+      }
+
+      if (url.includes('/api/equipment?') || url === '/api/equipment') {
+        return {
+          equipment: [
+            {
+              id: 1,
+              tag: 'PG-001',
+              name: 'Digital Pressure Gauge',
+              category: 'Pressure Gauges',
+              manufacturer: 'Fluke',
+              model: 'DPG-1000',
+              serialNumber: 'FLK12345',
+              location: 'Lab A',
+              status: 'Valid',
+              lastCalibration: '2024-06-15',
+              nextCalibration: '2025-06-15',
+              client: 'Acme Manufacturing'
+            },
+            {
+              id: 2,
+              tag: 'TM-002',
+              name: 'Digital Thermometer',
+              category: 'Temperature Meters',
+              manufacturer: 'Omega',
+              model: 'HH806AU',
+              serialNumber: 'OMG67890',
+              location: 'Lab B',
+              status: 'Valid',
+              lastCalibration: '2024-08-20',
+              nextCalibration: '2025-08-20',
+              client: 'TechFlow Solutions'
+            },
+            {
+              id: 3,
+              tag: 'FM-003',
+              name: 'Ultrasonic Flow Meter',
+              category: 'Flow Meters',
+              manufacturer: 'Keyence',
+              model: 'FD-U1',
+              serialNumber: 'KEY11111',
+              location: 'Lab C',
+              status: 'Expiring Soon',
+              lastCalibration: '2023-10-10',
+              nextCalibration: '2024-10-10',
+              client: 'MedCare Instruments'
+            }
+          ]
+        };
+      }
+
+      if (options.method === 'DELETE') {
+        return { success: true, message: 'Equipment deleted successfully' };
+      }
+
+      if (options.method === 'PUT' || options.method === 'POST') {
+        return { 
+          success: true, 
+          message: options.method === 'PUT' ? 'Equipment updated successfully' : 'Equipment added successfully',
+          id: Math.floor(Math.random() * 1000) + 100
+        };
+      }
+
+      return { success: true, message: 'Demo response' };
+    }
+
     // Load statistics
     async function loadStats() {
       try {
-        const token = localStorage.getItem('auth_token');
-        const response = await fetch('/api/equipment/stats', {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-
-        if (!response.ok) throw new Error('Failed to load stats');
-
-        const { totals } = await response.json();
+        const { totals } = await equipmentApiCall('/api/equipment/stats');
         
         document.getElementById('statTotal').textContent = totals.total || 0;
         document.getElementById('statValid').textContent = totals.valid || 0;
@@ -1084,14 +1213,7 @@
     // Load categories
     async function loadCategories() {
       try {
-        const token = localStorage.getItem('auth_token');
-        const response = await fetch('/api/equipment/categories', {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-
-        if (!response.ok) throw new Error('Failed to load categories');
-
-        const { categories } = await response.json();
+        const categories = await equipmentApiCall('/api/equipment/categories');
         const select = document.getElementById('categoryFilter');
         
         categories.forEach(cat => {
@@ -1108,7 +1230,6 @@
     // Load equipment
     async function loadEquipment() {
       try {
-        const token = localStorage.getItem('auth_token');
         const search = document.getElementById('searchInput').value;
         const category = document.getElementById('categoryFilter').value;
         const status = document.getElementById('statusFilter').value;
@@ -1116,17 +1237,17 @@
 
         const params = new URLSearchParams();
         if (search) params.append('search', search);
-        if (category) params.append('category', category);
+        if (category) params.append('category', category);  
         if (status) params.append('status', status);
         params.append('sortBy', sortBy);
         params.append('sortOrder', 'ASC');
 
         const response = await fetch(`/api/equipment?${params}`, {
-          headers: { 'Authorization': `Bearer ${token}` }
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('auth_token')}` }
         });
-
+        
         if (!response.ok) throw new Error('Failed to load equipment');
-
+        
         const { equipment } = await response.json();
         allEquipment = equipment;
         renderEquipmentTable(equipment);
@@ -1515,6 +1636,14 @@
     // Initialize
     window.addEventListener('DOMContentLoaded', async () => {
       if (!checkAuth()) return;
+
+      // Show demo banner if in demo mode
+      if (isDemoMode) {
+        const demoBanner = document.getElementById('demo-banner-equipment');
+        if (demoBanner) {
+          demoBanner.style.display = 'block';
+        }
+      }
 
       await Promise.all([
         loadStats(),
