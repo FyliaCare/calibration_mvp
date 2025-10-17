@@ -2281,14 +2281,19 @@ window.downloadPdfDirect = function() {
 
     // Header menu toggle (single toggle in header only)
     const menuToggle = document.getElementById('menuToggle');
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const headerLogo = document.getElementById('headerLogo');
     const sidebar = document.querySelector('.sidebar');
 
     function setSidebarExpanded(expanded) {
       if (!sidebar) return;
       sidebar.classList.toggle('collapsed', !expanded);
-      // set aria-expanded on toggle button
+      // set aria-expanded on toggle buttons
       if (menuToggle) {
         menuToggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+      }
+      if (mobileMenuToggle) {
+        mobileMenuToggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
       }
     }
 
@@ -2303,6 +2308,7 @@ window.downloadPdfDirect = function() {
       showNotification(`📱 Sidebar ${isCollapsed ? 'expanded' : 'collapsed'}`, 'info');
     }
 
+    // Desktop menu toggle
     if (menuToggle) {
       menuToggle.addEventListener('click', (e) => {
         e.preventDefault();
@@ -2314,6 +2320,29 @@ window.downloadPdfDirect = function() {
           ev.preventDefault();
           toggleSidebar();
         }
+      });
+    }
+
+    // Mobile hamburger menu toggle
+    if (mobileMenuToggle) {
+      mobileMenuToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        toggleSidebar();
+      });
+      // keyboard accessibility
+      mobileMenuToggle.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Enter' || ev.key === ' ') {
+          ev.preventDefault();
+          toggleSidebar();
+        }
+      });
+    }
+
+    // Header logo toggle (works as sidebar toggle too)
+    if (headerLogo) {
+      headerLogo.addEventListener('click', (e) => {
+        e.preventDefault();
+        toggleSidebar();
       });
     }
 
@@ -3384,6 +3413,14 @@ window.downloadPdfDirect = function() {
     showSection,
     updateActiveMenuItem,
     updateBreadcrumb,
+    toggleSidebar: () => {
+      const sidebar = document.querySelector('.sidebar');
+      if (sidebar) {
+        const isCollapsed = sidebar.classList.contains('collapsed');
+        sidebar.classList.toggle('collapsed', !isCollapsed);
+        showNotification(`📱 Sidebar ${!isCollapsed ? 'expanded' : 'collapsed'}`, 'info');
+      }
+    },
     
     // Worksheet functions
     showWorksheetList: () => showSection('worksheets'),

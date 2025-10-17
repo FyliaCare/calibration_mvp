@@ -259,7 +259,8 @@ class CalProMobileEnhancer {
     // Simulate refresh (replace with actual data fetch)
     await new Promise(resolve => setTimeout(resolve, 1500));
     
-    this.showToast('Content updated', 'success');
+    // Silently refresh - don't show toast to avoid annoying users
+    // this.showToast('Content updated', 'success');
     this.resetPullToRefresh();
     this.isRefreshing = false;
   }
