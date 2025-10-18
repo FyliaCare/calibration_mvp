@@ -4,6 +4,8 @@ import { LoginPage } from '@/pages/LoginPage';
 import { RegisterPage } from '@/pages/RegisterPage';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { DashboardPage } from '@/pages/DashboardPage';
+import { NewCalibrationPage } from '@/pages/NewCalibrationPage';
+import WorksheetPage from '@/pages/WorksheetPage';
 import { useAuthStore } from '@/stores/authStore';
 
 const queryClient = new QueryClient({
@@ -37,6 +39,8 @@ function App() {
             }
           >
             <Route index element={<DashboardPage />} />
+            <Route path="calibrations/new" element={<NewCalibrationPage />} />
+            <Route path="worksheets/new" element={<WorksheetPage />} />
             <Route path="equipment" element={<div className="text-center py-12">Equipment page coming soon...</div>} />
             <Route path="clients" element={<div className="text-center py-12">Clients page coming soon...</div>} />
             <Route path="calibrations" element={<div className="text-center py-12">Calibrations page coming soon...</div>} />

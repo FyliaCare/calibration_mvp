@@ -59,56 +59,65 @@ export const EquipmentStatusTable: React.FC<EquipmentStatusTableProps> = ({ equi
   };
 
   return (
-    <Card>
-      <div className="mb-4">
-        <h3 className="text-lg font-semibold">Equipment Status Overview</h3>
-        <p className="text-sm text-muted-foreground mt-1">
-          Real-time monitoring of all equipment calibration status
-        </p>
+    <Card className="border-0">
+      <div className="mb-6 px-6 pt-6">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg">
+            <Wrench className="h-6 w-6 text-white" />
+          </div>
+          <div>
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+              Equipment Status Overview
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              Real-time monitoring of all equipment calibration status
+            </p>
+          </div>
+        </div>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead>
+          <thead className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700">
             <tr className="border-b border-border">
-              <th className="text-left py-3 px-4 text-sm font-semibold">Equipment</th>
-              <th className="text-left py-3 px-4 text-sm font-semibold">Serial Number</th>
-              <th className="text-left py-3 px-4 text-sm font-semibold">Status</th>
-              <th className="text-left py-3 px-4 text-sm font-semibold">Next Calibration</th>
-              <th className="text-left py-3 px-4 text-sm font-semibold">Days Until Due</th>
-              <th className="text-left py-3 px-4 text-sm font-semibold">Compliance</th>
+              <th className="text-left py-4 px-6 text-sm font-bold uppercase tracking-wider">Equipment</th>
+              <th className="text-left py-4 px-6 text-sm font-bold uppercase tracking-wider">Serial Number</th>
+              <th className="text-left py-4 px-6 text-sm font-bold uppercase tracking-wider">Status</th>
+              <th className="text-left py-4 px-6 text-sm font-bold uppercase tracking-wider">Next Calibration</th>
+              <th className="text-left py-4 px-6 text-sm font-bold uppercase tracking-wider">Days Until Due</th>
+              <th className="text-left py-4 px-6 text-sm font-bold uppercase tracking-wider">Compliance</th>
             </tr>
           </thead>
           <tbody>
             {equipment.map((item) => (
               <tr
                 key={item.id}
-                className="border-b border-border last:border-0 hover:bg-muted/50 transition-colors"
+                className="border-b border-border last:border-0 hover:bg-gradient-to-r hover:from-blue-50/50 hover:to-purple-50/50 dark:hover:from-blue-900/20 dark:hover:to-purple-900/20 transition-all duration-200"
               >
-                <td className="py-3 px-4 font-medium">{item.name}</td>
-                <td className="py-3 px-4 text-sm text-muted-foreground">{item.serialNumber}</td>
-                <td className="py-3 px-4">{getStatusBadge(item.status)}</td>
-                <td className="py-3 px-4 text-sm">{item.nextCalibration}</td>
-                <td className="py-3 px-4 text-sm">
+                <td className="py-4 px-6 font-semibold">{item.name}</td>
+                <td className="py-4 px-6 text-sm text-muted-foreground font-mono">{item.serialNumber}</td>
+                <td className="py-4 px-6">{getStatusBadge(item.status)}</td>
+                <td className="py-4 px-6 text-sm font-medium">{item.nextCalibration}</td>
+                <td className="py-4 px-6 text-sm">
                   <span
                     className={
                       item.daysUntilDue < 0
-                        ? 'text-red-600 font-semibold'
+                        ? 'text-red-600 font-bold'
                         : item.daysUntilDue < 7
-                        ? 'text-yellow-600 font-semibold'
-                        : ''
+                        ? 'text-yellow-600 font-bold'
+                        : 'text-green-600 font-semibold'
                     }
                   >
                     {item.daysUntilDue < 0 ? `${Math.abs(item.daysUntilDue)} days overdue` : `${item.daysUntilDue} days`}
                   </span>
                 </td>
-                <td className="py-3 px-4">
-                  <div className="flex items-center gap-2">
+                <td className="py-4 px-6">
+                  <div className="flex items-center gap-3">
                     <Progress
                       value={item.compliance}
                       variant={getProgressVariant(item.compliance)}
-                      className="flex-1"
+                      className="flex-1 h-3"
                     />
-                    <span className="text-sm font-medium w-12">{item.compliance}%</span>
+                    <span className="text-sm font-bold w-14">{item.compliance}%</span>
                   </div>
                 </td>
               </tr>

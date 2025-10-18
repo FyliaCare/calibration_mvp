@@ -30,39 +30,49 @@ export const UpcomingCalibrations: React.FC<UpcomingCalibrationsProps> = ({ cali
   };
 
   return (
-    <Card>
-      <div className="mb-4">
-        <h3 className="text-lg font-semibold">Upcoming Calibrations</h3>
-        <p className="text-sm text-muted-foreground mt-1">
-          Scheduled calibration activities for the next 7 days
-        </p>
+    <Card className="border-0">
+      <div className="mb-6 p-6 pb-0">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="p-2 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg">
+            <Calendar className="h-6 w-6 text-white" />
+          </div>
+          <div>
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+              Upcoming Calibrations
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              Scheduled calibration activities for the next 7 days
+            </p>
+          </div>
+        </div>
       </div>
-      <div className="space-y-3">
-        {calibrations.map((calibration) => (
+      <div className="space-y-3 p-6">
+        {calibrations.map((calibration, index) => (
           <div
             key={calibration.id}
-            className="p-4 border border-border rounded-lg hover:bg-muted/50 transition-colors"
+            className="p-5 border-2 border-border rounded-xl hover:border-primary hover:shadow-lg hover:scale-[1.02] transition-all duration-300 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800"
+            style={{ animationDelay: `${index * 100}ms` }}
           >
             <div className="flex items-start justify-between">
               <div className="flex-1">
-                <div className="flex items-center gap-2 mb-2">
-                  <h4 className="font-semibold">{calibration.equipmentName}</h4>
+                <div className="flex items-center gap-3 mb-3">
+                  <h4 className="font-bold text-lg">{calibration.equipmentName}</h4>
                   {getPriorityBadge(calibration.priority)}
                 </div>
-                <div className="space-y-1">
+                <div className="space-y-2">
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Calendar className="h-4 w-4" />
-                    <span>
+                    <Calendar className="h-4 w-4 text-blue-600" />
+                    <span className="font-medium">
                       {calibration.date} at {calibration.time}
                     </span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <MapPin className="h-4 w-4" />
-                    <span>{calibration.location}</span>
+                    <MapPin className="h-4 w-4 text-green-600" />
+                    <span className="font-medium">{calibration.location}</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <User className="h-4 w-4" />
-                    <span>{calibration.technician}</span>
+                    <User className="h-4 w-4 text-purple-600" />
+                    <span className="font-medium">{calibration.technician}</span>
                   </div>
                 </div>
               </div>
