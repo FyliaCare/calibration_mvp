@@ -1,0 +1,58 @@
+/**
+ * CalPro Calibration Management System
+ * Main CSS Entry Point
+ * 
+ * This file imports all modular CSS files in the correct order.
+ * Import this single file in your HTML instead of individual CSS files.
+ */
+
+/* ========================================
+   CORE STYLES (Load First)
+   ======================================== */
+@import './core/variables.css';
+@import './core/reset.css';
+
+/* ========================================
+   COMPONENT STYLES
+   ======================================== */
+@import './components/layout.css';
+@import './components/buttons.css';
+@import './components/forms.css';
+@import './components/cards.css';
+@import './components/tables.css';
+@import './components/modals.css';
+@import './components/sidebar.css';
+
+/* ========================================
+   SECTION STYLES
+   Page-specific styles for major sections
+   ======================================== */
+@import './sections/header.css';
+@import './sections/dashboard.css';
+@import './sections/worksheets.css';
+@import './sections/records.css';
+@import './sections/certificates.css';
+@import './sections/profile.css';
+
+/* ========================================
+   UTILITIES & HELPERS
+   ======================================== */
+@import './utilities.css';
+
+/* ========================================
+   MOBILE RESPONSIVE
+   ======================================== */
+@import './mobile.css';
+
+/* ========================================
+   THEME OVERRIDES (Load Last)
+   ======================================== */
+/* @import url('themes/dark.css'); */
+/* @import url('themes/custom.css'); */
+
+/* ========================================
+   LEGACY STYLES (Temporary - Keep for compatibility)
+   Original styles.css contains remaining custom styles
+   Gradually migrate as needed
+   ======================================== */
+/* Keep loading styles.css for now until all styles are verified migrated */

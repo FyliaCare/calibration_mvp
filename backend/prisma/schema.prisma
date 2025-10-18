@@ -1,0 +1,169 @@
+// Prisma schema for CalPro Calibration System
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// User model with roles
+model User {
+  id                String             @id @default(cuid())
+  email             String             @unique
+  passwordHash      String
+  name              String
+  role              String             @default("USER") // ADMIN, MANAGER, TECHNICIAN, USER
+  isActive          Boolean            @default(true)
+  emailVerified     Boolean            @default(false)
+  lastLogin         DateTime?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  
+  refreshTokens     RefreshToken[]
+  auditLogs         AuditLog[]
+  calibrationRecords CalibrationRecord[] @relation("TechnicianRecords")
+  
+  @@index([email])
+  @@map("users")
+}
+
+// Refresh tokens for JWT authentication
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([token])
+  @@index([userId])
+  @@map("refresh_tokens")
+}
+
+// Client/Company model
+model Client {
+  id            String      @id @default(cuid())
+  companyName   String
+  contactName   String?
+  email         String?
+  phone         String?
+  address       String?
+  city          String?
+  state         String?
+  zipCode       String?
+  industry      String?
+  isActive      Boolean     @default(true)
+  notes         String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  
+  equipment     Equipment[]
+  
+  @@index([companyName])
+  @@map("clients")
+}
+
+// Equipment/Instrument model
+model Equipment {
+  id                    String              @id @default(cuid())
+  equipmentId           String              @unique // Custom ID like "CAL-001"
+  name                  String
+  manufacturer          String?
+  model                 String?
+  serialNumber          String?
+  category              String              // PRESSURE, TEMPERATURE, ELECTRICAL, DIMENSIONAL, TORQUE, FLOW, WEIGHT, OTHER
+  calibrationInterval   Int                 // Days between calibrations
+  lastCalibrationDate   DateTime?
+  nextCalibrationDate   DateTime?
+  status                String              @default("ACTIVE") // ACTIVE, INACTIVE, IN_SERVICE, OUT_OF_SERVICE, RETIRED
+  location              String?
+  clientId              String
+  notes                 String?
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+  
+  client                Client              @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  calibrationRecords    CalibrationRecord[]
+  schedules             CalibrationSchedule[]
+  
+  @@index([equipmentId])
+  @@index([clientId])
+  @@index([status])
+  @@index([nextCalibrationDate])
+  @@map("equipment")
+}
+
+// Calibration record model
+model CalibrationRecord {
+  id                  String              @id @default(cuid())
+  recordNumber        String              @unique // "CAL-REC-001"
+  equipmentId         String
+  calibrationDate     DateTime
+  nextDueDate         DateTime
+  technicianId        String
+  result              String              // PASS, PASS_WITH_ADJUSTMENT, FAIL, LIMITED
+  certificateNumber   String?
+  certificateUrl      String?
+  asFoundCondition    String?
+  asLeftCondition     String?
+  standardsUsed       String?
+  environmentalConditions String?
+  notes               String?
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  
+  equipment           Equipment           @relation(fields: [equipmentId], references: [id], onDelete: Cascade)
+  technician          User                @relation("TechnicianRecords", fields: [technicianId], references: [id])
+  
+  @@index([recordNumber])
+  @@index([equipmentId])
+  @@index([calibrationDate])
+  @@index([nextDueDate])
+  @@map("calibration_records")
+}
+
+// Calibration schedule model
+model CalibrationSchedule {
+  id              String      @id @default(cuid())
+  equipmentId     String
+  scheduledDate   DateTime
+  status          String      @default("PENDING") // PENDING, IN_PROGRESS, COMPLETED, CANCELLED, OVERDUE
+  priority        String      @default("NORMAL") // LOW, NORMAL, HIGH, URGENT
+  assignedTo      String?
+  notes           String?
+  completedAt     DateTime?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  
+  equipment       Equipment   @relation(fields: [equipmentId], references: [id], onDelete: Cascade)
+  
+  @@index([equipmentId])
+  @@index([scheduledDate])
+  @@index([status])
+  @@map("calibration_schedules")
+}
+
+// Audit log for tracking changes
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  action    String   // CREATE, UPDATE, DELETE, LOGIN, LOGOUT
+  entity    String   // User, Equipment, Calibration, etc.
+  entityId  String?
+  changes   String?  // JSON string of changes
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  @@index([userId])
+  @@index([entity])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
