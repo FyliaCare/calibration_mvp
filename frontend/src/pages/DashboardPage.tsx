@@ -290,13 +290,20 @@ export function DashboardPage() {
               </div>
               Quick Actions
             </h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+              <Button 
+                className="h-auto py-4 flex-col gap-2 bg-gradient-to-br from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700"
+                onClick={() => navigate('/dashboard/jobs/new')}
+              >
+                <Calendar className="h-6 w-6" />
+                <span className="text-sm font-semibold">New Job</span>
+              </Button>
               <Button 
                 className="h-auto py-4 flex-col gap-2 bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700"
                 onClick={() => navigate('/dashboard/calibrations/new')}
               >
-                <Plus className="h-6 w-6" />
-                <span className="text-sm font-semibold">New Calibration</span>
+                <Wrench className="h-6 w-6" />
+                <span className="text-sm font-semibold">Quick Calibration</span>
               </Button>
               <Button 
                 className="h-auto py-4 flex-col gap-2 bg-gradient-to-br from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
@@ -305,11 +312,17 @@ export function DashboardPage() {
                 <FileText className="h-6 w-6" />
                 <span className="text-sm font-semibold">Create Worksheet</span>
               </Button>
-              <Button className="h-auto py-4 flex-col gap-2 bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700">
+              <Button 
+                className="h-auto py-4 flex-col gap-2 bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700"
+                onClick={() => navigate('/dashboard/equipment')}
+              >
                 <Package className="h-6 w-6" />
-                <span className="text-sm font-semibold">Add Equipment</span>
+                <span className="text-sm font-semibold">Equipment</span>
               </Button>
-              <Button className="h-auto py-4 flex-col gap-2 bg-gradient-to-br from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700">
+              <Button 
+                className="h-auto py-4 flex-col gap-2 bg-gradient-to-br from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700"
+                onClick={() => navigate('/dashboard/clients')}
+              >
                 <Users className="h-6 w-6" />
                 <span className="text-sm font-semibold">New Client</span>
               </Button>

@@ -12,10 +12,12 @@ import {
   Save,
   FileDown,
   Printer,
+  FileText,
 } from 'lucide-react';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
+import { Badge } from '../components/ui/Badge';
 
 // Worksheet Types
 const WORKSHEET_TYPES = [
@@ -128,8 +130,16 @@ interface WorksheetData {
   verifiedBy: string;
 }
 
+// Mock calibration jobs
+const mockJobs = [
+  { id: 'JOB-001', title: 'Monthly Pressure Gauge Calibration', client: 'ABC Manufacturing', equipment: 'Pressure Gauge PG-1000', scheduledDate: '2025-10-20' },
+  { id: 'JOB-002', title: 'Temperature Sensor Verification', client: 'XYZ Industries', equipment: 'Temperature Sensor TS-550', scheduledDate: '2025-10-19' },
+  { id: 'JOB-003', title: 'Multimeter Calibration Service', client: 'Tech Corp', equipment: 'Digital Multimeter DMM-2500', scheduledDate: '2025-10-21' },
+];
+
 export default function WorksheetPage() {
   const navigate = useNavigate();
+  const [selectedJob, setSelectedJob] = useState<string | null>(null);
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [worksheetData, setWorksheetData] = useState<WorksheetData>({
     certificateNo: '',
@@ -291,8 +301,8 @@ export default function WorksheetPage() {
     window.print();
   };
 
-  // Type Selection View
-  if (!selectedType) {
+  // Step 1: Job Selection View
+  if (!selectedJob) {
     return (
       <div className="p-6 max-w-7xl mx-auto">
         {/* Header */}
@@ -308,8 +318,101 @@ export default function WorksheetPage() {
             Create Calibration Worksheet
           </h1>
           <p className="text-gray-600 mt-2">
-            Select the type of equipment to create a detailed calibration worksheet
+            Select an existing calibration job or create a new one
           </p>
+        </div>
+
+        {/* Option: Select Existing Job */}
+        <Card className="mb-6">
+          <div className="p-6">
+            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+              <FileText className="h-5 w-5 text-indigo-600" />
+              Select Existing Calibration Job
+            </h2>
+            
+            <div className="space-y-3 mb-4">
+              {mockJobs.map((job) => (
+                <button
+                  key={job.id}
+                  onClick={() => {
+                    setSelectedJob(job.id);
+                    setWorksheetData(prev => ({
+                      ...prev,
+                      jobNo: job.id,
+                      customerName: job.client,
+                      uutDescription: job.equipment,
+                    }));
+                  }}
+                  className="w-full p-4 border-2 border-gray-200 rounded-lg hover:border-indigo-500 hover:bg-indigo-50 transition-all text-left"
+                >
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <Badge variant="info">{job.id}</Badge>
+                        <span className="font-semibold text-gray-900">{job.title}</span>
+                      </div>
+                      <p className="text-sm text-gray-600">Client: {job.client}</p>
+                      <p className="text-sm text-gray-600">Equipment: {job.equipment}</p>
+                      <p className="text-sm text-gray-500">Scheduled: {job.scheduledDate}</p>
+                    </div>
+                    <ArrowLeft className="h-5 w-5 text-gray-400 transform rotate-180" />
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </Card>
+
+        {/* Option: Quick Entry (Skip Job Selection) */}
+        <Card>
+          <div className="p-6">
+            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+              <Plus className="h-5 w-5 text-green-600" />
+              Quick Entry (No Job Reference)
+            </h2>
+            <p className="text-gray-600 mb-4">
+              Create a worksheet without linking to a calibration job
+            </p>
+            <Button
+              onClick={() => setSelectedJob('quick-entry')}
+              variant="outline"
+              className="w-full"
+            >
+              Continue with Quick Entry
+            </Button>
+          </div>
+        </Card>
+      </div>
+    );
+  }
+
+  // Step 2: Type Selection View
+  if (!selectedType) {
+    return (
+      <div className="p-6 max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <button
+            onClick={() => setSelectedJob(null)}
+            className="flex items-center text-gray-600 hover:text-gray-900 mb-4"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Job Selection
+          </button>
+          <h1 className="text-3xl font-bold text-gray-900">
+            Select Equipment Type
+          </h1>
+          <p className="text-gray-600 mt-2">
+            Choose the type of equipment to create a detailed calibration worksheet
+          </p>
+          {selectedJob !== 'quick-entry' && (
+            <div className="mt-3 flex items-center gap-2">
+              <Badge variant="info" className="text-sm">
+                Job: {worksheetData.jobNo}
+              </Badge>
+              <span className="text-sm text-gray-600">→ {worksheetData.customerName}</span>
+            </div>
+          )}
         </div>
 
         {/* Worksheet Type Cards */}
