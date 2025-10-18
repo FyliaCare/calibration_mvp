@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Zap,
@@ -16,7 +16,6 @@ import {
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
-import { Badge } from '../components/ui/Badge';
 
 // Worksheet Types
 const WORKSHEET_TYPES = [
@@ -196,6 +195,7 @@ export default function WorksheetPage() {
           uutInternal: '',
           uutExternal: '',
           reference: '',
+          actual: '',
           deviation: '',
         }));
         break;
@@ -769,7 +769,7 @@ export default function WorksheetPage() {
             <h2 className="text-lg font-semibold text-gray-900">
               Calibration Data Points
             </h2>
-            <Button variant="outline" size="sm" onClick={addDataPoint}>
+            <Button variant="outline" onClick={addDataPoint}>
               <Plus className="w-4 h-4 mr-2" />
               Add Point
             </Button>
@@ -853,7 +853,6 @@ export default function WorksheetPage() {
                           handleDataPointChange(index, 'setPoint', e.target.value)
                         }
                         className="w-full"
-                        size="sm"
                       />
                     </td>
                     {selectedType === 'pressure' && (
@@ -865,7 +864,7 @@ export default function WorksheetPage() {
                               handleDataPointChange(index, 'uutRising', e.target.value)
                             }
                             className="w-full"
-                            size="sm"
+                           
                           />
                         </td>
                         <td className="border border-gray-300 px-3 py-2">
@@ -875,7 +874,7 @@ export default function WorksheetPage() {
                               handleDataPointChange(index, 'uutFalling', e.target.value)
                             }
                             className="w-full"
-                            size="sm"
+                           
                           />
                         </td>
                         <td className="border border-gray-300 px-3 py-2">
@@ -885,7 +884,7 @@ export default function WorksheetPage() {
                               handleDataPointChange(index, 'mean', e.target.value)
                             }
                             className="w-full"
-                            size="sm"
+                           
                           />
                         </td>
                         <td className="border border-gray-300 px-3 py-2">
@@ -895,7 +894,7 @@ export default function WorksheetPage() {
                               handleDataPointChange(index, 'deviation', e.target.value)
                             }
                             className="w-full"
-                            size="sm"
+                           
                           />
                         </td>
                         <td className="border border-gray-300 px-3 py-2">
@@ -905,7 +904,7 @@ export default function WorksheetPage() {
                               handleDataPointChange(index, 'hysteresis', e.target.value)
                             }
                             className="w-full"
-                            size="sm"
+                           
                           />
                         </td>
                       </>
@@ -919,7 +918,7 @@ export default function WorksheetPage() {
                               handleDataPointChange(index, 'uutInternal', e.target.value)
                             }
                             className="w-full"
-                            size="sm"
+                           
                           />
                         </td>
                         <td className="border border-gray-300 px-3 py-2">
@@ -929,7 +928,7 @@ export default function WorksheetPage() {
                               handleDataPointChange(index, 'uutExternal', e.target.value)
                             }
                             className="w-full"
-                            size="sm"
+                           
                           />
                         </td>
                         <td className="border border-gray-300 px-3 py-2">
@@ -939,7 +938,7 @@ export default function WorksheetPage() {
                               handleDataPointChange(index, 'reference', e.target.value)
                             }
                             className="w-full"
-                            size="sm"
+                           
                           />
                         </td>
                         <td className="border border-gray-300 px-3 py-2">
@@ -949,7 +948,7 @@ export default function WorksheetPage() {
                               handleDataPointChange(index, 'deviation', e.target.value)
                             }
                             className="w-full"
-                            size="sm"
+                           
                           />
                         </td>
                       </>
@@ -965,7 +964,7 @@ export default function WorksheetPage() {
                               handleDataPointChange(index, 'actual', e.target.value)
                             }
                             className="w-full"
-                            size="sm"
+                           
                           />
                         </td>
                         <td className="border border-gray-300 px-3 py-2">
@@ -975,7 +974,7 @@ export default function WorksheetPage() {
                               handleDataPointChange(index, 'deviation', e.target.value)
                             }
                             className="w-full"
-                            size="sm"
+                           
                           />
                         </td>
                       </>
@@ -1031,19 +1030,19 @@ export default function WorksheetPage() {
                       Unloaded
                     </td>
                     <td className="border border-gray-300 px-3 py-2">
-                      <Input size="sm" />
+                      <Input />
                     </td>
                     <td className="border border-gray-300 px-3 py-2">
-                      <Input size="sm" />
+                      <Input />
                     </td>
                     <td className="border border-gray-300 px-3 py-2">
-                      <Input size="sm" />
+                      <Input />
                     </td>
                     <td className="border border-gray-300 px-3 py-2">
-                      <Input size="sm" />
+                      <Input />
                     </td>
                     <td className="border border-gray-300 px-3 py-2">
-                      <Input size="sm" />
+                      <Input />
                     </td>
                   </tr>
                   <tr>
@@ -1051,19 +1050,19 @@ export default function WorksheetPage() {
                       Loaded
                     </td>
                     <td className="border border-gray-300 px-3 py-2">
-                      <Input size="sm" />
+                      <Input />
                     </td>
                     <td className="border border-gray-300 px-3 py-2">
-                      <Input size="sm" />
+                      <Input />
                     </td>
                     <td className="border border-gray-300 px-3 py-2">
-                      <Input size="sm" />
+                      <Input />
                     </td>
                     <td className="border border-gray-300 px-3 py-2">
-                      <Input size="sm" />
+                      <Input />
                     </td>
                     <td className="border border-gray-300 px-3 py-2">
-                      <Input size="sm" />
+                      <Input />
                     </td>
                   </tr>
                 </tbody>
