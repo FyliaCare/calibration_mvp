@@ -9,12 +9,20 @@ backend/.env
 backend/.env.local
 backend/.env.development.local
 backend/.env.test.local
-backend/.env.production.local
 backend/calibration.db
+backend/dev.db
 backend/uploads/
+backend/dist/
 backend/*.db
 backend/*.sqlite
 backend/*.sqlite3
+
+# Frontend specific
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/dist/
+frontend/build/
 
 # Development files
 *.backup

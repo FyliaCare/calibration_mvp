@@ -22,7 +22,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
-import { mockCalibrations, filterCalibrations, getCalibrationStats, type CalibrationRecord } from '@/data/mockCalibrations';
+import { filterCalibrations, getCalibrationStats, type CalibrationRecord } from '@/data/mockCalibrations';
 
 const CalibrationListPage = () => {
   const navigate = useNavigate();

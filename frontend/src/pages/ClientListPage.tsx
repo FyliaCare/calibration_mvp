@@ -24,11 +24,11 @@ import {
   ArrowUpDown,
   X,
   RefreshCw,
-  Zap,
-  TrendingUp,
-  Shield,
-  Sparkles,
-  Rocket,
+  Upload,
+  Edit,
+  Trash2,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import { mockClients, filterClients, getClientStats, type Client } from '@/data/mockClients';
 
