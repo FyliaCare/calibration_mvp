@@ -13,7 +13,9 @@ services:
       - key: PORT
         value: 10000
       - key: DATABASE_URL
-        sync: false
+        fromDatabase:
+          name: calibration-db
+          property: connectionString
       - key: JWT_ACCESS_SECRET
         generateValue: true
       - key: JWT_REFRESH_SECRET
@@ -51,3 +53,9 @@ services:
       - type: rewrite
         source: /*
         destination: /index.html
+
+# Free PostgreSQL Database
+databases:
+  - name: calibration-db
+    databaseName: calibration_production
+    region: oregon
