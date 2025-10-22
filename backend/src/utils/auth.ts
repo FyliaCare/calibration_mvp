@@ -20,17 +20,19 @@ export const generateAccessToken = (payload: {
   email: string;
   role: string;
 }): string => {
-  const options: SignOptions = {
-    expiresIn: String(config.jwt.accessExpiresIn),
-  };
-  return jwt.sign(payload, String(config.jwt.accessSecret), options);
+  return jwt.sign(
+    payload, 
+    String(config.jwt.accessSecret), 
+    { expiresIn: config.jwt.accessExpiresIn } as SignOptions
+  );
 };
 
 export const generateRefreshToken = (userId: string): string => {
-  const options: SignOptions = {
-    expiresIn: String(config.jwt.refreshExpiresIn),
-  };
-  return jwt.sign({ userId }, String(config.jwt.refreshSecret), options);
+  return jwt.sign(
+    { userId }, 
+    String(config.jwt.refreshSecret), 
+    { expiresIn: config.jwt.refreshExpiresIn } as SignOptions
+  );
 };
 
 export const verifyRefreshToken = (token: string): { userId: string } => {
