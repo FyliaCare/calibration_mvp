@@ -21,14 +21,14 @@ export const generateAccessToken = (payload: {
   role: string;
 }): string => {
   const options: SignOptions = {
-    expiresIn: config.jwt.accessExpiresIn,
+    expiresIn: String(config.jwt.accessExpiresIn),
   };
   return jwt.sign(payload, String(config.jwt.accessSecret), options);
 };
 
 export const generateRefreshToken = (userId: string): string => {
   const options: SignOptions = {
-    expiresIn: config.jwt.refreshExpiresIn,
+    expiresIn: String(config.jwt.refreshExpiresIn),
   };
   return jwt.sign({ userId }, String(config.jwt.refreshSecret), options);
 };
