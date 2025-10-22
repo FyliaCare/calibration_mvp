@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 import { config } from '../config/env.js';
 
 const SALT_ROUNDS = 10;
@@ -20,17 +20,19 @@ export const generateAccessToken = (payload: {
   email: string;
   role: string;
 }): string => {
-  return jwt.sign(payload, config.jwt.accessSecret as string, {
-    expiresIn: config.jwt.accessExpiresIn as string,
-  });
+  const options: SignOptions = {
+    expiresIn: config.jwt.accessExpiresIn,
+  };
+  return jwt.sign(payload, String(config.jwt.accessSecret), options);
 };
 
 export const generateRefreshToken = (userId: string): string => {
-  return jwt.sign({ userId }, config.jwt.refreshSecret as string, {
-    expiresIn: config.jwt.refreshExpiresIn as string,
-  });
+  const options: SignOptions = {
+    expiresIn: config.jwt.refreshExpiresIn,
+  };
+  return jwt.sign({ userId }, String(config.jwt.refreshSecret), options);
 };
 
 export const verifyRefreshToken = (token: string): { userId: string } => {
-  return jwt.verify(token, config.jwt.refreshSecret as string) as { userId: string };
+  return jwt.verify(token, String(config.jwt.refreshSecret)) as { userId: string };
 };
