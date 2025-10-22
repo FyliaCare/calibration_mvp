@@ -37,12 +37,10 @@ services:
         value: info
     healthCheckPath: /api/health
 
-  # Frontend Service
+  # Frontend Static Site
   - type: web
     name: calibration-frontend
     runtime: static
-    region: oregon
-    plan: starter
     buildCommand: cd frontend && npm install && npm run build
     staticPublishPath: ./frontend/dist
     envVars:
